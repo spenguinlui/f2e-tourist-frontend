@@ -5,18 +5,18 @@
   cursor: pointer;
 }
 @mixin btn-tag {
-  @include flex-row-start-center;
-  @include font-caption;
-  border-radius: 21px;
-  padding: 4px 10px;
+  @include flex-row-flex-start-center;
+  @include font-caption(bold);
+  border-radius: $oval-bora;
+  padding: .4em .9em;
   cursor: pointer;
 }
 
 @mixin tags-row {
-  @include flex-row-start-center;
+  @include flex-row-flex-start-center;
   padding: 5px 0;
   > div {
-    margin-right: 8px;
+    margin-right: .5rem;
   }
 }
 
@@ -45,7 +45,7 @@
   @include screen {
     width: 271px;
   }
-  align-items: start;
+  align-items: flex-start;
   padding: 8px 12px 8px 16px;
 }
 

@@ -15,10 +15,13 @@ export default {
   components: {
     Navbar,
     Footer
+  },
+  created() {
+    this.$store.dispatch("getFavorites");
   }
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+  @import "@/assets/scss/main.scss";
 </style>

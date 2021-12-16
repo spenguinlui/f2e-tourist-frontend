@@ -16,9 +16,9 @@
           <img src="../assets/images/icon/search-m.svg" alt="手機版搜尋">
         </div>
         <div class="nav-list">
-          <router-link class="nav-list-item" :to="{ name: 'scenicspots-list' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link>
-          <router-link class="nav-list-item" :to="{ name: 'hotels-list' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon"></router-link>
-          <router-link class="nav-list-item" :to="{ name: 'restaurants-list' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon"></router-link>
+          <router-link class="nav-list-item" :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link>
+          <router-link class="nav-list-item" :to="{ name: 'hotels' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon"></router-link>
+          <router-link class="nav-list-item" :to="{ name: 'restaurants' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon"></router-link>
           <router-link class="nav-list-item-f" :to="{ name: 'favorites' }">我的旅程</router-link>
         </div>
       </div>
@@ -31,9 +31,9 @@
     </div>
     <div class="nav-mobile" :class="{ expanding: menuShow }">
       <div class="nav-mobile-list">
-        <router-link class="nav-mobile-list-item" :to="{ name: 'scenicspots-list' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link>
-        <router-link class="nav-mobile-list-item" :to="{ name: 'hotels-list' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon"></router-link>
-        <router-link class="nav-mobile-list-item" :to="{ name: 'restaurants-list' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon"></router-link>
+        <router-link class="nav-mobile-list-item" :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link>
+        <router-link class="nav-mobile-list-item" :to="{ name: 'hotels' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon"></router-link>
+        <router-link class="nav-mobile-list-item" :to="{ name: 'restaurants' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon"></router-link>
       </div>
       <div class="nav-mobile-list">
         <router-link class="nav-mobile-list-item-f" :to="{ name: 'favorites' }">我的旅程</router-link>
@@ -68,8 +68,10 @@
           this.searchShow = false;
         }
       },
-      goSearch() {
-        console.log("搜尋")
+      goSearch(event) {
+        if (event.isComposing) { return }  // 還在輸入中文別要資料
+        // keyword 加入到網址，方便分享
+        this.$router.push(`/search?keyword=${this.keyword}`);
       }
     }
   }
@@ -80,11 +82,11 @@
 
   nav {
     @include flex-column-center-center;
+    @include content-padding(.5vh);
     @include posi(f);
     width: 100vw;
-    height: $nav-height;
+    min-height: $nav-height;
     background-color: $grey-200;
-    padding: 0 3vw;
     z-index: $nav-bar-z;
     .nav {
       @include flex-row-space-between-center;

@@ -11,7 +11,7 @@
       </div>
       <div class="footer-link">
         <div class="footer-item">
-          <router-link :to="{ name: 'scenicspots-list' }">找景點</router-link>
+          <router-link :to="{ name: 'scenicspots' }">找景點</router-link>
           <router-link :to="{ name: 'theme' }">主題景點</router-link>
         </div>
         <!-- <div class="footer-item">
@@ -19,11 +19,11 @@
           <router-link :to="{ name: 'theme' }">主題活動</router-link>
         </div> -->
         <div class="footer-item">
-          <router-link :to="{ name: 'restaurants-list' }">找餐廳</router-link>
+          <router-link :to="{ name: 'restaurants' }">找餐廳</router-link>
           <router-link :to="{ name: 'theme' }">主題餐廳</router-link>
         </div>
         <div class="footer-item">
-          <router-link :to="{ name: 'hotels-list' }">找飯店</router-link>
+          <router-link :to="{ name: 'hotels' }">找飯店</router-link>
           <router-link :to="{ name: 'theme' }">嚴選住宿</router-link>
         </div>
         <div class="footer-item">
@@ -56,8 +56,13 @@
     padding: 0 3vw;
     .footer {
       @include flex-column-center-center;
+      margin: auto;
       width: 90%;
+      height: 100%;
       color: $grey-100;
+      > div {
+        padding: 1vh 1%;
+      }
       .footer-brand {
         @include flex-column-center-center;
         .footer-icon {
@@ -70,7 +75,6 @@
       }
       .footer-link {
         width: 100%;
-        padding: 1vh 1%;
         @include flex-row-space-between-center;
         .footer-item {
           @include flex-column-center-center;

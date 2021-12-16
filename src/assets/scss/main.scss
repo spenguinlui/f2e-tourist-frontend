@@ -7,3 +7,13 @@
 * {
   box-sizing: border-box;
 }
+
+.container-fluid {
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  margin-bottom: $footer-m-height;
+  @include screen-up {
+    margin-bottom: $footer-height;
+  }
+}
