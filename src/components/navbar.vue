@@ -82,7 +82,7 @@
     @include flex-column-center-center;
     @include posi(f);
     width: 100vw;
-    height: $nav-heght;
+    height: $nav-height;
     background-color: $grey-200;
     padding: 0 3vw;
     z-index: $nav-bar-z;
@@ -113,7 +113,7 @@
     padding-bottom: .75rem;
     transition: all 0.3s ease-in-out;
     &.expanding {
-      top: $nav-heght;
+      top: $nav-height;
     }
     .nav-mobile-search-bar {
       @include flex-row-space-between-center;
@@ -143,7 +143,7 @@
     padding: .5rem 0;
     transition: all 0.3s ease-in-out;
     &.expanding {
-      top: $nav-heght;
+      top: $nav-height;
     }
     &-list {
       @include flex-row-center-center;

@@ -1,0 +1,102 @@
+<template>
+  <footer>
+    <div class="footer">
+      <div class="footer-brand">
+        <img src="../assets/images/icon/footer-logo.svg" alt="logo-icon">
+        <div class="footer-icon">
+          <img src="../assets/images/icon/facebook.svg" alt="facebook-icon">
+          <img src="../assets/images/icon/line.svg" alt="line-icon">
+          <img src="../assets/images/icon/twitter.svg" alt="twitter-icon">
+        </div>
+      </div>
+      <div class="footer-link">
+        <div class="footer-item">
+          <router-link :to="{ name: 'scenicspots-list' }">找景點</router-link>
+          <router-link :to="{ name: 'theme' }">主題景點</router-link>
+        </div>
+        <!-- <div class="footer-item">
+          <router-link :to="{ name: 'activities' }">找活動</router-link>
+          <router-link :to="{ name: 'theme' }">主題活動</router-link>
+        </div> -->
+        <div class="footer-item">
+          <router-link :to="{ name: 'restaurants-list' }">找餐廳</router-link>
+          <router-link :to="{ name: 'theme' }">主題餐廳</router-link>
+        </div>
+        <div class="footer-item">
+          <router-link :to="{ name: 'hotels-list' }">找飯店</router-link>
+          <router-link :to="{ name: 'theme' }">嚴選住宿</router-link>
+        </div>
+        <div class="footer-item">
+          <router-link :to="{ name: 'login' }">會員登入</router-link>
+          <router-link :to="{ name: 'suppliers' }">商家專區</router-link>
+        </div>
+      </div>
+      <div class="footer-copyright">Copyright ©</div>
+    </div>
+  </footer>
+</template>
+
+<script>
+  export default {
+    
+  }
+</script>
+
+<style lang="scss" scoped>
+  @import "@/assets/scss/main.scss";
+
+  footer {
+    @include flex-column-center-center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: $footer-m-height;
+    background-color: $primary-600;
+    padding: 0 3vw;
+    .footer {
+      @include flex-column-center-center;
+      width: 90%;
+      color: $grey-100;
+      .footer-brand {
+        @include flex-column-center-center;
+        .footer-icon {
+          @include flex-row-center-center;
+          margin-top: .5rem;
+          img {
+            margin-right: .375rem;
+          }
+        }
+      }
+      .footer-link {
+        width: 100%;
+        padding: 1vh 1%;
+        @include flex-row-space-between-center;
+        .footer-item {
+          @include flex-column-center-center;
+          a {
+            margin-bottom: .5rem;
+            color: $grey-100;
+            &:visited {
+              color: $grey-100;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include screen-up {
+    footer {
+      height: $footer-height;
+      .footer {
+        @include flex-row-center-center;
+        .footer-link {
+          width: 40%;
+          padding: 0 1%;
+        }
+      }
+    }
+  }
+  
+</style>
