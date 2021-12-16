@@ -1,0 +1,147 @@
+@mixin btn {
+  @include flex-row-center-center;
+  @include font-button;
+  border-radius: $oval-bora;
+  cursor: pointer;
+}
+@mixin btn-tag {
+  @include flex-row-start-center;
+  @include font-caption;
+  border-radius: 21px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+@mixin tags-row {
+  @include flex-row-start-center;
+  padding: 5px 0;
+  > div {
+    margin-right: 8px;
+  }
+}
+
+// 先用於 header、buttom-m、content
+@mixin btn-text {
+  @include btn;
+  padding: .5rem 1rem;
+}
+@mixin btn-icon-text {
+  @include btn;
+  padding: .5rem 1rem;
+  img {
+    width: 14px;
+    height: 14px;
+    margin-left: 9px;
+  }
+}
+@mixin btn-icon {
+  @include btn;
+  border-radius: $cycle-bora;
+  padding: .5rem;
+}
+@mixin btn-choose {
+  @include btn;
+  width: 128px;
+  @include screen {
+    width: 271px;
+  }
+  align-items: start;
+  padding: 8px 12px 8px 16px;
+}
+
+@mixin btn-tag-filled {
+  @include btn-tag;
+  background-color: $primary-600;
+  color: $grey-100;
+  border: 1px solid $primary-600;
+  &:hover {
+    background-color: $primary-700;
+    border: 1px solid $primary-700;
+  }
+  &:focus {
+    box-shadow: inset 0px 0px 4px $grey-100;
+  }
+  &:disabled {
+    background-color: $grey-300;
+    border: 1px solid $grey-300;
+  }
+  &:visited {
+    color: $grey-100;
+  }
+}
+
+@mixin btn-tag-outline {
+  @include btn-tag;
+  background-color: $grey-100;
+  color: $primary-600;
+  border: 1px solid $primary-600;
+  &:hover {
+    background-color: $primary-200;
+    color: $primary-700;
+    border: 1px solid $primary-700;
+  }
+  &:focus {
+    background-color: $primary-100;
+    box-shadow: inset 0px 0px 4px $grey-100;
+  }
+  &:disabled {
+    background-color: $grey-100;
+    color:  $grey-300;
+    border: 1px solid $grey-300;
+  }
+  &:visited {
+    color: $primary-600;
+  }
+}
+
+@mixin btn-filled {
+  background-color: $primary-700;
+  color: $grey-100;
+  border: 1px solid $primary-700;
+  div {
+    background-color: $grey-100;
+    color: $grey-100;
+    fill: $grey-100;
+  }
+  img {
+    color: $grey-100;
+    fill: $grey-100;
+  }
+  &:hover {
+    background-color: $primary-800;
+    border: 1px solid $primary-800;
+  }
+  &:focus {
+    box-shadow: inset 0px 0px 4px $grey-100;
+  }
+  &:disabled {
+    background-color: $grey-300;
+    border: 1px solid $grey-300;
+  }
+  &:visited {
+		color: $grey-100;
+	}
+}
+@mixin btn-outline {
+  background-color: $grey-100;
+  color:  $primary-700;
+  border: 1px solid $primary-700;
+  svg {
+    fill: $primary-700;
+  }
+  &:hover {
+    background-color: $primary-100;
+  }
+  &:focus {
+    background-color: $primary-100;
+    box-shadow: inset 0px 0px 5px $primary-500;
+  }
+  &:disabled {
+    background-color: $grey-100;
+    color:  $grey-300;
+    border: 1px solid $grey-300;
+  }
+  &:visited {
+		color: $primary-700;
+	}
+}

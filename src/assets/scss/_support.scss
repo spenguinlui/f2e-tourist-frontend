@@ -1,0 +1,353 @@
+// ------ RWD
+@mixin full-screen {
+  @media screen and (min-width: 1280px) {
+    @content;
+  }
+}
+@mixin screen-up {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+@mixin screen {
+  @media screen and (min-width: 768px) and (max-width: 1279px) {
+    @content;
+  }
+}
+@mixin pad-up {
+  @media screen and (min-width: 481px) {
+    @content;
+  }
+}
+@mixin pad {
+  @media screen and (min-width: 481px) and (max-width: 767px) {
+    @content;
+  }
+}
+@mixin pad-m {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
+}
+@mixin mobile {
+  @media(max-width: 480px){
+    @content;
+  }
+}
+
+// ------ flex-box
+// $flex-direction: (row column);
+// $flex-justify: (center space-between flex-start);
+// $flex-align: (center space-between baseline);
+
+// 寬度比例
+@mixin flex-col($i) {
+  flex: 0 0 ((100% / 12) * $i);
+}
+
+// position
+@mixin posi($mode: a) {
+  @if $mode == a {
+    position: absolute;
+  }
+  @if $mode == f {
+    position: fixed;
+  }
+  left: 0;
+  top: 0;
+}
+
+@mixin flex-row-center-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-row-center-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: space-between;
+}
+
+@mixin flex-row-center-baseline {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+}
+
+@mixin flex-row-space-between-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex-row-space-between-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: space-between;
+}
+
+@mixin flex-row-space-between-baseline {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+@mixin flex-row-flex-start-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@mixin flex-row-flex-start-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: space-between;
+}
+
+@mixin flex-row-flex-start-baseline {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+@mixin flex-column-center-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column-center-space-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-between;
+}
+
+@mixin flex-column-center-baseline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+}
+
+@mixin flex-column-space-between-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex-column-space-around-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+@mixin flex-column-space-between-space-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: space-between;
+}
+
+@mixin flex-column-space-between-baseline {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+@mixin flex-column-flex-start-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@mixin flex-column-flex-start-space-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: space-between;
+}
+
+@mixin flex-column-flex-start-baseline {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+// ------ 文字
+@mixin font-h1($b: 1) {
+  font-size: $font-size-h1;
+  line-height: $font-size-h1 * $line-height-scale-h1;
+  letter-spacing: $letter-spacing-h1;
+  font-weight: $b;
+}
+@mixin font-h2($b: 1) {
+  font-size: $font-size-h2;
+  line-height: $font-size-h2 * $line-height-scale-h2;
+  letter-spacing: $letter-spacing-h2;
+  font-weight: $b;
+}
+@mixin font-h3($b: 1) {
+  font-size: $font-size-h3;
+  line-height: $font-size-h3 * $line-height-scale-h3;
+  letter-spacing: $letter-spacing-h3;
+  font-weight: $b;
+}
+@mixin font-h4($b: 1) {
+  font-size: $font-size-h4;
+  line-height: $font-size-h4 * $line-height-scale-h4;
+  letter-spacing: $letter-spacing-h4;
+  font-weight: $b;
+}
+@mixin font-h5($b: 1) {
+  font-size: $font-size-h5;
+  line-height: $font-size-h5 * $line-height-scale-h5;
+  letter-spacing: $letter-spacing-h5;
+  font-weight: $b;
+}
+@mixin font-content($b: normal) {
+  font-size: $font-size-content;
+  line-height: $font-size-content * $line-height-scale-content;
+  letter-spacing: $letter-spacing-content;
+  font-weight: $b;
+}
+@mixin font-button($b: normal) {
+  font-size: $font-size-button;
+  line-height: $font-size-button * $line-height-scale-button;
+  letter-spacing: $letter-spacing-button;
+  font-weight: $b;
+}
+@mixin font-caption($b: normal) {
+  font-size: $font-size-caption;
+  line-height: $font-size-caption * $line-height-scale-caption;
+  letter-spacing: $letter-spacing-caption;
+  font-weight: $b;
+}
+
+// 按鈕
+@mixin btn($radius: $normal-bora) {
+  @include flex-row-center-center;
+  border-radius: $radius;
+  cursor: pointer;
+}
+
+@mixin btn-filled($color) {
+  color: $grey-100;
+  background-color: $color;
+}
+
+// 客製按鈕
+@mixin btn-outline-color($color, $bg, $bo) {
+  color: $color;
+  background-color: $bg;
+  border: 1px solid $bo;
+  &:hover, &.hover {
+    background-color: $color;
+    color:$bg;
+  }
+  &:focus, &.focus, &.active {
+    border-inline: 3px solid $bo;
+  }
+
+  &:disabled, &.disabled {
+    background-color: $grey-100;
+    color: $grey-300;
+    border: 1px solid $grey-300;
+    cursor: default;
+  }
+}
+
+// 一般按鈕
+@mixin btn-outline($color: primary) {
+  @if $color == primary {
+    @include btn-outline-color($primary-400, $grey-100, $primary-300);
+  }
+  @if $color == accent {
+    @include btn-outline-color($accent-400, $grey-100, $accent-300);
+  }
+  @if $color == alert {
+    @include btn-outline-color($alert-400, $grey-100, $alert-300);
+  }
+  @if $color == disabled {
+    @include btn-outline-color($grey-400, $grey-100, $grey-300);
+  }
+}
+
+// icon
+@mixin icon-m($ma, $d: r) {
+  @if $d == r {
+    svg {
+      margin-right: $ma;
+    }
+  }
+  @if $d == l {
+    svg {
+      margin-left: $ma;
+    }
+  }
+}
+
+// 隱藏過多文字
+@mixin ellipsis-text($n: 1) {
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $n;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+
+// 過場效果設定
+@mixin transi($du: .5s) {
+  transition-property: all;
+  transition-duration: $du;
+  transition-timing-function: ease-in-out;
+}
+
+// 滾輪效果
+@mixin scroll {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// vh 設定
+@mixin heightvh($value) {
+  height: #{$value}vh;
+  height: calc(var(--vh, 1vh) * #{$value});
+}
+
+// 背景圖
+@mixin benner-background($url) {
+  background-image: url($url);
+  background-size: cover;
+  background-position: center;
+}
+
+// 文字 + icon按鈕轉 icon按鈕
+@mixin text-icon-2-icon {
+  @include btn-icon;
+  font-size: 0;
+  img {
+    margin: 0;
+  }
+  @include full-screen{
+    @include btn-icon-text;
+  }
+}
+
