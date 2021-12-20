@@ -14,9 +14,9 @@
 
 @mixin tags-row {
   @include flex-row-flex-start-center;
-  padding: 5px 0;
-  > div {
-    margin-right: .5rem;
+  padding: .2em 0;
+  > div, li {
+    margin-right: .5em;
   }
 }
 

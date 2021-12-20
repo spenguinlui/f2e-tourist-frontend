@@ -12,7 +12,9 @@
   width: 100vw;
   min-height: 100vh;
   position: relative;
+  margin-top: $nav-height;
   margin-bottom: $footer-m-height;
+  overflow: hidden;
   @include screen-up {
     margin-bottom: $footer-height;
   }

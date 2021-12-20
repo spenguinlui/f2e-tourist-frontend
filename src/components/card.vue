@@ -3,20 +3,14 @@
     <div class="card-img">
       <img v-if="!item.Picture || !item.Picture.PictureUrl1" src="../assets/images/empty-img.png" alt="no-imag'">
       <img v-if="item.Picture && item.Picture.PictureUrl1" :src="item.Picture.PictureUrl1" :alt="item.Picture.PictureDescription1">
-      <div :class="favorites.includes(item.ID) ? 'card-icon filled' : 'card-icon'" @click.prevent.stop="changeFavorite(item.ID, !favorites.includes(item.ID))">
+      <div :class="favorites.includes(item.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(item.ID, !favorites.includes(item.ID))">
         <img v-show="favorites.includes(item.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
         <img v-show="!favorites.includes(item.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
       </div>
     </div>
     <div class="card-content">
       <div class="card-content-title">{{ item.Name }}</div>
-      <div class="card-content-stars">
-        <img src="../assets/images/icon/star-filled.svg" alt="滿星icon">
-        <img src="../assets/images/icon/star-filled.svg" alt="滿星icon">
-        <img src="../assets/images/icon/star-filled.svg" alt="滿星icon">
-        <img src="../assets/images/icon/half-star-filled.svg" alt="半星icon">
-        <img src="../assets/images/icon/star-outline.svg" alt="空星icon">
-      </div>
+      <Stars />
       <div class="card-content-tags">
         <template v-for="(tag, index) in item.Tag">
           <div class="card-tag" :key="index">{{ tag }}</div>
@@ -31,7 +25,8 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapGetters } from "vuex";
+  import Stars from "./stars.vue";
 
   export default {
     props: ['item', 'type', 'classType'],
@@ -46,14 +41,14 @@
     },
     methods: {
       toDetail(id) {
-        this.$router.push(`/detail/${id}/${this.type}`);
+        this.$router.push(`/${this.type}/${id}`);
       },
       changeFavorite(id, add) {
         !this.$store.getters.heartIsLoading && this.$store.dispatch("changeFavoriteToData", { dataId: id, add: add });
       }
     },
-    created() {
-      
+    components: {
+      Stars
     }
   }
 </script>
@@ -92,7 +87,7 @@
         object-position: center;
         border-radius: .5rem;
       }
-      .card-icon {
+      .favorite-btn {
         @include btn-icon;
         @include btn-outline;
         &.filled {

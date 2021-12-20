@@ -38,17 +38,7 @@
     @include content-padding(0, true);
     flex-wrap: wrap;
     .card-container {
-      @include flex-col(12);
-      padding: 1rem;
-      @media screen and (min-width: 560px) and (max-width: 920px) {
-        @include flex-col(6);
-      }
-      @media screen and (min-width: 921px) {
-        @include flex-col(4);
-      }
-      @include full-screen {
-        @include flex-col(3);
-      }
+      @include card-flex;
     }
   }
   

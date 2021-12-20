@@ -51,6 +51,7 @@ export default {
       @include flex-column-center-center;
       width: 100%;
       height: 686px;
+      margin-top: $nav-height;
       &-title {
         @include font-h1(bold);
         color: $grey-100;

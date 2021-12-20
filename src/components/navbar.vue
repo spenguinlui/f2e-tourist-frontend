@@ -82,7 +82,7 @@
 
   nav {
     @include flex-column-center-center;
-    @include content-padding(.5vh);
+    @include content-padding;
     @include posi(f);
     width: 100vw;
     min-height: $nav-height;

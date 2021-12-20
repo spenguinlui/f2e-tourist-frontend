@@ -353,6 +353,13 @@
 
 // 大容器左右留空 - 如果是 card 要扣回一些 padding
 @mixin content-padding($paddingY: 0, $card: false) {
+  padding: #{$paddingY} 3vw;
+  @include screen-up {
+    padding: #{$paddingY} 6vw;
+  }
+  @include full-screen {
+    padding: #{$paddingY} 12vw;
+  }
   @if ($card) {
     padding: #{$paddingY} calc(3vw - 1rem);
     @include screen-up {
@@ -362,11 +369,21 @@
       padding: #{$paddingY} calc(12vw - 1rem);
     }
   }
-  padding: #{$paddingY} 3vw;
-  @include screen-up {
-    padding: #{$paddingY} 6vw;
+}
+
+// 卡片大小
+@mixin card-flex {
+  padding: 15px 10px;
+  @include flex-col(11);
+  @media screen and (min-width: 560px) and (max-width: 920px) {
+    @include flex-col(6);
+  }
+  @media screen and (min-width: 921px) {
+    padding: 15px;
+    @include flex-col(4);
   }
   @include full-screen {
-    padding: #{$paddingY} 12vw;
+    padding: 15px;
+    @include flex-col(3);
   }
 }

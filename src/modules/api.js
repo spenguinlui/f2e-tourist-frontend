@@ -21,14 +21,27 @@ export const authorizationHeader = () => {
 const createNearByStr = ({ latitude, longitude }, limit = 1000) => (latitude && longitude) ? `&$spatialFilter=nearby(${latitude},${longitude}, ${limit})` : "";
 const createSelectByStr = (select) => select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `, ${cur}`), "&$select=");
 
+const determineType = (id) => {
+  const type = id.slice(0, 2);
+  switch (type) {
+    case "C1": return "Tourism/ScenicSpot";
+    case "C2": return "Tourism/Activity";
+    case "C3": return "Tourism/Restaurant";
+    case "C4": return "Tourism/Hotel";
+    default: return null;
+  }
+}
+
 // 呼叫 API 的最終 URL
-export const urlQueryStr = (dataType, query = { top: null, position: null, select: null, routeName: null }) => {
+export const urlQueryStr = (dataType, query = { id: null, top: 30, select: null, position: null, keyword: null }) => {
   let queryStr = "";
+  
+  // 指定資料過濾
+  if (query.id) queryStr += `&$filter=ID eq '${query.id}'`;
 
   // 總筆數
   if (query.top) queryStr += `&$top=${query.top}`;
-  if (!query.top) queryStr += `&$top=30`;           // 安全機制
-  
+
   // 距離過濾
   if (query.position) queryStr += createNearByStr(query.position);
 
@@ -36,13 +49,10 @@ export const urlQueryStr = (dataType, query = { top: null, position: null, selec
   if (query.select) queryStr += createSelectByStr(query.select);
 
   // 針對關鍵字過濾
-  // if (query.keyword) queryStr += `&$filter=contains(RouteName/Zh_tw, '${query.keyword}')`;
+  if (query.keyword) queryStr += `&$filter=contains(Name, '${query.keyword}') or contains(Description, '${query.keyword}')`;
   
-  // 指定路線要全部符合
-  // if (query.routeName) queryStr += `&$filter=RouteName/Zh_tw eq '${query.routeName}'`;
-
   return encodeURI(`${API_DOMAIN}${dataType}?$format=JSON${queryStr}`);
-}
+};
 
 // 景觀列表
 export const AJAX_getScenicSpot = () => {
@@ -80,6 +90,18 @@ export const AJAX_getActivity = () => {
   return axios({
     method: 'get',
     url: urlQueryStr(path),
+    headers: authorizationHeader()
+  })
+}
+
+// 指定項目細節
+export const AJAX_getDetail = ({ id }) => {
+  const path = determineType(id);
+  if (!determineType) console.log(`AJAX_getDetail 失敗, ID: ${id} 不正確`);
+  console.log(urlQueryStr(path, { id: id }))
+  return axios({
+    method: 'get',
+    url: urlQueryStr(path, { id: id }),
     headers: authorizationHeader()
   })
 }

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ClassBenner from '../components/class_benner.vue';
+import ClassBenner from '../components/class-benner.vue';
 import CardList from "./card-list.vue";
 
 export default {

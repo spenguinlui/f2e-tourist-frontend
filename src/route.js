@@ -29,4 +29,9 @@ export const routes = [
     component: () => import('./pages/hotels'),
     name: 'hotels'
   },
+  {
+    path: '/:type/:id',
+    component: () => import('./pages/detail'),
+    name: 'detail',
+  },
 ]
