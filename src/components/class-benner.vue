@@ -153,12 +153,8 @@
   .benner-container {
     @include flex-row-center-center;
     @include content-padding($section-padding-y);
+    @include darken-benner;
     height: $class-benner-m-height;
-    margin-top: $nav-height;
-    background-color: #61616166;
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: darken;
     .benner-btn-container {
       display: none;
     }
@@ -195,6 +191,9 @@
     .benner-container {
       @include flex-column-center-baseline;
       height: $class-benner-height;
+      .benner-title {
+        @include font-h4(bold);
+      }
       .benner-btn-container {
         @include flex-row-space-between-center;
         width: 100%;

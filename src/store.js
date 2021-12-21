@@ -4,23 +4,37 @@ import {
   AJAX_getHotel,
   AJAX_getActivity,
   AJAX_getDetail
-} from "./modules/api"
+} from "./modules/api";
+
+const determineType = (id) => {
+  const type = id.slice(0, 2);
+  switch (type) {
+    case "C1": return "scenicspots";
+    case "C2": return "activities";
+    case "C3": return "restaurants";
+    case "C4": return "hotels";
+    default: return null;
+  }
+}
 
 export const storeObject = {
   state: {
     dataList: [],
+    allTypeDataList: [],
     dataDetail: {},
     favorites: [],
     heartIsLoading: false, // 加入我的最愛是否程序中
   },
   getters: {
     dataList: state => state.dataList,
+    allTypeDataList: state => state.allTypeDataList,
     dataDetail: state => state.dataDetail,
     favorites: state => state.favorites,
     heartIsLoading: state => state.heartIsLoading,
   },
   mutations: {
     UPDATE_DATA_LIST: (state, dataList) => state.dataList = dataList,
+    UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
     UPDATE_DATA_DETAIL: (state, dataDetail) => {
       dataDetail.showPicture = "";
       if (dataDetail.Picture && dataDetail.Picture.PictureUrl1)
@@ -58,6 +72,28 @@ export const storeObject = {
     getSingleTypeDetail({ commit }, id) {
       AJAX_getDetail({ id }).then(res => {
         commit("UPDATE_DATA_DETAIL", res.data[0]);
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 以關鍵字搜尋所有類型資料
+    getAllTypeDataListWithKeyword({ commit }, keyword) {
+      Promise.all([
+        AJAX_getScenicSpot(keyword),
+        AJAX_getRestaurant(keyword),
+        AJAX_getHotel(keyword),
+        AJAX_getActivity(keyword)
+      ]).then(ress => {
+        const datalist = ress.reduce(
+          (collection, res) => {
+            res.data.map((data) => data.Type = determineType(data.ID));
+            return collection.concat(res.data);
+          }, []
+        )
+        console.log(datalist)
+        commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理

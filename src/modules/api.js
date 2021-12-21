@@ -34,6 +34,9 @@ const determineType = (id) => {
 
 // 呼叫 API 的最終 URL
 export const urlQueryStr = (dataType, query = { id: null, top: 30, select: null, position: null, keyword: null }) => {
+  // 只要沒給限制就是 30筆
+  query.top = query.top || 30; 
+  
   let queryStr = "";
   
   // 指定資料過濾
@@ -55,41 +58,41 @@ export const urlQueryStr = (dataType, query = { id: null, top: 30, select: null,
 };
 
 // 景觀列表
-export const AJAX_getScenicSpot = () => {
+export const AJAX_getScenicSpot = (keyword) => {
   const path = "Tourism/ScenicSpot";
   return axios({
     method: 'get',
-    url: urlQueryStr(path),
+    url: urlQueryStr(path, { keyword }),
     headers: authorizationHeader()
   })
 }
 
 // 餐廳列表
-export const AJAX_getRestaurant = () => {
+export const AJAX_getRestaurant = (keyword) => {
   const path = "Tourism/Restaurant";
   return axios({
     method: 'get',
-    url: urlQueryStr(path),
+    url: urlQueryStr(path, { keyword }),
     headers: authorizationHeader()
   })
 }
 
 // 住宿列表
-export const AJAX_getHotel = () => {
+export const AJAX_getHotel = (keyword) => {
   const path = "Tourism/Hotel";
   return axios({
     method: 'get',
-    url: urlQueryStr(path),
+    url: urlQueryStr(path, { keyword }),
     headers: authorizationHeader()
   })
 }
 
 // 活動列表
-export const AJAX_getActivity = () => {
+export const AJAX_getActivity = (keyword) => {
   const path = "Tourism/Activity";
   return axios({
     method: 'get',
-    url: urlQueryStr(path),
+    url: urlQueryStr(path, { keyword }),
     headers: authorizationHeader()
   })
 }
@@ -98,7 +101,6 @@ export const AJAX_getActivity = () => {
 export const AJAX_getDetail = ({ id }) => {
   const path = determineType(id);
   if (!determineType) console.log(`AJAX_getDetail 失敗, ID: ${id} 不正確`);
-  console.log(urlQueryStr(path, { id: id }))
   return axios({
     method: 'get',
     url: urlQueryStr(path, { id: id }),

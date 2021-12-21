@@ -2,9 +2,9 @@
   <div class="container-fluid">
     <div class="container">
       <nav class="breadcrumbs">未完成 > 麵包屑 > 未完成</nav>
-      <header class="detail-header">
+      <section class="detail-header">
         <div class="detail-header-title">
-          <div class="detail-header-title-text">{{ dataDetail.Name }}</div>
+          <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
           <div class="detail-header-comment">
             <Stars />
             <div class="detail-header-comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '100' }} 則評論</div>
@@ -15,31 +15,31 @@
         </div>
         <div class="detail-connect">
           <a class="call-btn" :href="`tel:${dataDetail.Phone}`">撥打電話<img src="../assets/images/icon/phone.svg" alt="撥打電話icon"></a>
-          <a :href="dataDetail.WebsiteUrl"><div class="web-btn"><img src="../assets/images/icon/web.svg" alt="前往網站icon"></div></a>
+          <a class="web-btn" :href="dataDetail.WebsiteUrl"><img src="../assets/images/icon/web.svg" alt="前往網站icon"></a>
           <div :class="favorites.includes(dataDetail.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(dataDetail.ID, !favorites.includes(dataDetail.ID))">
             <img v-show="favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
             <img v-show="!favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
           </div>
         </div>
-      </header>
+      </section>
       <section class="detail-section">
-        <div class="detail-left">
+        <div class="detail-section-left">
           <div class="detail-left-content">
             <div class="detail-about">
-              <div class="detail-title">關於</div>
+              <h2 class="detail-title">關於</h2>
               <div class="detail-content">{{ dataDetail.Description }}</div>
             </div>
             <div class="detail-address">
-              <div class="detail-title">地址</div>
+              <h2 class="detail-title">地址</h2>
               <div class="detail-content">{{ dataDetail.Address }}</div>
             </div>
             <div class="detail-opentime">
-              <div class="detail-title">營業時間</div>
+              <h2 class="detail-title">營業時間</h2>
               <div class="detail-content opentime">{{ dataDetail.OpenTime }}</div>
             </div>
           </div>
         </div>
-        <div class="detail-right">
+        <div class="detail-section-right">
           <div class="detail-right-content">
             <div class="show-image" :style="{ backgroundImage: `url(${dataDetail.showPicture})` }" :alt="dataDetail.showPicture ? '景點大圖' : '找不到圖片'"></div>
             <ul class="imgs-row">
@@ -60,28 +60,33 @@
           </div>
         </div>
       </section>
-      <section class="detail-feature">
-        <div class="detail-title">{{ classType_zh }}特色</div>
+
+      <section>
+        <h2 class="detail-title">{{ classType_zh }}特色</h2>
         <div v-if="!dataDetail.DescriptionDetail" class="no-content">目前資料不足！</div>
-        <div v-if="dataDetail.DescriptionDetail" class="detail-content article">{{ dataDetail.DescriptionDetail }}</div>
+        <article v-if="dataDetail.DescriptionDetail" class="detail-content">{{ dataDetail.DescriptionDetail }}</article>
       </section>
-      <section class="detail-feature">
-        <div class="detail-title">{{ dataDetail === "restaurants" ? '餐點推薦' : '服務設施' }}</div>
+
+      <section>
+        <h2 class="detail-title">{{ dataDetail === "restaurants" ? '餐點推薦' : '服務設施' }}</h2>
         <div v-if="!dataDetail.Features2" class="no-content">目前資料不足！</div>
         <div v-if="dataDetail.Features2" class="detail-content">{{ dataDetail.Features2 }}</div>
       </section>
-      <section v-if="dataDetail.ServiceInfo" class="detail-feature">
-        <div class="detail-title">服務設施</div>
+
+      <section v-if="dataDetail.ServiceInfo">
+        <h2 class="detail-title">服務設施</h2>
         <div v-if="dataDetail.ServiceInfo" class="detail-content">{{ dataDetail.ServiceInfo }}</div>
       </section>
-      <section class="detail-traffic">
-        <div class="detail-title">交通方式</div>
+
+      <section>
+        <h2 class="detail-title">交通方式</h2>
         <div v-if="!dataDetail.TravelInfo" class="no-content">製作中！</div>
-        <div v-if="dataDetail.TravelInfo" class="detail-content">{{ dataDetail.TravelInfo }}</div>
+        <article v-if="dataDetail.TravelInfo" class="detail-content">{{ dataDetail.TravelInfo }}</article>
       </section>
-      <section class="detail-nearby">
-        <div class="detail-title">鄰近景點</div>
-        <div class="detail-nearby-block">
+
+      <section>
+        <h2 class="detail-title">鄰近景點</h2>
+        <div class="detail-nearby">
           <div class="detail-left">製作中</div>
           <div class="detail-right">
             <div class="map">
@@ -90,15 +95,17 @@
           </div>
         </div>
       </section>
-      <section class="detail-comment">
-        <div class="detail-title">旅客評價</div>
+
+      <section>
+        <h2 class="detail-title">旅客評價</h2>
         <div v-if="!dataDetail.Comments" class="no-content">此{{ classType_zh }}尚無評論！</div>
         <div v-if="dataDetail.Comments">
           <!-- ... -->
         </div>
       </section>
-      <section class="detail-recommend">
-        <div class="detail-title">這些景點大家也推</div>
+
+      <section>
+        <h2 class="detail-title">這些景點大家也推</h2>
         <div class="recommend-container">
           <div v-for="item in recommendList" :key="item.ID" class="card-container">
             <Card :key="item.ID" :item="item" :type="dataType" :classType="'commonCard'"/>
@@ -149,9 +156,6 @@ export default {
   },
   created() {
     this.getDetail();
-    console.log('我的最愛', this.favorites);
-    console.log('現在的 ID', this.dataDetail);
-    console.log('比較', this.favorites.includes(this.dataDetail.ID));
   },
   components: {
     Stars
@@ -173,7 +177,10 @@ export default {
   }
 
   section {
-    padding: 1.5rem 0;
+    padding: 0.75rem 0;
+    article {
+      text-indent: 2em;
+    }
   }
 
   .detail-title {
@@ -185,14 +192,11 @@ export default {
   .detail-content {
     @include font-content(500);
     color: $grey-600;
-    &.article {
-      text-indent: 2em;
-    }
   }
 
   .no-content {
     @include flex-row-center-center;
-    @include font-h2(bold);
+    @include font-h3(bold);
     color: $grey-300;
     padding: 30px;
   }
@@ -229,6 +233,10 @@ export default {
       @include flex-col(4);
       @include tags-row;
       justify-content: flex-end;
+      > * {
+        width: 1.75rem;
+        height: 1.75rem;
+      }
       .call-btn, .web-btn, .favorite-btn {
         @include btn-icon;
       }
@@ -260,13 +268,13 @@ export default {
   .detail-section {
     @include flex-column-center-baseline;
     flex-direction: column-reverse;
-    .detail-left {
+    &-left {
       @include flex-col(12);
       height: calc(60vh + 1rem);
       .detail-left-content {
         @include flex-column-flex-start-space-between;
         height: 100%;
-        border: none;
+        overflow: hidden;
         padding: 0;
         gap: 1.25rem;
         .detail-content {
@@ -277,9 +285,10 @@ export default {
         }
       }
     }
-    .detail-right {
+    &-right {
       @include flex-col(12);
       padding-left: 0;
+      padding-bottom: 1.5rem;
       margin: 0;
       width: 100%;
       .detail-right-content {
@@ -320,7 +329,7 @@ export default {
   }
 
   .detail-nearby {
-    .detail-nearby-block {
+    .detail-nearby {
       @include flex-row-center-center;
       .detail-left {
         @include flex-col(5);
@@ -365,6 +374,10 @@ export default {
       }
       .detail-connect {
         @include flex-col(5);
+        > * {
+          width: auto;
+          height: auto;
+        }
         .call-btn {
           @include font-button(700);
           @include btn-icon-text;
@@ -372,8 +385,8 @@ export default {
       }
     }
     .detail-section {
-      @include flex-row-center-center;
-      .detail-left  {
+      @include flex-row-center-flex-start;
+      &-left  {
         @include flex-col(5);
         padding: 0;
         .detail-left-content {
@@ -381,14 +394,9 @@ export default {
           padding: 1.5rem;
         }
       }
-      .detail-right {
+      &-right {
         @include flex-col(7);
         padding-left: 1.5rem;
-        .detail-right-content {
-          .imgs-row {
-
-          }
-        }
       }
     }
   }
