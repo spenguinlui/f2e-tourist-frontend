@@ -24,6 +24,8 @@ export const storeObject = {
     dataDetail: {},
     favorites: [],
     keyword: "",
+    currentCity: "臺北市",
+    currentTown: "中山區",
     heartIsLoading: false, // 加入我的最愛是否程序中
   },
   getters: {
@@ -32,6 +34,8 @@ export const storeObject = {
     dataDetail: state => state.dataDetail,
     favorites: state => state.favorites,
     keyword: state => state.keyword,
+    currentCity: state => state.currentCity,
+    currentTown: state => state.currentTown,
     heartIsLoading: state => state.heartIsLoading,
   },
   mutations: {
@@ -45,6 +49,8 @@ export const storeObject = {
     },
     UPDATE_DATA_DETAIL_SHOW_PICTURE: (state, PictureUrl) => state.dataDetail.showPicture = PictureUrl,
     UPDATE_KEYWORD: (state, keyword) => state.keyword = keyword,
+    TOGGLE_CITY: (state, cityName) => state.currentCity = cityName,
+    TOGGLE_TOWN: (state, townName) => state.currentTown = townName,
 
     UPDATE_HEART_LOADING: (state, isProgress) => state.heartIsLoading = isProgress,
     SET_FAVORITES: (state, favorites) => state.favorites = favorites,
@@ -53,17 +59,17 @@ export const storeObject = {
   },
   actions: {
     // 取得單一類型資料集合
-    getSingleTypeDataList({ commit }, type) {
+    getSingleTypeDataList({ commit }, dataType) {
       const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
       let targetAjax;
-      switch (type) {
+      switch (dataType) {
         case "scenicspots": targetAjax = ajaxList[0]; break;
         case "restaurants": targetAjax = ajaxList[1]; break;
         case "hotels": targetAjax = ajaxList[2];      break;
         case "activities": targetAjax = ajaxList[3];  break;
         default: targetAjax = ajaxList[0];            break;
       }
-      targetAjax().then(res => {
+      targetAjax({}).then(res => {
         commit("UPDATE_DATA_LIST", res.data);
       }).catch((error) => {
         console.log(error);
@@ -84,10 +90,10 @@ export const storeObject = {
     // 以關鍵字搜尋所有類型資料
     getAllTypeDataListWithKeyword({ commit }, keyword) {
       Promise.all([
-        AJAX_getScenicSpot(keyword),
-        AJAX_getRestaurant(keyword),
-        AJAX_getHotel(keyword),
-        AJAX_getActivity(keyword)
+        AJAX_getScenicSpot({ keyword }),
+        AJAX_getRestaurant({ keyword }),
+        AJAX_getHotel({ keyword }),
+        AJAX_getActivity({ keyword })
       ]).then(ress => {
         const datalist = ress.reduce(
           (collection, res) => {
@@ -97,6 +103,26 @@ export const storeObject = {
         )
         commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
         commit("UPDATE_KEYWORD", "");
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 以鄉鎮市區過濾資料集合
+    filterDataListWithTown({ commit }, { dataType, townName }) {
+      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
+      let targetAjax;
+      switch (dataType) {
+        case "scenicspots": targetAjax = ajaxList[0]; break;
+        case "restaurants": targetAjax = ajaxList[1]; break;
+        case "hotels": targetAjax = ajaxList[2];      break;
+        case "activities": targetAjax = ajaxList[3];  break;
+        default: targetAjax = ajaxList[0];            break;
+      }
+      targetAjax({ townName }).then(res => {
+        commit("TOGGLE_TOWN", townName);
+        commit("UPDATE_DATA_LIST", res.data);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理

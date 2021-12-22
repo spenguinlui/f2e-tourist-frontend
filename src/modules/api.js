@@ -33,7 +33,10 @@ const determineType = (id) => {
 }
 
 // 呼叫 API 的最終 URL
-export const urlQueryStr = (dataType, query = { id: null, top: 30, select: null, position: null, keyword: null }) => {
+export const urlQueryStr = (
+    dataType,
+    query = { id: null, top: 30, select: null, position: null, keyword: null, town: null }
+  ) => {
   // 只要沒給限制就是 30筆
   query.top = query.top || 30; 
   
@@ -53,46 +56,49 @@ export const urlQueryStr = (dataType, query = { id: null, top: 30, select: null,
 
   // 針對關鍵字過濾
   if (query.keyword) queryStr += `&$filter=contains(Name, '${query.keyword}') or contains(Description, '${query.keyword}')`;
-  
+
+  // 地區過濾
+  if (query.town) queryStr += `&$filter=contains(Address, '${query.town}')`;
+
   return encodeURI(`${API_DOMAIN}${dataType}?$format=JSON${queryStr}`);
 };
 
 // 景觀列表
-export const AJAX_getScenicSpot = (keyword) => {
+export const AJAX_getScenicSpot = ({ keyword, townName }) => {
   const path = "Tourism/ScenicSpot";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword }),
+    url: urlQueryStr(path, { keyword, town: townName }),
     headers: authorizationHeader()
   })
 }
 
 // 餐廳列表
-export const AJAX_getRestaurant = (keyword) => {
+export const AJAX_getRestaurant = ({ keyword, townName }) => {
   const path = "Tourism/Restaurant";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword }),
+    url: urlQueryStr(path, { keyword, town: townName }),
     headers: authorizationHeader()
   })
 }
 
 // 住宿列表
-export const AJAX_getHotel = (keyword) => {
+export const AJAX_getHotel = ({ keyword, townName }) => {
   const path = "Tourism/Hotel";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword }),
+    url: urlQueryStr(path, { keyword, town: townName }),
     headers: authorizationHeader()
   })
 }
 
 // 活動列表
-export const AJAX_getActivity = (keyword) => {
+export const AJAX_getActivity = ({ keyword, townName }) => {
   const path = "Tourism/Activity";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword }),
+    url: urlQueryStr(path, { keyword, town: townName }),
     headers: authorizationHeader()
   })
 }
