@@ -247,6 +247,13 @@
   font-weight: $b;
 }
 
+@mixin font-inherit() {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  font-weight: inherit;
+}
+
 // 按鈕
 @mixin btn($radius: $normal-bora) {
   @include flex-row-center-center;

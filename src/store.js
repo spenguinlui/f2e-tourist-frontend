@@ -23,6 +23,7 @@ export const storeObject = {
     allTypeDataList: [],
     dataDetail: {},
     favorites: [],
+    keyword: "",
     heartIsLoading: false, // 加入我的最愛是否程序中
   },
   getters: {
@@ -30,6 +31,7 @@ export const storeObject = {
     allTypeDataList: state => state.allTypeDataList,
     dataDetail: state => state.dataDetail,
     favorites: state => state.favorites,
+    keyword: state => state.keyword,
     heartIsLoading: state => state.heartIsLoading,
   },
   mutations: {
@@ -42,6 +44,7 @@ export const storeObject = {
       state.dataDetail = dataDetail;
     },
     UPDATE_DATA_DETAIL_SHOW_PICTURE: (state, PictureUrl) => state.dataDetail.showPicture = PictureUrl,
+    UPDATE_KEYWORD: (state, keyword) => state.keyword = keyword,
 
     UPDATE_HEART_LOADING: (state, isProgress) => state.heartIsLoading = isProgress,
     SET_FAVORITES: (state, favorites) => state.favorites = favorites,
@@ -92,8 +95,8 @@ export const storeObject = {
             return collection.concat(res.data);
           }, []
         )
-        console.log(datalist)
         commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
+        commit("UPDATE_KEYWORD", "");
       }).catch((error) => {
         console.log(error);
         // 錯誤處理

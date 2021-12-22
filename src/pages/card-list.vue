@@ -34,7 +34,7 @@
   @import "@/assets/scss/main.scss";
 
   .content {
-    @include flex-row-center-center;
+    @include flex-row-flex-start-center;
     @include content-padding(0, true);
     flex-wrap: wrap;
     .card-container {

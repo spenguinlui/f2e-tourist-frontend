@@ -1,13 +1,12 @@
 <template>
   <div class="home">
-    <div class="home-benner">
-      <div class="home-benner-title">
-        開始實現你的夢想旅程
-      </div>
-    </div>
-    <div class="home-section">
+    <header class="home-benner">
+      <h1 class="home-benner-title">開始實現你的夢想旅程</h1>
+      <SearchBar :className="'home-search-bar'" />
+    </header>
+    <section class="home-section">
       <div class="home-section-title">
-        <div class="home-section-title-left">熱門景點</div>
+        <h2 class="home-section-title-left">熱門景點</h2>
         <div class="home-section-title-right">
           <div class="section-btn">查看更多</div>
         </div>
@@ -15,16 +14,16 @@
       <div class="home-cards-slider">
         
       </div>
-    </div>
-    <div class="home-theme">
+    </section>
+    <section class="home-theme">
       <div>
-        <div class="home-theme-tittle">你不能錯過的注目景點！</div>
+        <h2 class="home-theme-tittle">你不能錯過的注目景點 !</h2>
         <router-link :to="{ name: 'theme' }" class="home-theme-btn">賞楓秘境看這裡</router-link>
       </div>
-    </div>
-    <div class="home-section">
+    </section>
+    <section class="home-section">
       <div class="home-section-title">
-        <div class="home-section-title-left">主題</div>
+        <h2 class="home-section-title-left">主題</h2>
         <div class="home-section-title-right">
           <div class="section-btn">查看更多</div>
         </div>
@@ -32,13 +31,16 @@
       <div class="home-cards-slider">
         
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
 <script>
+import SearchBar from "../components/search-bar.vue";
 export default {
-  
+  components: {
+    SearchBar
+  }
 }
 </script>
 

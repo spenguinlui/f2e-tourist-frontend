@@ -1,14 +1,16 @@
 <template>
   <div class="container-fluid">
     <header class="benner-container">
-      <h1 class="benner-title">搜尋 - {{ keyword }}</h1>
+      <h1 class="benner-title">搜尋結果</h1>
     </header>
     <section class="content">
+      <!-- 查詢有資料 -->
       <template v-if="allTypeDataList.length > 0">
         <div v-for="item in allTypeDataList" :key="item.ID" class="card-container">
           <Card :item="item" :type="item.Type"/>
         </div>
       </template>
+      <!-- 查詢無資料 -->
       <template v-else>
         <h2>無符合資料 !</h2>
       </template>
@@ -22,19 +24,16 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'search',
-  data() {
-    return {
-      keyword: ""
-    }
-  },
   computed: {
-    ...mapGetters(['allTypeDataList']),
+    ...mapGetters(['allTypeDataList', 'keyword']),
   },
   components: {
     Card
   },
   created() {
-    const keyword = this.keyword = this.$route.query.keyword;
+    // 用網址進入的也要一次資料
+    const keyword = this.localKeyword = this.$route.query.keyword;
+    this.$store.commit("UPDATE_KEYWORD", keyword);
     this.$store.dispatch("getAllTypeDataListWithKeyword", keyword);
   }
 }
@@ -56,7 +55,7 @@ export default {
   }
 
   .content {
-    @include flex-row-center-center;
+    @include flex-row-flex-start-center;
     @include content-padding(0, true);
     flex-wrap: wrap;
     .card-container {
