@@ -23,8 +23,15 @@ const store = new Vuex.Store(storeObject);
 
 Vue.config.productionTip = false
 
-new Vue({
+const vm = new Vue({
   router,
   store,
   render: h => h(App),
 }).$mount('#app')
+
+router.beforeEach((to, _, next) => {
+  if (to.name === "scenicspots" || to.name === "restaurants" || to.name === "hotels") {
+    vm.$store.commit("TOGGLE_MAP_MODE", false);
+  }
+  next();
+})

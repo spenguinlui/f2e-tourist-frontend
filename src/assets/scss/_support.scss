@@ -261,48 +261,6 @@
   cursor: pointer;
 }
 
-@mixin btn-filled($color) {
-  color: $grey-100;
-  background-color: $color;
-}
-
-// 客製按鈕
-@mixin btn-outline-color($color, $bg, $bo) {
-  color: $color;
-  background-color: $bg;
-  border: 1px solid $bo;
-  &:hover, &.hover {
-    background-color: $color;
-    color:$bg;
-  }
-  &:focus, &.focus, &.active {
-    border-inline: 3px solid $bo;
-  }
-
-  &:disabled, &.disabled {
-    background-color: $grey-100;
-    color: $grey-300;
-    border: 1px solid $grey-300;
-    cursor: default;
-  }
-}
-
-// 一般按鈕
-@mixin btn-outline($color: primary) {
-  @if $color == primary {
-    @include btn-outline-color($primary-400, $grey-100, $primary-300);
-  }
-  @if $color == accent {
-    @include btn-outline-color($accent-400, $grey-100, $accent-300);
-  }
-  @if $color == alert {
-    @include btn-outline-color($alert-400, $grey-100, $alert-300);
-  }
-  @if $color == disabled {
-    @include btn-outline-color($grey-400, $grey-100, $grey-300);
-  }
-}
-
 // icon
 @mixin icon-m($ma, $d: r) {
   @if $d == r {

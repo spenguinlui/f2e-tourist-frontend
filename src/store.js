@@ -43,7 +43,7 @@ const determineIcon = (id) => {
 
 const createMarkerPopupObj = (data) => {
   return `
-  <div class="card-img" style="padding-top: .5rem;">
+  <div class="card-img">
     <img
       style="width: 100%;"
       src="${(data.Picture && data.Picture.PictureUrl1) ? data.Picture.PictureUrl1 : noImage}"
@@ -201,9 +201,9 @@ export const storeObject = {
           .bindPopup(
             createMarkerPopupObj(data),
             {
-              minWidth: 100,
+              minWidth: 300,
               offset: [0, -30],
-              className: `card ${determineType(data.ID)}`
+              className: `map-card ${determineType(data.ID)}`
             }
           )
           .addTo(markerLayer);

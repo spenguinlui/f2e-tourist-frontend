@@ -128,10 +128,10 @@
   svg {
     fill: $primary-700;
   }
-  &:hover {
+  &:hover{
     background-color: $primary-100;
   }
-  &:focus {
+  &:focus, &.active {
     background-color: $primary-100;
     box-shadow: inset 0px 0px 5px $primary-500;
   }

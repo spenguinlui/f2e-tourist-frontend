@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="map-content">
     <aside class="card-aside">
       <div v-for="item in dataList" :key="item.ID" class="card-container">
         <Card
@@ -52,10 +52,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import "@/assets/scss/main.scss";
 
-  .content {
+  .map-content {
     @include flex-row-flex-start-center;
     @include content-padding(1.5rem, true);
     height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-m-height});
@@ -76,46 +76,11 @@ export default {
     .map-mode {
       @include flex-col(12);
       height: 100%;
-
-      // leaflet 不吃 css todo
-      .leaflet-popup-content-wrapper {
-        box-shadow: none;
-      }
-      .leaflet-popup-tip-container {
-        display: none;
-      }
-      .leaflet-popup-content {
-        margin: 0;
-      }
-      .leaflet-popup {
-        .leaflet-popup-content-wrapper {
-          border-radius: .5rem;
-          border: 1px solid $primary-800;
-          .card {
-            margin-top: .5rem;
-            .card-content-title {
-              color: $grey-700;
-            }
-          }
-        }
-      }
-      &.scenicspots .leaflet-popup-content-wrapper {
-        border: 1px solid $primary-800;
-      }
-      &.activities .leaflet-popup-content-wrapper {
-        border: 1px solid #09097c;
-      }
-      &.restaurants .leaflet-popup-content-wrapper {
-        border: 1px solid $accent-800;
-      }
-      &.hotels .leaflet-popup-content-wrapper {
-        border: 1px solid $alert-600;
-      }
     }
   }
 
   @include screen-up {
-    .content {
+    .map-content {
       height: calc(100vh - #{$nav-height} - #{$class-benner-height} - #{$footer-height});
       .card-aside {
         @include flex-col(5);
@@ -128,6 +93,43 @@ export default {
       .map-mode {
         @include flex-col(7);
       }
+    }
+  }
+
+  // leaflet
+  .leaflet-popup-content-wrapper {
+    box-shadow: none;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+  .leaflet-popup-content {
+    margin: 0;
+  }
+  .leaflet-popup {
+    .leaflet-popup-content-wrapper {
+      border-radius: .5rem;
+      .leaflet-popup-content {
+        .card-img {
+          padding: 1rem;
+        }
+        .card-content-title {
+          @include font-button(bold);
+          color: $grey-700;
+        }
+      }
+    }
+    &.scenicspots .leaflet-popup-content-wrapper {
+      border: 1px solid $primary-800;
+    }
+    &.activities .leaflet-popup-content-wrapper {
+      border: 1px solid #09097c;
+    }
+    &.restaurants .leaflet-popup-content-wrapper {
+      border: 1px solid $accent-800;
+    }
+    &.hotels .leaflet-popup-content-wrapper {
+      border: 1px solid $alert-600;
     }
   }
 
