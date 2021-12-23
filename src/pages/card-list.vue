@@ -36,6 +36,9 @@
   .content {
     @include flex-row-flex-start-center;
     @include content-padding(0, true);
+    @include mobile {
+      @include flex-row-center-center;
+    }
     flex-wrap: wrap;
     .card-container {
       @include card-flex;

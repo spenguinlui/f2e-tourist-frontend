@@ -48,16 +48,29 @@ export default {
   @import "@/assets/scss/main.scss";
 
   .home {
+    margin-bottom: $footer-m-height;
     &-benner {
       @include benner-background('../assets/images/home-benner.png');
       @include flex-column-center-center;
       width: 100%;
-      height: 686px;
+      height: calc(100vh - #{$nav-height} - #{$footer-m-height});
       margin-top: $nav-height;
       &-title {
         @include font-h1(bold);
         color: $grey-100;
         text-shadow: $tilte-shadow;
+        width: 70%;
+        text-align: center;
+      }
+    }
+  }
+  @include screen-up {
+    .home {
+      &-benner {
+        height: calc(100vh - #{$nav-height} - #{$footer-height});
+        &-title {
+          width: 100%;
+        }
       }
     }
   }

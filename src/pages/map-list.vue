@@ -1,0 +1,134 @@
+<template>
+  <div class="content">
+    <aside class="card-aside">
+      <div v-for="item in dataList" :key="item.ID" class="card-container">
+        <Card
+          :item="item" :type="dataType"
+          :classType="'full-card'"
+          />
+      </div>
+    </aside>
+    <section class="map-mode" id="map"></section>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex';
+import L from 'leaflet';
+
+import Card from "../components/card.vue";
+
+export default {
+  computed: {
+    dataType() {
+      return this.$route.name
+    },
+    ...mapGetters(['dataList', 'favorites']),
+  },
+  methods: {
+    initMap() {
+      // 預設第一個景點位置
+      const currentPosition = {
+        latitude: "25.046951",
+        longitude: "121.516887",  // 預設台北火車站
+      }
+      const map = L.map('map', { zoomControl: false })
+        .setView([currentPosition.latitude, currentPosition.longitude], 16);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        opacity: 0.5
+      }).addTo(map);
+
+      this.$store.commit("SET_MAP_MODE_OBJECT", map);
+    }
+  },
+  mounted() {
+    this.initMap();
+  },
+  components: {
+    Card
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "@/assets/scss/main.scss";
+
+  .content {
+    @include flex-row-flex-start-center;
+    @include content-padding(1.5rem, true);
+    height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-m-height});
+    @include mobile {
+      @include flex-row-center-center;
+    }
+    .card-aside {
+      @include flex-column-flex-start-center;
+      @include flex-col(12);
+      height: 100%;
+      overflow: auto;
+      .card-container {
+        width: 100%;
+        padding: 1rem 1rem;
+      }
+    }
+  
+    .map-mode {
+      @include flex-col(12);
+      height: 100%;
+
+      // leaflet 不吃 css todo
+      .leaflet-popup-content-wrapper {
+        box-shadow: none;
+      }
+      .leaflet-popup-tip-container {
+        display: none;
+      }
+      .leaflet-popup-content {
+        margin: 0;
+      }
+      .leaflet-popup {
+        .leaflet-popup-content-wrapper {
+          border-radius: .5rem;
+          border: 1px solid $primary-800;
+          .card {
+            margin-top: .5rem;
+            .card-content-title {
+              color: $grey-700;
+            }
+          }
+        }
+      }
+      &.scenicspots .leaflet-popup-content-wrapper {
+        border: 1px solid $primary-800;
+      }
+      &.activities .leaflet-popup-content-wrapper {
+        border: 1px solid #09097c;
+      }
+      &.restaurants .leaflet-popup-content-wrapper {
+        border: 1px solid $accent-800;
+      }
+      &.hotels .leaflet-popup-content-wrapper {
+        border: 1px solid $alert-600;
+      }
+    }
+  }
+
+  @include screen-up {
+    .content {
+      height: calc(100vh - #{$nav-height} - #{$class-benner-height} - #{$footer-height});
+      .card-aside {
+        @include flex-col(5);
+        .card-container {
+          &:nth-child(1) {
+            padding-top: 0;
+          }
+        }
+      }
+      .map-mode {
+        @include flex-col(7);
+      }
+    }
+  }
+
+</style>

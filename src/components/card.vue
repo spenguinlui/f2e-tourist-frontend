@@ -1,7 +1,7 @@
 <template>
   <div :class="`card ${classType || ''} ${type}`" @click="toDetail(item.ID)">
     <div class="card-img">
-      <img v-if="!item.Picture || !item.Picture.PictureUrl1" src="../assets/images/empty-img.png" alt="no-imag'">
+      <img v-if="!item.Picture || !item.Picture.PictureUrl1" src="../assets/images/empty-img.png" alt="no-image'">
       <img v-if="item.Picture && item.Picture.PictureUrl1" :src="item.Picture.PictureUrl1" :alt="item.Picture.PictureDescription1">
       <div :class="favorites.includes(item.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(item.ID, !favorites.includes(item.ID))">
         <img v-show="favorites.includes(item.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
@@ -104,28 +104,29 @@
     }
     .card-content {
       padding: 5px;
-      > div {
-        margin: .25rem 0;
-      }
       &-title {
         @include font-h4(bold);
         @include ellipsis-text(1);
-      }
-      &-stars {
-        // padding-bottom: 5px;
+        color: $grey-700;
+        margin: .5rem 0;
       }
       &-tags {
         @include tags-row;
         flex-wrap: wrap;
+        margin: .25rem 0;
         .card-tag {
           @include btn-tag-filled;
           margin-bottom: .5rem;
         }
       }
+      &-stars {
+        margin: .25rem 0;
+      }
       &-text {
         @include ellipsis-text(3);
         @include font-content;
         color: $grey-600;
+        margin: .25rem 0;
       }
     }
   }
