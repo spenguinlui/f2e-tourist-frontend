@@ -98,7 +98,47 @@ export const storeObject = {
     // 取得單一類型資料細節
     getSingleTypeDetail({ commit }, id) {
       AJAX_getDetail({ id }).then(res => {
-        commit("UPDATE_DATA_DETAIL", res.data[0]);
+        return res.data[0];
+      }).then(data => {
+        const position = {
+          latitude: data.Position.PositionLat,
+          longitude: data.Position.PositionLon
+        }
+        Promise.all([
+          AJAX_getScenicSpot({ position }),
+          AJAX_getRestaurant({ position }),
+          AJAX_getHotel({ position }),
+          AJAX_getActivity({ position })
+        ]).then(ress => {
+          const nearbyDataList = concatAndAddType(ress);
+          data.NearbyDataList = nearbyDataList;
+          commit("UPDATE_DATA_DETAIL", data);
+        }).catch((error) => {
+          console.log(error);
+          // 錯誤處理
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 搜尋附近地點所有類型資料
+    getAllTypeDataListWithPosition({ commit }, Position) {
+      const position = {
+        latitude: Position.PositionLon,
+        longitude: Position.PositionLat
+      }
+
+      Promise.all([
+        AJAX_getScenicSpot({ position }),
+        AJAX_getRestaurant({ position }),
+        AJAX_getHotel({ position }),
+        AJAX_getActivity({ position })
+      ]).then(ress => {
+        const datalist = concatAndAddType(ress);
+        commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理
@@ -159,13 +199,14 @@ export const storeObject = {
       
       add ? commit("ADD_FAVORITES", dataId) : commit("REMOVE_FAVORITES", dataId);
       localStorage.setItem("touristHeart", JSON.stringify(this.state.favorites));
-      
+
       commit("UPDATE_HEART_LOADING", false);
     },
 
     // 在地圖上打入景點 marker
     setMarkerOnMap() {
-      const markerLayer = new L.LayerGroup().addTo(this.state.mapClass);
+      const mapClass = this.state.mapClass;
+      const markerLayer = new L.LayerGroup().addTo(mapClass);
 
       this.state.dataList.forEach((data) => {
         const { PositionLat, PositionLon } = data.Position;
@@ -180,9 +221,10 @@ export const storeObject = {
           )
           .addTo(markerLayer);
       })
+      if (mapClass.tap) mapClass.tap.disable();
       const firstPositionLat = this.state.dataList[0].Position.PositionLat;
       const firstPositionLon = this.state.dataList[0].Position.PositionLon;
-      this.state.mapClass.flyTo([firstPositionLat, firstPositionLon]);
+      mapClass.flyTo([firstPositionLat, firstPositionLon]);
     },
 
     // 取得熱門景點資料集合

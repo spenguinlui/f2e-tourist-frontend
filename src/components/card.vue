@@ -12,10 +12,14 @@
       <div class="card-content-title">{{ item.Name }}</div>
       <Stars />
       <div class="card-content-tags">
-        <template v-for="(tag, index) in item.Tag">
+        <!-- <template v-for="(tag, index) in item.Tag">
           <div class="card-tag" :key="index">{{ tag }}</div>
         </template>
-        <div v-if="!item.Tag" class="card-tag">尚未建立</div>
+        <div v-if="!item.Tag" class="card-tag">尚未建立</div> -->
+        <div class="card-tag" v-if="!item.Class1">無標記</div>
+        <div class="card-tag" v-if="item.Class1">{{ item.Class1 }}</div>
+        <div class="card-tag" v-if="item.Class2">{{ item.Class2 }}</div>
+        <div class="card-tag" v-if="item.Class3">{{ item.Class3 }}</div>
       </div>
       <div v-if="classType === 'full-card'" class="card-content-text">
         {{ item.Description }}

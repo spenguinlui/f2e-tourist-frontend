@@ -76,6 +76,7 @@ export default {
     .map-mode {
       @include flex-col(12);
       height: 100%;
+      border-radius: .5rem;
     }
   }
 
@@ -105,6 +106,9 @@ export default {
   }
   .leaflet-popup-content {
     margin: 0;
+  }
+  .leaflet-popup-close-button {
+    display: none;
   }
   .leaflet-popup {
     .leaflet-popup-content-wrapper {

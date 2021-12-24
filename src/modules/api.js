@@ -89,41 +89,41 @@ export const urlQueryStr = (
 };
 
 // 景觀列表
-export const AJAX_getScenicSpot = ({ keyword, townName, ids, tags }) => {
+export const AJAX_getScenicSpot = ({ keyword, townName, ids, tags, position }) => {
   const path = "Tourism/ScenicSpot";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName, ids, tags }),
+    url: urlQueryStr(path, { keyword, town: townName, ids, tags, position }),
     headers: authorizationHeader()
   })
 }
 
 // 餐廳列表
-export const AJAX_getRestaurant = ({ keyword, townName, ids, tags }) => {
+export const AJAX_getRestaurant = ({ keyword, townName, ids, tags, position }) => {
   const path = "Tourism/Restaurant";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName, ids, tags }),
+    url: urlQueryStr(path, { keyword, town: townName, ids, tags, position }),
     headers: authorizationHeader()
   })
 }
 
 // 住宿列表
-export const AJAX_getHotel = ({ keyword, townName, ids, tags }) => {
+export const AJAX_getHotel = ({ keyword, townName, ids, tags, position }) => {
   const path = "Tourism/Hotel";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName, ids, tags }),
+    url: urlQueryStr(path, { keyword, town: townName, ids, tags, position }),
     headers: authorizationHeader()
   })
 }
 
 // 活動列表
-export const AJAX_getActivity = ({ keyword, townName, ids, tags }) => {
+export const AJAX_getActivity = ({ keyword, townName, ids, tags, position }) => {
   const path = "Tourism/Activity";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName , ids, tags }),
+    url: urlQueryStr(path, { keyword, town: townName , ids, tags, position }),
     headers: authorizationHeader()
   })
 }
