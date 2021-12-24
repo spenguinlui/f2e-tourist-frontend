@@ -1,8 +1,5 @@
 import L from 'leaflet';
-import scenicspotIcon from "./assets/images/icon/spot-marker.svg";
-import foodIcon from "./assets/images/icon/food-marker.svg";
-import hotelIcon from "./assets/images/icon/hotel-marker.svg";
-import noImage from "./assets/images/empty-img.png"
+
 import {
   AJAX_getScenicSpot,
   AJAX_getRestaurant,
@@ -11,66 +8,43 @@ import {
   AJAX_getDetail
 } from "./modules/api";
 
-
-const determineType = (id) => {
-  const type = id.slice(0, 2);
-  switch (type) {
-    case "C1": return "scenicspots";
-    case "C2": return "activities";
-    case "C3": return "restaurants";
-    case "C4": return "hotels";
-    default: return null;
-  }
-}
-
-const determineIcon = (id) => {
-  const type = determineType(id);
-  const icon = (type) => {
-    switch (type) {
-      case "scenicspots": return scenicspotIcon;
-      case "activities": return scenicspotIcon;
-      case "restaurants": return foodIcon;
-      case "hotels": return hotelIcon;
-      default: return null;
-    }
-  }
-  return L.icon({
-    iconUrl: icon(type),
-    iconSize: [32, 40],
-    iconAnchor: [16, 40],
-  });
-}
-
-const createMarkerPopupObj = (data) => {
-  return `
-  <div class="card-img">
-    <img
-      style="width: 100%;"
-      src="${(data.Picture && data.Picture.PictureUrl1) ? data.Picture.PictureUrl1 : noImage}"
-      alt="${(data.Picture && data.Picture.PictureDescription1) ? data.Picture.PictureDescription1 : 'no-image'}">
-    <h5 class="card-content-title">${data.Name}</h5>
-  </div>
-  `
-};
+import { determineIcon, createMarkerPopupObj } from "./modules/map-support";
+import { determineType, concatAndAddType } from "./modules/data-support";
 
 export const storeObject = {
   state: {
-    dataList: [],
-    allTypeDataList: [],
-    dataDetail: {},
-    favorites: [],
-    keyword: "",
-    currentCity: "臺北市",
-    currentTown: "中山區",
-    mapMode: false,
+    dataList: [],          // 單一類型資料集合
+    allTypeDataList: [],   // 所有類型資料集合
+    dataDetail: {},        // 指定資料詳細內容
+    
+    keyword: "",           // 搜尋關鍵字
+    currentCity: "臺北市",  // 地區過濾第一層 - 城市
+    currentTown: "中山區",  // 地區過濾第二層 - 鄉鎮
+    
+    mapMode: false,        // 是否切換地圖瀏覽模式
     heartIsLoading: false, // 加入我的最愛是否程序中
-    mapClass: {},
+    mapClass: {},          // 全域地圖物件
+
+    // -- DB 交流
+    favorites: [],         // 我的最愛 ID 集合
+    hots: [],              // 熱門資料 ID 集合
+    hotDataList: [],       // 熱門資料集合
+    themes: [              // 主題物件集合(包含集合)，init [] << DB
+      {                    // 主題物件 - 主題名稱、Tag 陣列
+        themeName: "Rainbow Life!",
+        themeTags: ["彩虹", "七彩"]
+      }
+    ],
+    themeDataList: []
   },
   getters: {
     dataList: state => state.dataList,
     allTypeDataList: state => state.allTypeDataList,
     dataDetail: state => state.dataDetail,
+    hotDataList: state => state.hotDataList,
+    themeDataList: state => state.themeDataList,
     favorites: state => state.favorites,
+    themes: state => state.themes,
     keyword: state => state.keyword,
     currentCity: state => state.currentCity,
     currentTown: state => state.currentTown,
@@ -80,6 +54,8 @@ export const storeObject = {
   mutations: {
     UPDATE_DATA_LIST: (state, dataList) => state.dataList = dataList,
     UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
+    UPDATE_HOT_DATA_LIST: (state, dataList) => state.hotDataList = dataList,
+    UPDATE_THEME_DATA_LIST: (state, dataList) => state.themeDataList = dataList,
     UPDATE_DATA_DETAIL: (state, dataDetail) => {
       dataDetail.showPicture = "";
       if (dataDetail.Picture && dataDetail.Picture.PictureUrl1)
@@ -137,12 +113,7 @@ export const storeObject = {
         AJAX_getHotel({ keyword }),
         AJAX_getActivity({ keyword })
       ]).then(ress => {
-        const datalist = ress.reduce(
-          (collection, res) => {
-            res.data.map((data) => data.Type = determineType(data.ID));
-            return collection.concat(res.data);
-          }, []
-        )
+        const datalist = concatAndAddType(ress);
         commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
         commit("UPDATE_KEYWORD", "");
       }).catch((error) => {
@@ -185,9 +156,10 @@ export const storeObject = {
     // 將我的最愛更新後存入瀏覽器
     changeFavoriteToData({ commit }, { dataId, add }) {
       commit("UPDATE_HEART_LOADING", true);
-      if (add) commit("ADD_FAVORITES", dataId);
-      else commit("REMOVE_FAVORITES", dataId);
+      
+      add ? commit("ADD_FAVORITES", dataId) : commit("REMOVE_FAVORITES", dataId);
       localStorage.setItem("touristHeart", JSON.stringify(this.state.favorites));
+      
       commit("UPDATE_HEART_LOADING", false);
     },
 
@@ -211,6 +183,43 @@ export const storeObject = {
       const firstPositionLat = this.state.dataList[0].Position.PositionLat;
       const firstPositionLon = this.state.dataList[0].Position.PositionLon;
       this.state.mapClass.flyTo([firstPositionLat, firstPositionLon]);
+    },
+
+    // 取得熱門景點資料集合
+    getHotDataList({ commit }) {
+      // const hotArray = getHotIds()  --- 從 db吐，然後存到 this.state.hots;
+
+      // mock
+      const hotArray = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"]
+
+      Promise.all([
+        AJAX_getScenicSpot({ ids: hotArray }),
+        AJAX_getRestaurant({ ids: hotArray }),
+        AJAX_getHotel({ ids: hotArray }),
+        AJAX_getActivity({ ids: hotArray })
+      ]).then(ress => {
+        const datalist = concatAndAddType(ress);
+        commit("UPDATE_HOT_DATA_LIST", datalist);
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 取得單一主題景點資料集合
+    getThemeDataList({ commit }, themeTags) {
+      Promise.all([
+        AJAX_getScenicSpot({ tags: themeTags }),
+        AJAX_getRestaurant({ tags: themeTags }),
+        AJAX_getHotel({ tags: themeTags }),
+        AJAX_getActivity({ tags: themeTags })
+      ]).then(ress => {
+        const datalist = concatAndAddType(ress);
+        commit("UPDATE_THEME_DATA_LIST", datalist);
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
     }
   }
 }

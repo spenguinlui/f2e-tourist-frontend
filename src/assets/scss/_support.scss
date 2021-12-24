@@ -327,7 +327,7 @@
 @mixin content-padding($paddingY: 0, $card: false) {
   padding: #{$paddingY} 3vw;
   @include screen-up {
-    padding: #{$paddingY} 6vw;
+    padding: #{$paddingY} 5vw;
   }
   @include full-screen {
     padding: #{$paddingY} 12vw;
@@ -335,7 +335,7 @@
   @if ($card) {
     padding: #{$paddingY} calc(3vw - 1rem);
     @include screen-up {
-      padding: #{$paddingY} calc(6vw - 1rem);
+      padding: #{$paddingY} calc(5vw - 1rem);
     }
     @include full-screen {
       padding: #{$paddingY} calc(12vw - 1rem);

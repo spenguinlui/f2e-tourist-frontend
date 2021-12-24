@@ -2,18 +2,18 @@
   <nav>
     <div class="nav">
       <!-- mobile -->
-      <div class="nav-mobile-menu" @click="expandingMenu">
+      <button class="nav-mobile-menu" @click="expandingMenu">
         <img src="../assets/images/icon/menu.svg" alt="手機版選單">
-      </div>
+      </button>
       <!-- pc -->
-      <div class="nav-brand">
+      <button class="nav-brand">
         <router-link class="nav-brand-item" :to="{ name: 'home' }"><img src="../assets/images/logo.svg" alt="首頁Logo"></router-link>
         <SearchBar :className="'nav-search-bar'" />
-      </div>
+      </button>
       <!-- mobile -->
-      <div class="nav-mobile-search" @click="expandingSearch">
+      <button class="nav-mobile-search" @click="expandingSearch">
         <img src="../assets/images/icon/search-m.svg" alt="手機版搜尋">
-      </div>
+      </button>
       <!-- pc -->
       <ul class="nav-list">
         <li><router-link class="nav-list-item" :class="{ active: $route.params.name === 'scenicspots' }" :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link></li>

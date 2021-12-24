@@ -29,9 +29,9 @@
   @include btn;
   padding: .5rem 1rem;
   img {
-    width: 14px;
-    height: 14px;
-    margin-left: 9px;
+    width: 1em;
+    height: 1em;
+    margin-left: .5em;
   }
 }
 @mixin btn-icon {

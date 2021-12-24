@@ -6,46 +6,69 @@
     </header>
     <section class="home-section">
       <div class="home-section-title">
-        <h2 class="home-section-title-left">熱門景點</h2>
-        <div class="home-section-title-right">
-          <div class="section-btn">查看更多</div>
-        </div>
+        <h2 class="home-section-title-text">熱門景點</h2>
+        <button class="home-section-title-btn">查看更多</button>
       </div>
       <div class="home-cards-slider">
-        
+        <div v-for="item in hotDataList" :key="item.ID" class="card-container">
+          <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+        </div>
       </div>
     </section>
     <section class="home-theme">
-      <div>
-        <h2 class="home-theme-tittle">你不能錯過的注目景點 !</h2>
-        <router-link :to="{ name: 'theme' }" class="home-theme-btn">賞楓秘境看這裡</router-link>
-      </div>
+      <h2 class="home-theme-title">你不能錯過的注目景點 !</h2>
+      <button><router-link :to="{ name: 'theme' }" class="home-theme-btn">賞楓秘境看這裡</router-link></button>
     </section>
     <section class="home-section">
       <div class="home-section-title">
-        <h2 class="home-section-title-left">主題</h2>
+        <h2 class="home-section-title-text">{{ themes[0].themeName }}</h2>
         <div class="home-section-title-right">
-          <div class="section-btn">查看更多</div>
+          <button class="home-section-title-btn">查看更多</button>
         </div>
       </div>
       <div class="home-cards-slider">
-        
+        <div v-for="item in themeDataList" :key="item.ID" class="card-container">
+          <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import SearchBar from "../components/search-bar.vue";
+import { mapGetters } from 'vuex';
+import SearchBar from "@/components/search-bar.vue";
+import Card from "@/components/card.vue";
+
 export default {
+  computed: {
+    ...mapGetters(['hotDataList', 'themes', 'themeDataList'])
+  },
+  methods: {
+    getHotDataList() {
+      this.$store.dispatch("getHotDataList");
+    },
+    getThemeDataList() {
+      this.$store.dispatch("getThemeDataList", this.themes[0].themeTags);
+    }
+  },
+  created() {
+    this.getHotDataList();
+    this.getThemeDataList();
+  },
   components: {
-    SearchBar
+    SearchBar,
+    Card
   }
 }
 </script>
 
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
+
+  section {
+    @include content-padding(2.5vh);
+  }
 
   .home {
     margin-bottom: $footer-m-height;
@@ -61,6 +84,43 @@ export default {
         text-shadow: $tilte-shadow;
         width: 70%;
         text-align: center;
+      }
+    }
+    &-section {
+      &-title {
+        @include flex-row-space-between-center;
+        &-text {
+          @include font-h3(bold);
+          color: $primary-800;
+          padding: .5rem 0;
+        }
+        &-btn {
+          @include btn-text;
+          @include btn-filled;
+        }
+      }
+    }
+    &-cards-slider {
+      @include flex-row-flex-start-center;
+      overflow: auto;
+      .card-container {
+        @include card-flex;
+      }
+    }
+    &-theme {
+      @include benner-background('../assets/images/theme-benner.png');
+      @include flex-column-center-center;
+      width: 100%;
+      height: 50vh;
+      &-title {
+        @include font-h2(bold);
+        padding: 1.25rem;
+        text-shadow: $tilte-shadow;
+        color: $grey-100;
+      }
+      &-btn {
+        @include btn-text;
+        @include btn-filled;
       }
     }
   }
