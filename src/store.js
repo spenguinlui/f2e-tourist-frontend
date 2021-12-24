@@ -27,6 +27,7 @@ export const storeObject = {
 
     // -- DB 交流
     favorites: [],         // 我的最愛 ID 集合
+    favoriteDataList: [],  // 我的最愛資料集合
     hots: [],              // 熱門資料 ID 集合
     hotDataList: [],       // 熱門資料集合
     themes: [              // 主題物件集合(包含集合)，init [] << DB
@@ -42,6 +43,7 @@ export const storeObject = {
     allTypeDataList: state => state.allTypeDataList,
     dataDetail: state => state.dataDetail,
     hotDataList: state => state.hotDataList,
+    favoriteDataList: state => state.favoriteDataList,
     themeDataList: state => state.themeDataList,
     favorites: state => state.favorites,
     themes: state => state.themes,
@@ -55,6 +57,7 @@ export const storeObject = {
     UPDATE_DATA_LIST: (state, dataList) => state.dataList = dataList,
     UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
     UPDATE_HOT_DATA_LIST: (state, dataList) => state.hotDataList = dataList,
+    UPDATE_FAVORITE_DATA_LIST: (state, dataList) => state.favoriteDataList = dataList,
     UPDATE_THEME_DATA_LIST: (state, dataList) => state.themeDataList = dataList,
     UPDATE_DATA_DETAIL: (state, dataDetail) => {
       dataDetail.showPicture = "";
@@ -242,6 +245,24 @@ export const storeObject = {
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_HOT_DATA_LIST", datalist);
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 取得熱門景點資料集合
+    getFavoriteDataList({ commit }) {
+      const favoriteIds = this.state.favorites
+
+      Promise.all([
+        AJAX_getScenicSpot({ ids: favoriteIds }),
+        AJAX_getRestaurant({ ids: favoriteIds }),
+        AJAX_getHotel({ ids: favoriteIds }),
+        AJAX_getActivity({ ids: favoriteIds })
+      ]).then(ress => {
+        const datalist = concatAndAddType(ress);
+        commit("UPDATE_FAVORITE_DATA_LIST", datalist);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理

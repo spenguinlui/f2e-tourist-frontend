@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid">
     <div class="container">
-      <nav class="breadcrumbs">未完成 > 麵包屑 > 未完成</nav>
       <section class="detail-header">
         <div class="detail-header-title">
           <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
@@ -54,8 +53,8 @@
         <article v-if="dataDetail.DescriptionDetail" class="detail-content">{{ dataDetail.DescriptionDetail }}</article>
       </section>
 
-      <section>
-        <h2 class="detail-title">{{ dataDetail === "restaurants" ? '餐點推薦' : '服務設施' }}</h2>
+      <section v-if="dataDetail === 'restaurants'">
+        <h2 class="detail-title">餐點推薦</h2>
         <p v-if="!dataDetail.Features2" class="no-content">無資料</p>
         <article v-if="dataDetail.Features2" class="detail-content">{{ dataDetail.Features2 }}</article>
       </section>
@@ -96,8 +95,8 @@
       <section>
         <h2 class="detail-title">這些景點大家也推</h2>
         <div class="recommend-container">
-          <div v-for="item in recommendList" :key="item.ID" class="card-container">
-            <Card :key="item.ID" :item="item" :type="dataType" :classType="'commonCard'"/>
+          <div v-for="item in hotDataList" :key="item.ID" class="card-container">
+            <Card :key="item.ID" :item="item" :type="item.Type" :classType="'commonCard'"/>
           </div>
         </div>
       </section>
@@ -131,7 +130,7 @@ export default {
         default: return "其他";
       }
     },
-    ...mapGetters(['dataDetail', 'favorites']),
+    ...mapGetters(['dataDetail', 'favorites', 'hotDataList']),
   },
   methods: {
     getDetail() {
@@ -141,10 +140,14 @@ export default {
     },
     changeFavorite(id, add) {
       !this.$store.getters.heartIsLoading && this.$store.dispatch("changeFavoriteToData", { dataId: id, add: add });
-    }
+    },
+    getHotDataList() {
+      this.$store.dispatch("getHotDataList");
+    },
   },
   created() {
     this.getDetail();
+    this.getHotDataList();  // 先用熱門假資料代替
     // detail 點選其他卡片跳轉後位置要拉回頂端
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
@@ -164,12 +167,6 @@ export default {
 
   .container {
     @include content-padding(.1vh);
-  }
-
-  .breadcrumbs {
-    @include font-button(500);
-    color: $grey-500;
-    margin-top: $nav-height;
   }
 
   section {
@@ -303,13 +300,11 @@ export default {
     }
   }
 
-  .detail-recommend {
-    .recommend-container {
-      @include flex-row-center-center;
-      flex-wrap: wrap;
-      .card-container {
-        @include card-flex;
-      }
+  .recommend-container {
+    @include flex-row-flex-start-center;
+    overflow: auto;
+    .card-container {
+      @include card-flex;
     }
   }
 

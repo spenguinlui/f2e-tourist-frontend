@@ -72,6 +72,7 @@
         @include font-content(bold);
         @include ellipsis-text(1);
         color: $grey-700;
+        margin-bottom: .2rem;
       }
       &-tags {
         @include tags-row;
@@ -79,6 +80,7 @@
         .card-tag {
           @include btn-tag-filled;
           @include font-caption(700);
+          margin-top: .2rem;
         }
       }
     }

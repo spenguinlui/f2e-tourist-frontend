@@ -49,6 +49,7 @@
       },
       changeFavorite(id, add) {
         !this.$store.getters.heartIsLoading && this.$store.dispatch("changeFavoriteToData", { dataId: id, add: add });
+        this.$store.dispatch("getFavoriteDataList");
       }
     },
     components: {

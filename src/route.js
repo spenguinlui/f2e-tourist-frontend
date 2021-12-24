@@ -34,4 +34,9 @@ export const routes = [
     component: () => import('./pages/detail'),
     name: 'detail',
   },
+  {
+    path: '/favorites',
+    component: () => import('./pages/favorites'),
+    name: 'favorites'
+  },
 ]
