@@ -16,11 +16,6 @@
   import Card from '../components/card.vue';
 
   export default {
-    data () {
-      return {
-        
-      }
-    },
     computed: {
       ...mapGetters(['favoriteDataList'])
     },

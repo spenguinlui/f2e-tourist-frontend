@@ -1,15 +1,20 @@
 <template>
-  <div class="map-content">
-    <aside class="card-aside">
-      <div v-for="item in dataList" :key="item.ID" class="card-container">
-        <Card
-          :item="item" :type="dataType"
-          :classType="'full-card'"
-          />
-      </div>
-    </aside>
-    <section class="map-mode" id="map"></section>
-  </div>
+  <section class="map-content">
+    <template v-if="dataList.length > 0">
+      <aside class="card-aside">
+        <div v-for="item in dataList" :key="item.ID" class="card-container">
+          <Card
+            :item="item" :type="dataType"
+            :classType="'full-card'"
+            />
+        </div>
+      </aside>
+      <div class="map-mode" id="map"></div>
+    </template>
+    <template v-else>
+      "沒有資料"
+    </template>
+  </section>
 </template>
 
 <script>
@@ -44,7 +49,7 @@ export default {
     }
   },
   mounted() {
-    this.initMap();
+    if (this.dataList.length > 0) this.initMap();
   },
   components: {
     Card

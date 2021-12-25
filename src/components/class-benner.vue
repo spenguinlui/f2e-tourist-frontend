@@ -1,17 +1,18 @@
 <template>
-  <div>
+  <header>
     <div class="benner-container" :style="{ backgroundImage: bgImage }">
       <h1 class="benner-title">{{ classType_zh }}列表</h1>
       <div class="benner-btn-container">
         <div class="left-btn">
           <div class="relative">
-            <button class="choose-btn" @click.prevent.stop="showSelectBlock">選擇地區</button>
-            <SelectAreaBlock  v-show="areaSelectBlockVisible" ref="selectAreaBlockContainer" :dataType="classType" :hideSelectBlock="hideSelectBlock"/>
+            <button class="choose-btn" @click.prevent.stop="showBlock(areaBlock)">選擇地區</button>
+            <SelectAreaBlock v-show="areaBlock.visible" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
           </div>
-          <button class="choose-btn">選擇日期</button>
+          <button class="choose-btn" @click="showDateBlock">選擇日期</button>
         </div>
         <div class="right-btn">
-          <button type="button" class="filter-btn">篩選<img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
+          <button type="button" class="filter-btn" @click.prevent.stop="showBlock(filterBlock)">篩選<img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
+          <FilterBlock  v-show="filterBlock.visible" ref="filterBlockContainer" :dataType="classType" :filterBlock="filterBlock" :hideBlock="hideBlock"/>
           <button type="button" class="filter-icon-btn" @click="toggleMapMode">
             <img v-show="mapMode" src="../assets/images/icon/list-f.svg" alt="切換列表icon">
             <img v-show="!mapMode" src="../assets/images/icon/map-f.svg" alt="切換地圖icon">
@@ -22,50 +23,66 @@
     <!-- mobile -->
     <div class="benner-m-menu">
       <div class="benner-m-menu-left-block">
-        <button class="left-btn" @click.stop.prevent="showSelectBlock">選擇地區</button>
+        <button class="left-btn" @click.prevent.stop="showBlock(areaMBlock)">選擇地區</button>
         <button class="left-btn">選擇日期</button>
-        <SelectAreaBlock v-show="areaSelectBlockVisible" ref="selectAreaBlockContainer" :dataType="classType" :hideSelectBlock="hideSelectBlock" />
+        <SelectAreaBlock v-show="areaMBlock.visible" ref="areaMBlockContainer" :dataType="classType" :areaBlock="areaMBlock" :hideBlock="hideBlock"/>
       </div>
 
       <div class="benner-m-menu-right-block">
-        <button class="right-btn"><img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
+        <button class="right-btn" @click.prevent.stop="showBlock(filterMBlock)"><img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
+        <FilterBlock  v-show="filterMBlock.visible" ref="filterMBlockContainer" :dataType="classType" :filterBlock="filterMBlock" :hideBlock="hideBlock"/>
         <button class="right-btn" @click="toggleMapMode">
           <img v-show="mapMode" src="../assets/images/icon/list-f.svg" alt="切換列表icon">
           <img v-show="!mapMode" src="../assets/images/icon/map-f.svg" alt="切換地圖icon">
         </button>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import SelectAreaBlock from './select-area-block.vue';
+import FilterBlock from './filter-block.vue';
 
 export default {
   props: ['type'],
   data () {
     return {
-      areaSelectBlockVisible: false
+      areaBlock: {
+        visible: false,
+        checkFn: (e) => { !this.$refs.areaBlockContainer.$el.contains(e.target) && this.hideBlock(this.areaBlock) }
+      },
+      filterBlock: {
+        visible: false,
+        checkFn: (e) => { !this.$refs.filterBlockContainer.$el.contains(e.target) && this.hideBlock(this.filterBlock) }
+      },
+      areaMBlock: {
+        visible: false,
+        checkFn: (e) => { !this.$refs.areaMBlockContainer.$el.contains(e.target) && this.hideBlock(this.areaMBlock) }
+      },
+      filterMBlock: {
+        visible: false,
+        checkFn: (e) => { !this.$refs.filterMBlockContainer.$el.contains(e.target) && this.hideBlock(this.filterMBlock) }
+      }
     }
   },
   methods: {
-    showSelectBlock () {
-      if (this.areaSelectBlockVisible) {
-        this.hideSelectBlock();
+    showBlock(blockObject) {
+      if (blockObject.visible) {
+        this.hideBlock(blockObject);
       } else {
-        this.areaSelectBlockVisible = true
-        document.addEventListener('click', this.checkElementIsNotBlock, false);
+        this.areaBlock.visible = this.filterBlock.visible = this.areaMBlock.visible = this.filterMBlock.visible = false;
+        blockObject.visible = true;
+        document.addEventListener('click', blockObject.checkFn, false);
       }
     },
-    hideSelectBlock () {
-      this.areaSelectBlockVisible = false;
-      document.removeEventListener('click', this.checkElementIsNotBlock, false)
+    hideBlock(blockObject) {
+      blockObject.visible = false;
+      document.removeEventListener('click', blockObject.checkFn, false);
     },
-    checkElementIsNotBlock (e) {
-      if (!this.$refs.selectAreaBlockContainer.contains(e.target)) {
-        this.hideSelectBlock();
-      }
+    showDateBlock () {
+      this.window.alert('功能尚未開放');
     },
     toggleMapMode() {
       this.$store.commit("TOGGLE_MAP_MODE", !this.mapMode);
@@ -75,15 +92,15 @@ export default {
     classType() {
       const currentPath = this.$route.name;
       if (currentPath.indexOf("activities") >= 0) {
-        return "activities"
+        return "activities";
       } else if (currentPath.indexOf("restaurants") >= 0) {
-        return "restaurants"
+        return "restaurants";
       } else if (currentPath.indexOf("hotels") >= 0) {
-        return "hotels"
+        return "hotels";
       } else if (currentPath.indexOf("scenicspots") >= 0) {
-        return "scenicspots"
+        return "scenicspots";
       } else {
-        return "others"
+        return "others";
       }
     },
     classType_zh() {
@@ -107,7 +124,8 @@ export default {
     ...mapGetters(['mapMode'])
   },
   components: {
-    SelectAreaBlock
+    SelectAreaBlock,
+    FilterBlock
   }
 }
 </script>
@@ -165,6 +183,7 @@ export default {
         margin-top: .5rem;
         .left-btn, .right-btn {
           @include flex-row-center-center;
+          position: relative;
           gap: 1.5rem;
           .choose-btn {
             @include btn-choose;

@@ -22,6 +22,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store(storeObject);
 
 Vue.config.productionTip = false
+Vue.prototype.window = window;
 
 const vm = new Vue({
   router,

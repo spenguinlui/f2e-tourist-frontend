@@ -16,7 +16,8 @@
           <div class="card-tag" :key="index">{{ tag }}</div>
         </template>
         <div v-if="!item.Tag" class="card-tag">尚未建立</div> -->
-        <div class="card-tag" v-if="!item.Class1">無標記</div>
+        <div class="card-tag" v-if="!item.Class1 && !item.Class">無標記</div>
+        <div class="card-tag" v-if="item.Class">{{ item.Class }}</div>
         <div class="card-tag" v-if="item.Class1">{{ item.Class1 }}</div>
         <div class="card-tag" v-if="item.Class2">{{ item.Class2 }}</div>
         <div class="card-tag" v-if="item.Class3">{{ item.Class3 }}</div>

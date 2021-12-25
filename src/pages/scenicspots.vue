@@ -23,7 +23,6 @@ export default {
     MapList
   },
   created() {
-    console.log(this.$route.name)
     this.$store.dispatch("getSingleTypeDataList", "scenicspots");
   },
   updated() {

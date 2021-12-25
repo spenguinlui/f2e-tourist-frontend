@@ -5,7 +5,7 @@
         <h3 class="v-area">{{ area.area }}</h3>
 
         <section v-for="city in area.citys" :key="city.cityName" class="area-block">
-          <div class="area-title" @click="toggleList(city.cityName)">
+          <div class="area-title" @click.prevent.stop="toggleList(city.cityName)">
             <h4 class="title-text">{{ city.cityName }}</h4>
             <div class="title-icon" :class="{ show: localCityName === city.cityName }"></div>
           </div>
@@ -30,7 +30,7 @@ import citys from "../json/citys.json";
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['hideSelectBlock', 'dataType'],
+  props: ['areaBlock', 'dataType', 'hideBlock'],
   data () {
     return {
       areaList: citys,
@@ -44,7 +44,7 @@ export default {
     filterCityData(townName) {
       this.$store.commit("TOGGLE_CITY", this.localCityName);
       this.$store.dispatch("filterDataListWithTown", { dataType: this.dataType, townName });
-      this.hideSelectBlock();
+      this.hideBlock(this.areaBlock);
     }
   },
   computed: {
@@ -65,7 +65,7 @@ export default {
     padding: 1.5rem;
     background-color: $grey-100;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    border-radius: 0.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
     z-index: 1;
     cursor: default;
     .area-container {
@@ -127,6 +127,7 @@ export default {
       position: absolute;
       top: 40px;
       bottom: initial;
+      border-radius: 0.5rem;
     }
   }
 </style>

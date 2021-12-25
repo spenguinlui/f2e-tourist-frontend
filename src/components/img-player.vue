@@ -24,7 +24,7 @@ export default {
   props: ['data'],
   data() {
     return {
-      imageList: new Array(5)
+      imageList: new Array(3)
     }
   },
   methods: {
@@ -54,8 +54,11 @@ export default {
       @include flex-row-center-center;
       height: $imgs-h;
       border-top: .5rem solid $grey-800;
-      li:nth-child(1), li:nth-child(2), li:nth-child(3), li:nth-child(4) {
+      li {
         border-right: .5rem solid $grey-800;
+      }
+      li:last-child {
+        border-right: none;
       }
       border-collapse: collapse;
       .img-small {

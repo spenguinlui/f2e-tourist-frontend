@@ -36,8 +36,10 @@ const determineType = (id) => {
 export const urlQueryStr = (
     dataType,
     query = {
-      top: 30, select: null, position: null,                  // 一般過濾條件
-      id: null, keyword: null, town: null, ids: [], tags: []  // 特殊過濾條件(只能取一)
+      // 一般過濾條件
+      top: 0, select: [], position: null,
+      // 特殊過濾條件(只能取一)
+      id: "", keyword: "", townName: "", ids: [], tags: [], classObject: null
     }
   ) => {
   // 只要沒給限制就是 30筆
@@ -58,7 +60,7 @@ export const urlQueryStr = (
   if (query.id) queryStr += `&$filter=ID eq '${query.id}'`;
 
   // 地區過濾
-  if (query.town) queryStr += `&$filter=contains(Address, '${query.town}')`;
+  if (query.townName) queryStr += `&$filter=contains(Address, '${query.townName}')`;
   
   // 針對關鍵字過濾
   if (query.keyword) queryStr += `&$filter=contains(Name, '${query.keyword}') or contains(Description, '${query.keyword}')`;
@@ -85,45 +87,57 @@ export const urlQueryStr = (
     )
   }
 
+  // Class 類型過濾
+  if (query.classObject) {
+    if (query.classObject.dataType === "scenicspots") {
+      queryStr 
+        += `&$filter=contains(Class1, '${query.classObject.classType}')`
+        +  ` or contains(Class2, '${query.classObject.classType}')`
+        +  ` or contains(Class3, '${query.classObject.classType}')`;
+    } else {
+      queryStr += `&$filter=contains(Class, '${query.classObject.classType}')`;
+    }
+  }
+
   return encodeURI(`${API_DOMAIN}${dataType}?$format=JSON${queryStr}`);
 };
 
 // 景觀列表
-export const AJAX_getScenicSpot = ({ keyword, townName, ids, tags, position }) => {
+export const AJAX_getScenicSpot = (query) => {
   const path = "Tourism/ScenicSpot";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName, ids, tags, position }),
+    url: urlQueryStr(path, query),
     headers: authorizationHeader()
   })
 }
 
 // 餐廳列表
-export const AJAX_getRestaurant = ({ keyword, townName, ids, tags, position }) => {
+export const AJAX_getRestaurant = (query) => {
   const path = "Tourism/Restaurant";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName, ids, tags, position }),
+    url: urlQueryStr(path, query),
     headers: authorizationHeader()
   })
 }
 
 // 住宿列表
-export const AJAX_getHotel = ({ keyword, townName, ids, tags, position }) => {
+export const AJAX_getHotel = (query) => {
   const path = "Tourism/Hotel";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName, ids, tags, position }),
+    url: urlQueryStr(path, query),
     headers: authorizationHeader()
   })
 }
 
 // 活動列表
-export const AJAX_getActivity = ({ keyword, townName, ids, tags, position }) => {
+export const AJAX_getActivity = (query) => {
   const path = "Tourism/Activity";
   return axios({
     method: 'get',
-    url: urlQueryStr(path, { keyword, town: townName , ids, tags, position }),
+    url: urlQueryStr(path, query),
     headers: authorizationHeader()
   })
 }

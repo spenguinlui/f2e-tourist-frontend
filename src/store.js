@@ -20,6 +20,7 @@ export const storeObject = {
     keyword: "",           // 搜尋關鍵字
     currentCity: "臺北市",  // 地區過濾第一層 - 城市
     currentTown: "中山區",  // 地區過濾第二層 - 鄉鎮
+    currentClassType: "",  // Class 類型過濾
     
     mapMode: false,        // 是否切換地圖瀏覽模式
     heartIsLoading: false, // 加入我的最愛是否程序中
@@ -50,6 +51,7 @@ export const storeObject = {
     keyword: state => state.keyword,
     currentCity: state => state.currentCity,
     currentTown: state => state.currentTown,
+    currentClassType: state => state.currentClassType,
     mapMode: state => state.mapMode,
     heartIsLoading: state => state.heartIsLoading,
   },
@@ -69,6 +71,7 @@ export const storeObject = {
     UPDATE_KEYWORD: (state, keyword) => state.keyword = keyword,
     TOGGLE_CITY: (state, cityName) => state.currentCity = cityName,
     TOGGLE_TOWN: (state, townName) => state.currentTown = townName,
+    TOGGLE_CLASS_TYPE: (state, classType) => state.currentClassType = classType,
     TOGGLE_MAP_MODE: (state, mapMode) => state.mapMode = mapMode,
 
     UPDATE_HEART_LOADING: (state, isProgress) => state.heartIsLoading = isProgress,
@@ -185,6 +188,27 @@ export const storeObject = {
       })
     },
 
+    // 以 Class 類型篩選資料集合
+    filterDataListByClass({ commit }, { dataType, classType }) {
+      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
+      let targetAjax;
+      switch (dataType) {
+        case "scenicspots": targetAjax = ajaxList[0]; break;
+        case "restaurants": targetAjax = ajaxList[1]; break;
+        case "hotels": targetAjax = ajaxList[2];      break;
+        case "activities": targetAjax = ajaxList[3];  break;
+        default: targetAjax = ajaxList[0];            break;
+      }
+      const classObject = { dataType, classType };
+      targetAjax({ classObject }).then(res => {
+        commit("TOGGLE_CLASS_TYPE", classType);
+        commit("UPDATE_DATA_LIST", res.data);
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
     // 更改細節頁面目前顯示大圖
     changeDetailShowPicture({ commit }, PictureUrl) {
       commit("UPDATE_DATA_DETAIL_SHOW_PICTURE", PictureUrl);
@@ -208,6 +232,7 @@ export const storeObject = {
 
     // 在地圖上打入景點 marker
     setMarkerOnMap() {
+      if (this.state.dataList.length === 0) return;
       const mapClass = this.state.mapClass;
       const markerLayer = new L.LayerGroup().addTo(mapClass);
 
@@ -227,7 +252,10 @@ export const storeObject = {
       if (mapClass.tap) mapClass.tap.disable();
       const firstPositionLat = this.state.dataList[0].Position.PositionLat;
       const firstPositionLon = this.state.dataList[0].Position.PositionLon;
-      mapClass.flyTo([firstPositionLat, firstPositionLon]);
+      mapClass.flyTo([firstPositionLat, firstPositionLon], 16, {
+        animate: true,
+        duration: 1.5
+      });
     },
 
     // 取得熱門景點資料集合
