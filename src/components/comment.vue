@@ -1,0 +1,171 @@
+<template>
+  <div>
+    <section class="comment-header">
+      <section class="comment-header-left">
+        <div class="border"></div>
+        <h3 class="comment-score">3.5</h3>
+        <Stars class="comment-stars"/>
+        <p class="comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論</p>
+      </section>
+      <section class="comment-header-right">
+        <button type="button" class="sort-btn">排序<img src="../assets/images/icon/sort.svg" alt="排序icon"></button>
+        <button type="button" class="comment-btn" @click="commentFormShow = !commentFormShow">撰寫評論<img src="../assets/images/icon/pin.svg" alt="撰寫評論icon"></button>
+      </section>
+    </section>
+    <section class="comment-content">
+      <template v-if="dataDetail.Comments">
+        <!-- ... -->
+      </template>
+      <template v-else><NoContent /></template>
+    </section>
+    <section class="comment-form" v-show="commentFormShow">
+      <div class="form-tilte-block">
+        <h3 class="form-title">撰寫評論</h3>
+        <ul class="form-stars">
+          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
+          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
+          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
+          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
+          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
+        </ul>
+      </div>
+      <input type="text" placeholder="輸入標題" class="form-text">
+      <textarea placeholder="我覺得..." class="form-textarea"></textarea>
+      <button type="submit" class="form-btn">送出評論</button>
+    </section>
+  </div>
+</template>
+
+<script>
+import Stars from "@/components/stars.vue";
+import NoContent from '@/components/no-content.vue';
+
+export default {
+  name: "comment",
+  props: ['dataDetail'],
+  data() {
+    return {
+      commentFormShow: false
+    }
+  },
+  components: {
+    Stars,
+    NoContent
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "@/assets/scss/main.scss";
+
+  .comment-header {
+    @include flex-row-space-between-center;
+    &-left {
+      @include flex-row-flex-start-center;
+      @include flex-col(9);
+      .border {
+        display: none;
+      }
+      .comment-score {
+        @include font-h4(700);
+        color: $grey-700;
+      }
+      .comment-stars {
+        width: 30%;
+        margin: 0 .5rem;
+      }
+      .comment-count {
+        @include font-caption(500);
+        color: $grey-500;
+        margin-left: .5rem;
+      }
+    }
+    &-right {
+      @include flex-row-center-center;
+      @include flex-col(3);
+      .sort-btn {
+        @include text-icon-2-icon;
+        @include btn-outline;
+      }
+      .comment-btn {
+        @include text-icon-2-icon;
+        @include btn-filled;
+        margin-left: .5rem;
+      }
+    }
+  }
+  .comment-form {
+    @include flex-column-center-baseline;
+    width: 100%;
+    > * {
+      margin: .5rem 0;
+    }
+    .form-tilte-block {
+      @include flex-row-space-between-center;
+      width: 100%;
+      .form-title {
+        @include font-h3(bold);
+        color: $primary-800;
+      }
+      .form-stars {
+        @include flex-row-flex-start-center;
+        li {
+          img {
+            width: 100%;
+          }
+        }
+      }
+    }
+    .form-text, .form-textarea {
+      width: 100%;
+      border: 1px solid $grey-300;
+      padding: .75rem;
+    }
+    .form-textarea {
+      height: 10rem;
+    }
+    .form-btn {
+      @include btn-text;
+      @include btn-filled;
+      align-self: center;
+    }
+  }
+
+  @include screen-up {
+    .comment-header {
+      &-left {
+        .border {
+          display: block;
+          width: 5rem;
+          height: 50%;
+          border-top: 1px solid $grey-500;
+          margin-right: .5rem;
+        }
+        .comment-score {
+          @include font-h2(700);
+          color: $grey-700;
+        }
+        .comment-count {
+          @include font-content(500);
+          color: $grey-500;
+          margin-left: .5rem;
+        }
+      }
+      &-right {
+        .sort-btn {
+          @include btn-outline;
+        }
+        .comment-btn {
+          @include btn-filled;
+          > img {
+            display: none;
+          }
+        }
+      }
+    }
+    .form-btn {
+      align-self: flex-end;
+    }
+  }
+
+</style>

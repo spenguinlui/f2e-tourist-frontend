@@ -90,22 +90,7 @@
 
       <section class="detail-section">
         <h2 class="detail-title">旅客評價</h2>
-        <section class="comment-header">
-          <div class="comment-header-left">
-            <div class="border"></div>
-            <div class="comment-score">3.5</div>
-            <Stars class="comment-stars"/>
-            <div class="comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論</div>
-          </div>
-          <div class="comment-header-right">
-            <button type="button" class="sort-btn">排序<img src="../assets/images/icon/sort.svg" alt="排序icon"></button>
-            <button type="button" class="comment-btn">撰寫評論<img src="../assets/images/icon/pin.svg" alt="撰寫評論icon"></button>
-          </div>
-        </section>
-        <template v-if="dataDetail.Comments">
-          <!-- ... -->
-        </template>
-        <template v-else><NoContent /></template>
+        <Comment :dataDetail="dataDetail"/>
       </section>
 
       <section class="detail-section">
@@ -128,6 +113,7 @@ import Card from "@/components/card.vue";
 import NearbyCard from "@/components/nearby-card.vue";
 import NearbyMap from "@/components/nearby-map.vue";
 import NoContent from '@/components/no-content.vue';
+import Comment from '@/components/comment.vue';
 
 export default {
   name: "detail",
@@ -175,7 +161,8 @@ export default {
     Card,
     NearbyCard,
     NearbyMap,
-    NoContent
+    NoContent,
+    Comment
   }
 }
 </script>
@@ -311,43 +298,6 @@ export default {
     }
   }
 
-  .comment-header {
-    @include flex-row-space-between-center;
-    &-left {
-      @include flex-row-flex-start-center;
-      @include flex-col(9);
-      .border {
-        display: none;
-      }
-      .comment-score {
-        @include font-h4(700);
-        color: $grey-700;
-      }
-      .comment-stars {
-        width: 30%;
-        margin: 0 .5rem;
-      }
-      .comment-count {
-        @include font-caption(500);
-        color: $grey-500;
-        margin-left: .5rem;
-      }
-    }
-    &-right {
-      @include flex-row-center-center;
-      @include flex-col(3);
-      .sort-btn {
-        @include text-icon-2-icon;
-        @include btn-outline;
-      }
-      .comment-btn {
-        @include text-icon-2-icon;
-        @include btn-filled;
-        margin-left: .5rem;
-      }
-    }
-  }
-
   .recommend-container {
     @include flex-row-flex-start-center;
     @include scroll;
@@ -408,37 +358,6 @@ export default {
         @include flex-col(7);
         padding-left: 1.5rem;
         padding-bottom: 0;
-      }
-    }
-    .comment-header {
-      &-left {
-        .border {
-          display: block;
-          width: 5rem;
-          height: 50%;
-          border-top: 1px solid $grey-500;
-          margin-right: .5rem;
-        }
-        .comment-score {
-          @include font-h2(700);
-          color: $grey-700;
-        }
-        .comment-count {
-          @include font-content(500);
-          color: $grey-500;
-          margin-left: .5rem;
-        }
-      }
-      &-right {
-        .sort-btn {
-          @include btn-outline;
-        }
-        .comment-btn {
-          @include btn-filled;
-          > img {
-            display: none;
-          }
-        }
       }
     }
   }
