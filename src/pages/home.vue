@@ -102,7 +102,7 @@ export default {
     }
     &-cards-slider {
       @include flex-row-flex-start-center;
-      overflow: auto;
+      @include scroll;
       .card-container {
         @include card-flex;
       }

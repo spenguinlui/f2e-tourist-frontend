@@ -12,7 +12,7 @@
       <div class="map-mode" id="map"></div>
     </template>
     <template v-else>
-      "沒有資料"
+      <NoContent />
     </template>
   </section>
 </template>
@@ -22,6 +22,7 @@ import { mapGetters } from 'vuex';
 import L from 'leaflet';
 
 import Card from "../components/card.vue";
+import NoContent from '../components/no-content.vue';
 
 export default {
   computed: {
@@ -52,7 +53,8 @@ export default {
     if (this.dataList.length > 0) this.initMap();
   },
   components: {
-    Card
+    Card,
+    NoContent
   }
 }
 </script>
@@ -70,8 +72,8 @@ export default {
     .card-aside {
       @include flex-column-flex-start-center;
       @include flex-col(12);
+      @include scroll;
       height: 100%;
-      overflow: auto;
       .card-container {
         width: 100%;
         padding: 1rem 1rem;

@@ -86,8 +86,8 @@ export default {
     z-index: 1;
     cursor: default;
     .area-container {
+      @include scroll;
       width: 100%;
-      overflow: auto;
       .area-block {
         padding: 0.5rem 0;
         .area-title {

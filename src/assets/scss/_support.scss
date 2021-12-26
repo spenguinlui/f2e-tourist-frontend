@@ -315,11 +315,15 @@
 @mixin text-icon-2-icon {
   @include btn-icon;
   font-size: 0;
+  width: 2rem;
+  height: 2rem;
   img {
     margin: 0;
   }
-  @include full-screen{
+  @include screen-up {
     @include btn-icon-text;
+    width: auto;
+    height: auto;
   }
 }
 
@@ -354,10 +358,10 @@
     padding: 1rem;
     @include flex-col(4);
   }
-  @include full-screen {
-    padding: 1rem;
-    @include flex-col(3);
-  }
+  // @include full-screen {
+  //   padding: 1rem;
+  //   @include flex-col(3);
+  // }
 }
 
 // 暗化橫幅背景

@@ -2,11 +2,13 @@
   <div class="container-fluid">
     <div class="container">
       <section class="detail-header">
-        <div class="detail-header-title">
+        <section class="detail-header-title">
           <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
           <div class="detail-header-comment">
             <Stars />
-            <div class="detail-header-comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '100' }} 則評論</div>
+            <div class="detail-header-comment-count">
+              {{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論
+            </div>
           </div>
           <ul class="detail-tags">
             <!-- <li class="detail-tag" v-for="tag in ['文化活動', '熱鬧', '一年一度']" :key="tag">{{ tag }}</li> -->
@@ -15,84 +17,98 @@
             <li class="detail-tag" v-if="dataDetail.Class2">{{ dataDetail.Class2 }}</li>
             <li class="detail-tag" v-if="dataDetail.Class3">{{ dataDetail.Class3 }}</li>
           </ul>
-        </div>
-        <div class="detail-connect">
+        </section>
+        <section class="detail-connect">
           <a class="call-btn" :href="`tel:${dataDetail.Phone}`">撥打電話<img src="../assets/images/icon/phone.svg" alt="撥打電話icon"></a>
-          <a class="web-btn" :href="dataDetail.WebsiteUrl" formtarget="_blank"><img src="../assets/images/icon/web.svg" alt="前往網站icon"></a>
-          <button type="button" :class="favorites.includes(dataDetail.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(dataDetail.ID, !favorites.includes(dataDetail.ID))">
+          <a class="web-btn" :href="dataDetail.WebsiteUrl" target="_blank" formtarget="_blank"><img src="../assets/images/icon/web.svg" alt="前往網站icon"></a>
+          <button type="button"
+            :class="favorites.includes(dataDetail.ID) ? 'favorite-btn filled' : 'favorite-btn'"
+            @click.prevent.stop="changeFavorite(dataDetail.ID, !favorites.includes(dataDetail.ID))">
             <img v-show="favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
             <img v-show="!favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
           </button>
-        </div>
+        </section>
       </section>
-      <section class="detail-section">
-        <div class="detail-section-left">
+      <section class="detail-section-block">
+        <section class="detail-block-left">
           <div class="detail-left-content">
-            <div class="detail-about">
+            <section class="detail-about">
               <h2 class="detail-title">關於</h2>
               <p class="detail-content">{{ dataDetail.Description }}</p>
-            </div>
-            <div class="detail-address">
+            </section>
+            <section class="detail-address">
               <h2 class="detail-title">地址</h2>
               <p class="detail-content">{{ dataDetail.Address }}</p>
-            </div>
-            <div class="detail-opentime">
+            </section>
+            <section class="detail-opentime">
               <h2 class="detail-title">營業時間</h2>
               <p class="detail-content opentime">{{ dataDetail.OpenTime }}</p>
-            </div>
+            </section>
           </div>
-        </div>
-        <div class="detail-section-right">
+        </section>
+        <section class="detail-block-right">
           <ImgPlayer :data="dataDetail" />
-        </div>
+        </section>
       </section>
 
-      <section>
+      <section class="detail-section">
         <h2 class="detail-title">{{ classType_zh }}特色</h2>
-        <p v-if="!dataDetail.DescriptionDetail" class="no-content">無資料</p>
         <article v-if="dataDetail.DescriptionDetail" class="detail-content">{{ dataDetail.DescriptionDetail }}</article>
+        <template v-else><NoContent /></template>
       </section>
 
-      <section v-if="dataDetail === 'restaurants'">
+      <section class="detail-section" v-if="dataDetail === 'restaurants'">
         <h2 class="detail-title">餐點推薦</h2>
-        <p v-if="!dataDetail.Features2" class="no-content">無資料</p>
         <article v-if="dataDetail.Features2" class="detail-content">{{ dataDetail.Features2 }}</article>
+        <template v-else><NoContent /></template>
       </section>
 
-      <section v-if="dataDetail.ServiceInfo">
+      <section class="detail-section" v-if="dataDetail.ServiceInfo">
         <h2 class="detail-title">服務設施</h2>
-        <article v-if="dataDetail.ServiceInfo" class="detail-content">{{ dataDetail.ServiceInfo }}</article>
+        <article class="detail-content">{{ dataDetail.ServiceInfo }}</article>
       </section>
 
-      <section>
+      <section class="detail-section">
         <h2 class="detail-title">交通方式</h2>
-        <p v-if="!dataDetail.TravelInfo" class="no-content">製作中！</p>
         <article v-if="dataDetail.TravelInfo" class="detail-content">{{ dataDetail.TravelInfo }}</article>
+        <template v-else><NoContent /></template>
       </section>
 
-      <section>
+      <section class="detail-section">
         <h2 class="detail-title">鄰近景點</h2>
         <div class="detail-nearby">
-          <div class="detail-nearby-left">
+          <section class="detail-nearby-left">
             <NearbyCard
               v-for="item in dataDetail.NearbyDataList"
               :key="item.ID" :item="item"/>
-          </div>
-          <div class="detail-nearby-right">
+          </section>
+          <section class="detail-nearby-right">
             <NearbyMap :dataList="dataDetail.NearbyDataList"/>
-          </div>
+          </section>
         </div>
       </section>
 
-      <section>
+      <section class="detail-section">
         <h2 class="detail-title">旅客評價</h2>
-        <div v-if="!dataDetail.Comments" class="no-content">此{{ classType_zh }}尚無評論！</div>
-        <div v-if="dataDetail.Comments">
+        <section class="comment-header">
+          <div class="comment-header-left">
+            <div class="border"></div>
+            <div class="comment-score">3.5</div>
+            <Stars class="comment-stars"/>
+            <div class="comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論</div>
+          </div>
+          <div class="comment-header-right">
+            <button type="button" class="sort-btn">排序<img src="../assets/images/icon/sort.svg" alt="排序icon"></button>
+            <button type="button" class="comment-btn">撰寫評論<img src="../assets/images/icon/pin.svg" alt="撰寫評論icon"></button>
+          </div>
+        </section>
+        <template v-if="dataDetail.Comments">
           <!-- ... -->
-        </div>
+        </template>
+        <template v-else><NoContent /></template>
       </section>
 
-      <section>
+      <section class="detail-section">
         <h2 class="detail-title">這些景點大家也推</h2>
         <div class="recommend-container">
           <div v-for="item in hotDataList" :key="item.ID" class="card-container">
@@ -111,6 +127,7 @@ import ImgPlayer from "@/components/img-player.vue";
 import Card from "@/components/card.vue";
 import NearbyCard from "@/components/nearby-card.vue";
 import NearbyMap from "@/components/nearby-map.vue";
+import NoContent from '@/components/no-content.vue';
 
 export default {
   name: "detail",
@@ -157,7 +174,8 @@ export default {
     ImgPlayer,
     Card,
     NearbyCard,
-    NearbyMap
+    NearbyMap,
+    NoContent
   }
 }
 </script>
@@ -169,7 +187,7 @@ export default {
     @include content-padding(.1vh);
   }
 
-  section {
+  section[class^="detail-section"] {
     padding: 0.75rem 0;
     article {
       text-indent: 2em;
@@ -185,13 +203,6 @@ export default {
   .detail-content {
     @include font-content(500);
     color: $grey-600;
-  }
-
-  .no-content {
-    @include flex-row-center-center;
-    @include font-h3(bold);
-    color: $grey-300;
-    padding: 30px;
   }
 
   .detail-header {
@@ -256,10 +267,10 @@ export default {
     }
   }
 
-  .detail-section {
+  .detail-section-block {
     @include flex-column-center-baseline;
     flex-direction: column-reverse;
-    &-left {
+    .detail-block-left {
       @include flex-col(12);
       height: calc(60vh + 1rem);
       .detail-left-content {
@@ -276,7 +287,7 @@ export default {
         }
       }
     }
-    &-right {
+    .detail-block-right {
       @include flex-col(12);
       padding-left: 0;
       padding-bottom: 1.5rem;
@@ -300,9 +311,46 @@ export default {
     }
   }
 
+  .comment-header {
+    @include flex-row-space-between-center;
+    &-left {
+      @include flex-row-flex-start-center;
+      @include flex-col(9);
+      .border {
+        display: none;
+      }
+      .comment-score {
+        @include font-h4(700);
+        color: $grey-700;
+      }
+      .comment-stars {
+        width: 30%;
+        margin: 0 .5rem;
+      }
+      .comment-count {
+        @include font-caption(500);
+        color: $grey-500;
+        margin-left: .5rem;
+      }
+    }
+    &-right {
+      @include flex-row-center-center;
+      @include flex-col(3);
+      .sort-btn {
+        @include text-icon-2-icon;
+        @include btn-outline;
+      }
+      .comment-btn {
+        @include text-icon-2-icon;
+        @include btn-filled;
+        margin-left: .5rem;
+      }
+    }
+  }
+
   .recommend-container {
     @include flex-row-flex-start-center;
-    overflow: auto;
+    @include scroll;
     .card-container {
       @include card-flex;
     }
@@ -333,9 +381,9 @@ export default {
         }
       }
     }
-    .detail-section {
+    .detail-section-block {
       @include flex-row-center-flex-start;
-      &-left  {
+      .detail-block-left  {
         @include flex-col(5);
         padding: 0;
         .detail-left-content {
@@ -343,7 +391,7 @@ export default {
           padding: 1.5rem;
         }
       }
-      &-right {
+      .detail-block-right {
         @include flex-col(7);
         padding-left: 1.5rem;
       }
@@ -351,15 +399,46 @@ export default {
     .detail-nearby {
       &-left {
         @include flex-col(5);
+        @include scroll;
         padding: 0;
         height: 100%;
-        overflow: auto;
         display: block;
       }
       &-right {
         @include flex-col(7);
         padding-left: 1.5rem;
         padding-bottom: 0;
+      }
+    }
+    .comment-header {
+      &-left {
+        .border {
+          display: block;
+          width: 5rem;
+          height: 50%;
+          border-top: 1px solid $grey-500;
+          margin-right: .5rem;
+        }
+        .comment-score {
+          @include font-h2(700);
+          color: $grey-700;
+        }
+        .comment-count {
+          @include font-content(500);
+          color: $grey-500;
+          margin-left: .5rem;
+        }
+      }
+      &-right {
+        .sort-btn {
+          @include btn-outline;
+        }
+        .comment-btn {
+          @include btn-filled;
+          > img {
+            display: none;
+          }
+        }
       }
     }
   }

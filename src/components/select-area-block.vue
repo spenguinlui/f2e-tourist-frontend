@@ -69,9 +69,9 @@ export default {
     z-index: 1;
     cursor: default;
     .area-container {
+      @include scroll;
       height: 50vh;
       width: 100%;
-      overflow: auto;
       .area {
         color: $grey-700;
         padding-top: 0.5rem;

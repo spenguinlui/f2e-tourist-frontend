@@ -6,13 +6,14 @@
       </div>
     </template>
     <template v-else>
-      "沒有資料"
+      <NoContent/>
     </template>
   </section>
 </template>
 
 <script>
   import Card from '../components/card.vue';
+  import NoContent from '../components/no-content.vue';
   import { mapGetters } from 'vuex';
 
   export default {
@@ -30,7 +31,8 @@
     methods: {
     },
     components: {
-      Card
+      Card,
+      NoContent
     }
   }
 </script>
@@ -41,12 +43,12 @@
   .content {
     @include flex-row-flex-start-center;
     @include content-padding(0, true);
+    @include scroll;
     @include mobile {
       @include flex-row-center-center;
     }
     flex-wrap: wrap;
     height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-m-height});
-    overflow: auto;
     .card-container {
       @include card-flex;
     }
