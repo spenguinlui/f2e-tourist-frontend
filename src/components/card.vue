@@ -120,6 +120,7 @@
         @include tags-row;
         flex-wrap: wrap;
         margin: .25rem 0;
+        height: 3.5rem;  // todo 太多的 tag 會有問題，應該還有解
         .card-tag {
           @include btn-tag-filled;
           margin-bottom: .5rem;

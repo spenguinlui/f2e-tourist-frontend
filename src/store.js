@@ -19,12 +19,13 @@ export const storeObject = {
     
     keyword: "",           // 搜尋關鍵字
     currentCity: "臺北市",  // 地區過濾第一層 - 城市
-    currentTown: "中山區",  // 地區過濾第二層 - 鄉鎮
+    currentTown: "",  // 地區過濾第二層 - 鄉鎮
     currentClassType: "",  // Class 類型過濾
     
     mapMode: false,        // 是否切換地圖瀏覽模式
     heartIsLoading: false, // 加入我的最愛是否程序中
     mapClass: {},          // 全域地圖物件
+    dataLoading: false,    // 資料是否載入中
 
     // -- DB 交流
     favorites: [],         // 我的最愛 ID 集合
@@ -53,10 +54,12 @@ export const storeObject = {
     currentTown: state => state.currentTown,
     currentClassType: state => state.currentClassType,
     mapMode: state => state.mapMode,
+    dataLoading: state => state.dataLoading,
     heartIsLoading: state => state.heartIsLoading,
   },
   mutations: {
     UPDATE_DATA_LIST: (state, dataList) => state.dataList = dataList,
+    UPDATE_MORE_DATA_LIST: (state, dataList) => state.dataList = state.dataList.concat(dataList),
     UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
     UPDATE_HOT_DATA_LIST: (state, dataList) => state.hotDataList = dataList,
     UPDATE_FAVORITE_DATA_LIST: (state, dataList) => state.favoriteDataList = dataList,
@@ -73,6 +76,7 @@ export const storeObject = {
     TOGGLE_TOWN: (state, townName) => state.currentTown = townName,
     TOGGLE_CLASS_TYPE: (state, classType) => state.currentClassType = classType,
     TOGGLE_MAP_MODE: (state, mapMode) => state.mapMode = mapMode,
+    UPDATE_DATA_LOADING: (state, toggle) => state.dataLoading = toggle,
 
     UPDATE_HEART_LOADING: (state, isProgress) => state.heartIsLoading = isProgress,
     SET_FAVORITES: (state, favorites) => state.favorites = favorites,
@@ -205,6 +209,38 @@ export const storeObject = {
         commit("UPDATE_DATA_LIST", res.data);
       }).catch((error) => {
         console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 取得更多資料集合
+    getMoreDataList({ commit }, dataType) {
+      commit("UPDATE_DATA_LOADING", true);
+      // 判斷是否有過濾條件
+      const { keyword, currentTown, currentClassType, dataList } = this.state;
+      let queryObj = {
+        skip: dataList.length,
+        keyword,
+        townName: currentTown
+      }
+      if (currentClassType) {
+        queryObj.classObject = { dataType, classType: currentClassType };
+      }
+      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
+      let targetAjax;
+      switch (dataType) {
+        case "scenicspots": targetAjax = ajaxList[0]; break;
+        case "restaurants": targetAjax = ajaxList[1]; break;
+        case "hotels": targetAjax = ajaxList[2];      break;
+        case "activities": targetAjax = ajaxList[3];  break;
+        default: targetAjax = ajaxList[0];            break;
+      }
+      targetAjax(queryObj).then(res => {
+        commit("UPDATE_MORE_DATA_LIST", res.data);
+        commit("UPDATE_DATA_LOADING", false);
+      }).catch((error) => {
+        console.log(error);
+        commit("UPDATE_DATA_LOADING", false);
         // 錯誤處理
       })
     },

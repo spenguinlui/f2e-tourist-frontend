@@ -37,7 +37,7 @@ export const urlQueryStr = (
     dataType,
     query = {
       // 一般過濾條件
-      top: 0, select: [], position: null,
+      top: 0, select: [], position: null, skip: 0,
       // 特殊過濾條件(只能取一)
       id: "", keyword: "", townName: "", ids: [], tags: [], classObject: null
     }
@@ -49,6 +49,9 @@ export const urlQueryStr = (
   
   // 總筆數
   if (query.top) queryStr += `&$top=${query.top}`;
+
+  // 位移量
+  if (query.skip) queryStr += `&$skip=${query.skip}`;
   
   // 距離過濾
   if (query.position) queryStr += createNearByStr(query.position);

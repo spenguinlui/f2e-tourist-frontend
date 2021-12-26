@@ -31,7 +31,7 @@
           <router-link :to="{ name: 'suppliers' }">商家專區</router-link>
         </div>
       </div>
-      <div class="footer-copyright">Copyright ©</div>
+      <div class="footer-copyright">Released 2021 by Shiaohan & 阿柳 ©</div>
     </div>
   </footer>
 </template>

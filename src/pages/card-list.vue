@@ -1,5 +1,5 @@
 <template>
-  <section class="content">
+  <section class="content" @scroll="contentScroll">
     <template v-if="dataList.length > 0">
       <div v-for="item in dataList" :key="item.ID" class="card-container">
         <Card :item="item" :type="dataType" :classType="'commonCard'"/>
@@ -23,12 +23,18 @@
       }
     },
     computed: {
-      ...mapGetters(['dataList']),
+      ...mapGetters(['dataList', 'dataLoading']),
       dataType() {
         return this.$route.name
       },
     },
     methods: {
+      contentScroll(e) {
+        const { scrollHeight, scrollTop } = e.target;
+        if (scrollHeight - scrollTop < (scrollHeight * 0.15) && !this.dataLoading) {
+          this.$store.dispatch("getMoreDataList", this.dataType);
+        }
+      }
     },
     components: {
       Card,

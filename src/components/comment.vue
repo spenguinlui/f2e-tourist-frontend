@@ -22,11 +22,37 @@
       <div class="form-tilte-block">
         <h3 class="form-title">撰寫評論</h3>
         <ul class="form-stars">
-          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
-          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
-          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
-          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
-          <li><img src="../assets/images/icon/star-grey.svg" alt="空星icon"></li>
+          <!-- 第一個是猜手的慣性消分數 -->
+          <li @mouseover="changeCommentStar(0)" @click="changeCommentStar(0)" style="opacity: 0;">
+            <img
+              src="../assets/images/icon/star-grey.svg"
+              alt="空icon">
+          </li>
+          <li @mouseover="changeCommentStar(1)" @click="changeCommentStar(1)">
+            <img
+              :src="commentStar >= 1 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentStar >= 1 ? '滿星icon' : '空星icon'">
+          </li>
+          <li @mouseover="changeCommentStar(2)" @click="changeCommentStar(2)">
+            <img
+              :src="commentStar >= 2 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentStar >= 2 ? '滿星icon' : '空星icon'">
+          </li>
+          <li @mouseover="changeCommentStar(3)" @click="changeCommentStar(3)">
+            <img
+              :src="commentStar >= 3 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentStar >= 3 ? '滿星icon' : '空星icon'">
+          </li>
+          <li @mouseover="changeCommentStar(4)" @click="changeCommentStar(4)">
+            <img
+              :src="commentStar >= 4 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentStar >= 4 ? '滿星icon' : '空星icon'">
+          </li>
+          <li @mouseover="changeCommentStar(5)" @click="changeCommentStar(5)">
+            <img
+              :src="commentStar >= 5 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentStar >= 5 ? '滿星icon' : '空星icon'">
+          </li>
         </ul>
       </div>
       <input type="text" placeholder="輸入標題" class="form-text">
@@ -45,7 +71,13 @@ export default {
   props: ['dataDetail'],
   data() {
     return {
-      commentFormShow: false
+      commentFormShow: false,
+      commentStar: 0
+    }
+  },
+  methods: {
+    changeCommentStar(score) {
+      this.commentStar = score;
     }
   },
   components: {
