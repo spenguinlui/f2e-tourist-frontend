@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import citys from "../json/citys.json";
+import citys from "@/json/citys.json";
 import { mapGetters } from 'vuex';
 
 export default {

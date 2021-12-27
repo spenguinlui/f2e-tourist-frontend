@@ -42,8 +42,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import SelectAreaBlock from './select-area-block.vue';
-import FilterBlock from './filter-block.vue';
+import SelectAreaBlock from '@/components/select-area-block.vue';
+import FilterBlock from '@/components/filter-block.vue';
 
 export default {
   props: ['type'],
@@ -70,7 +70,10 @@ export default {
   methods: {
     showBlock(blockObject) {
       if (blockObject.visible) {
-        this.hideBlock(blockObject);
+        this.hideBlock(this.areaBlock);
+        this.hideBlock(this.filterBlock);
+        this.hideBlock(this.areaMBlock);
+        this.hideBlock(this.filterMBlock);
       } else {
         this.areaBlock.visible = this.filterBlock.visible = this.areaMBlock.visible = this.filterMBlock.visible = false;
         blockObject.visible = true;

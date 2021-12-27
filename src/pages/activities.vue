@@ -8,9 +8,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ClassBenner from '../components/class-benner.vue';
-import CardList from "./card-list.vue";
-import MapList from "./map-list.vue";
+import ClassBenner from '@/components/class-benner.vue';
+import CardList from "@/pages/card-list.vue";
+import MapList from "@/pages/map-list.vue";
 
 export default {
   name: 'activities',

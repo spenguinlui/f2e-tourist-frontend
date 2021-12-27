@@ -1,6 +1,6 @@
 <template>
   <div class="img-player-container">
-    <div class="show-image" :style="{ backgroundImage: `url(${data.showPicture})` }" :alt="data.showPicture ? '景點大圖' : '找不到圖片'"></div>
+    <div class="show-image" :style="showImageUrl" :alt="data.showPicture ? '景點大圖' : '找不到圖片'"></div>
     <ul class="imgs-row">
       <template v-if="!data.Picture">
         <li v-for="item in imageList" :key="item" class="img-empty"><img src="../assets/images/icon/empty-img-sm.svg" alt="找不到圖片"></li>
@@ -20,11 +20,26 @@
 </template>
 
 <script>
+import noImage from "@/assets/images/empty-img.png"
+
 export default {
   props: ['data'],
   data() {
     return {
       imageList: new Array(3)
+    }
+  },
+  computed: {
+    showImageUrl() {
+      if (this.data.showPicture) {
+        return {
+          "backgroundImage" : `url(${this.data.showPicture})`
+        }
+      } else {
+        return {
+          "backgroundImage": noImage
+        }
+      }
     }
   },
   methods: {

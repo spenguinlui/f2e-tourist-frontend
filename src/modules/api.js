@@ -155,3 +155,19 @@ export const AJAX_getDetail = ({ id }) => {
     headers: authorizationHeader()
   })
 }
+
+// 根據類型決定指定 API
+export const getSingleType_AJAX = (dataType) => {
+  const ajaxList = [
+    AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity
+  ];
+  let targetAjax;
+  switch (dataType) {
+    case "scenicspots": targetAjax = ajaxList[0]; break;
+    case "restaurants": targetAjax = ajaxList[1]; break;
+    case "hotels": targetAjax = ajaxList[2];      break;
+    case "activities": targetAjax = ajaxList[3];  break;
+    default: targetAjax = ajaxList[0];            break;
+  }
+  return targetAjax;
+}

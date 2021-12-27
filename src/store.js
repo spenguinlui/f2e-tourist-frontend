@@ -5,7 +5,8 @@ import {
   AJAX_getRestaurant,
   AJAX_getHotel,
   AJAX_getActivity,
-  AJAX_getDetail
+  AJAX_getDetail,
+  getSingleType_AJAX
 } from "./modules/api";
 
 import { determineIcon, createMarkerPopupObj } from "./modules/map-support";
@@ -19,7 +20,7 @@ export const storeObject = {
     
     keyword: "",           // 搜尋關鍵字
     currentCity: "臺北市",  // 地區過濾第一層 - 城市
-    currentTown: "",  // 地區過濾第二層 - 鄉鎮
+    currentTown: "",       // 地區過濾第二層 - 鄉鎮
     currentClassType: "",  // Class 類型過濾
     
     mapMode: false,        // 是否切換地圖瀏覽模式
@@ -32,13 +33,20 @@ export const storeObject = {
     favoriteDataList: [],  // 我的最愛資料集合
     hots: [],              // 熱門資料 ID 集合
     hotDataList: [],       // 熱門資料集合
-    themes: [              // 主題物件集合(包含集合)，init [] << DB
-      {                    // 主題物件 - 主題名稱、Tag 陣列
+    themes: {              // 主題物件 - 主題名稱、Tag 陣列、資料集合
+      "0": {
+        themeId: "0",
         themeName: "Rainbow Life!",
-        themeTags: ["彩虹", "七彩"]
+        themeTags: ["彩虹", "七彩"],
+        themeDataList: []
+      },
+      "1": {
+        themeId: "1",
+        themeName: "賞楓秘境",
+        themeTags: ["楓", "紅葉"],
+        themeDataList: []
       }
-    ],
-    themeDataList: []
+    },
   },
   getters: {
     dataList: state => state.dataList,
@@ -46,7 +54,6 @@ export const storeObject = {
     dataDetail: state => state.dataDetail,
     hotDataList: state => state.hotDataList,
     favoriteDataList: state => state.favoriteDataList,
-    themeDataList: state => state.themeDataList,
     favorites: state => state.favorites,
     themes: state => state.themes,
     keyword: state => state.keyword,
@@ -63,7 +70,10 @@ export const storeObject = {
     UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
     UPDATE_HOT_DATA_LIST: (state, dataList) => state.hotDataList = dataList,
     UPDATE_FAVORITE_DATA_LIST: (state, dataList) => state.favoriteDataList = dataList,
-    UPDATE_THEME_DATA_LIST: (state, dataList) => state.themeDataList = dataList,
+    UPDATE_THEME_DATA_LIST: (state, { index, dataList }) => {
+
+      state.themes[index].themeDataList = dataList
+    },
     UPDATE_DATA_DETAIL: (state, dataDetail) => {
       dataDetail.showPicture = "";
       if (dataDetail.Picture && dataDetail.Picture.PictureUrl1)
@@ -88,15 +98,7 @@ export const storeObject = {
   actions: {
     // 取得單一類型資料集合
     getSingleTypeDataList({ commit }, dataType) {
-      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
-      let targetAjax;
-      switch (dataType) {
-        case "scenicspots": targetAjax = ajaxList[0]; break;
-        case "restaurants": targetAjax = ajaxList[1]; break;
-        case "hotels": targetAjax = ajaxList[2];      break;
-        case "activities": targetAjax = ajaxList[3];  break;
-        default: targetAjax = ajaxList[0];            break;
-      }
+      const targetAjax = getSingleType_AJAX(dataType);
       targetAjax({}).then(res => {
         commit("UPDATE_DATA_LIST", res.data);
       }).catch((error) => {
@@ -174,15 +176,7 @@ export const storeObject = {
 
     // 以鄉鎮市區過濾資料集合
     filterDataListWithTown({ commit }, { dataType, townName }) {
-      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
-      let targetAjax;
-      switch (dataType) {
-        case "scenicspots": targetAjax = ajaxList[0]; break;
-        case "restaurants": targetAjax = ajaxList[1]; break;
-        case "hotels": targetAjax = ajaxList[2];      break;
-        case "activities": targetAjax = ajaxList[3];  break;
-        default: targetAjax = ajaxList[0];            break;
-      }
+      const targetAjax = getSingleType_AJAX(dataType);
       targetAjax({ townName }).then(res => {
         commit("TOGGLE_TOWN", townName);
         commit("UPDATE_DATA_LIST", res.data);
@@ -194,15 +188,7 @@ export const storeObject = {
 
     // 以 Class 類型篩選資料集合
     filterDataListByClass({ commit }, { dataType, classType }) {
-      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
-      let targetAjax;
-      switch (dataType) {
-        case "scenicspots": targetAjax = ajaxList[0]; break;
-        case "restaurants": targetAjax = ajaxList[1]; break;
-        case "hotels": targetAjax = ajaxList[2];      break;
-        case "activities": targetAjax = ajaxList[3];  break;
-        default: targetAjax = ajaxList[0];            break;
-      }
+      const targetAjax = getSingleType_AJAX(dataType);
       const classObject = { dataType, classType };
       targetAjax({ classObject }).then(res => {
         commit("TOGGLE_CLASS_TYPE", classType);
@@ -226,15 +212,7 @@ export const storeObject = {
       if (currentClassType) {
         queryObj.classObject = { dataType, classType: currentClassType };
       }
-      const ajaxList = [AJAX_getScenicSpot, AJAX_getRestaurant, AJAX_getHotel, AJAX_getActivity];
-      let targetAjax;
-      switch (dataType) {
-        case "scenicspots": targetAjax = ajaxList[0]; break;
-        case "restaurants": targetAjax = ajaxList[1]; break;
-        case "hotels": targetAjax = ajaxList[2];      break;
-        case "activities": targetAjax = ajaxList[3];  break;
-        default: targetAjax = ajaxList[0];            break;
-      }
+      const targetAjax = getSingleType_AJAX(dataType);
       targetAjax(queryObj).then(res => {
         commit("UPDATE_MORE_DATA_LIST", res.data);
         commit("UPDATE_DATA_LOADING", false);
@@ -334,19 +312,40 @@ export const storeObject = {
     },
 
     // 取得單一主題景點資料集合
-    getThemeDataList({ commit }, themeTags) {
+    getThemeDataList({ commit }, theme) {
+      const { themeTags, themeId } = theme;
       Promise.all([
-        AJAX_getScenicSpot({ tags: themeTags }),
-        AJAX_getRestaurant({ tags: themeTags }),
-        AJAX_getHotel({ tags: themeTags }),
-        AJAX_getActivity({ tags: themeTags })
+        AJAX_getScenicSpot({ top: 6, tags: themeTags }),
+        AJAX_getRestaurant({ top: 6, tags: themeTags }),
+        AJAX_getHotel({ top: 6, tags: themeTags }),
+        AJAX_getActivity({ top: 6, tags: themeTags })
       ]).then(ress => {
-        const datalist = concatAndAddType(ress);
-        commit("UPDATE_THEME_DATA_LIST", datalist);
+        const dataList = concatAndAddType(ress);
+        commit("UPDATE_THEME_DATA_LIST", { index: themeId, dataList });
       }).catch((error) => {
         console.log(error);
         // 錯誤處理
       })
+    },
+
+    // 取得所有主題單一類型資料集合
+    getSingleTypeThemeDataList({ commit }, dataType) {
+      const targetAjax = getSingleType_AJAX(dataType);
+      const themes = this.state.themes;
+      let themeArray = new Array();
+      for(let theme in themes) {
+        themeArray[themeArray.length] = targetAjax({ tags: themes[theme].themeTags })
+      }
+      Promise.all(themeArray)
+        .then(ress => {
+          ress.map((res, index) => {
+            res.data.map((data) => data.Type = determineType(data.ID));
+            commit("UPDATE_THEME_DATA_LIST", { index, dataList: res.data })
+          })
+        }).catch((error) => {
+          console.log(error);
+          // 錯誤處理
+        })
     }
   }
 }

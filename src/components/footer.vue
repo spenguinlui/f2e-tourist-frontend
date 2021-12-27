@@ -12,19 +12,19 @@
       <div class="footer-link">
         <div class="footer-item">
           <router-link :to="{ name: 'scenicspots' }">找景點</router-link>
-          <router-link :to="{ name: 'theme' }">主題景點</router-link>
+          <router-link :to="{ name: 'themes', params: { type: 'scenicspots' } }">主題景點</router-link>
         </div>
         <!-- <div class="footer-item">
           <router-link :to="{ name: 'activities' }">找活動</router-link>
-          <router-link :to="{ name: 'theme' }">主題活動</router-link>
+          <router-link :to="{ name: 'themes', params: { type: 'activities' } }">主題活動</router-link>
         </div> -->
         <div class="footer-item">
           <router-link :to="{ name: 'restaurants' }">找餐廳</router-link>
-          <router-link :to="{ name: 'theme' }">主題餐廳</router-link>
+          <router-link :to="{ name: 'themes', params: { type: 'restaurants' } }">主題餐廳</router-link>
         </div>
         <div class="footer-item">
           <router-link :to="{ name: 'hotels' }">找飯店</router-link>
-          <router-link :to="{ name: 'theme' }">嚴選住宿</router-link>
+          <router-link :to="{ name: 'themes', params: { type: 'hotels' } }">嚴選住宿</router-link>
         </div>
         <div class="footer-item">
           <router-link :to="{ name: 'login' }">會員登入</router-link>

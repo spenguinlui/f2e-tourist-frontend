@@ -31,7 +31,7 @@
 
 <script>
   import { mapGetters } from "vuex";
-  import Stars from "./stars.vue";
+  import Stars from "@/components/stars.vue";
 
   export default {
     props: ['item', 'type', 'classType'],

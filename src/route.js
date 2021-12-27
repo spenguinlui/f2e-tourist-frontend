@@ -10,6 +10,16 @@ export const routes = [
     name: 'search'
   },
   {
+    path: '/themes/:type',
+    component: () => import('./pages/themes'),
+    name: 'themes'
+  },
+  {
+    path: '/theme/:index',
+    component: () => import('./pages/theme'),
+    name: 'theme'
+  },
+  {
     path: '/scenicspots',
     component: () => import('./pages/scenicspots'),
     name: 'scenicspots'
@@ -39,4 +49,10 @@ export const routes = [
     component: () => import('./pages/favorites'),
     name: 'favorites'
   },
+  
+  // {
+  //   path: '/suppliers',
+  //   component: () => import('./pages/suppliers'),
+  //   name: 'suppliers'
+  // },
 ]

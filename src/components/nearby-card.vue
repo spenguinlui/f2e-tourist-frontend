@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import Stars from "./stars.vue";
+  import Stars from "@/components/stars.vue";
   import { mapGetters } from 'vuex';
 
   export default {

@@ -4,16 +4,22 @@
       <h1 class="benner-title">我的旅程</h1>
     </header>
     <div class="content">
-      <div v-for="item in favoriteDataList" :key="item.ID" class="card-container">
-        <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
-      </div>
+      <template v-if="favoriteDataList.length > 0">
+        <div v-for="item in favoriteDataList" :key="item.ID" class="card-container">
+          <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+        </div>
+      </template>
+      <template v-else>
+        <NoContent/>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+  import Card from '@/components/card.vue';
+  import NoContent from '@/components/no-content.vue';
   import { mapGetters } from 'vuex';
-  import Card from '../components/card.vue';
 
   export default {
     computed: {
@@ -28,7 +34,8 @@
       this.getFavoriteDataList();
     },
     components: {
-      Card
+      Card,
+      NoContent
     }
   }
 </script>
@@ -40,7 +47,7 @@
     @include flex-row-center-center;
     @include content-padding($section-padding-y);
     @include darken-benner;
-    background: url("../assets/images/spare-benner-2.jpeg");
+    background-image: url("../assets/images/spare-benner-2.jpeg");
     height: $class-benner-m-height;
     .benner-title {
       @include font-h4(bold);

@@ -12,8 +12,8 @@
 </template>
 
 <script>
-  import Card from '../components/card.vue';
-  import NoContent from '../components/no-content.vue';
+  import Card from '@/components/card.vue';
+  import NoContent from '@/components/no-content.vue';
   import { mapGetters } from 'vuex';
 
   export default {

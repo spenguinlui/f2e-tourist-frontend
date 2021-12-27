@@ -5,8 +5,8 @@
 <script>
 import L from 'leaflet';
 import { mapGetters } from 'vuex';
-import { determineIcon, createMarkerPopupObj } from "../modules/map-support";
-import { determineType } from "../modules/data-support";
+import { determineIcon, createMarkerPopupObj } from "@/modules/map-support";
+import { determineType } from "@/modules/data-support";
 
 export default {
   props: ['dataList'],
