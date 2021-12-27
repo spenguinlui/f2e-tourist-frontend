@@ -16,10 +16,24 @@
       </button>
       <!-- pc -->
       <ul class="nav-list">
-        <li><router-link class="nav-list-item" :class="{ active: $route.params.name === 'scenicspots' }" :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link></li>
-        <li><router-link class="nav-list-item" :class="{ active: $route.params.name === 'hotels' }" :to="{ name: 'hotels' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon"></router-link></li>
-        <li><router-link class="nav-list-item" :class="{ active: $route.params.name === 'restaurants' }" :to="{ name: 'restaurants' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon"></router-link></li>
-        <li><router-link class="nav-list-item-f" :to="{ name: 'favorites' }">我的旅程</router-link></li>
+        <li @click="menuShow = false">
+          <router-link class="nav-list-item" :class="{ active: $route.params.name === 'scenicspots' }"
+            :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon">
+          </router-link>
+        </li>
+        <li @click="menuShow = false">
+          <router-link class="nav-list-item" :class="{ active: $route.params.name === 'hotels' }"
+            :to="{ name: 'hotels' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon">
+          </router-link>
+        </li>
+        <li @click="menuShow = false">
+          <router-link class="nav-list-item" :class="{ active: $route.params.name === 'restaurants' }"
+            :to="{ name: 'restaurants' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon">
+          </router-link>
+        </li>
+        <li @click="menuShow = false">
+          <router-link class="nav-list-item-f" :to="{ name: 'favorites' }">我的旅程</router-link>
+        </li>
       </ul>
     </div>
     <!-- mobile -->
@@ -29,12 +43,26 @@
     <!-- mobile -->
     <div class="nav-mobile" :class="{ expanding: menuShow }">
       <ul class="nav-mobile-list">
-        <li><router-link class="nav-mobile-list-item" :class="{ active: $route.params.name === 'scenicspots' }" :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon"></router-link></li>
-        <li><router-link class="nav-mobile-list-item" :class="{ active: $route.params.name === 'hotels' }" :to="{ name: 'hotels' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon"></router-link></li>
-        <li><router-link class="nav-mobile-list-item" :class="{ active: $route.params.name === 'restaurants' }" :to="{ name: 'restaurants' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon"></router-link></li>
+        <li @click="menuShow = false">
+          <router-link class="nav-mobile-list-item" :class="{ active: $route.params.name === 'scenicspots' }"
+            :to="{ name: 'scenicspots' }">找景點<img src="../assets/images/icon/tour-o.svg" alt="景點icon">
+          </router-link>
+        </li>
+        <li @click="menuShow = false">
+          <router-link class="nav-mobile-list-item" :class="{ active: $route.params.name === 'hotels' }"
+            :to="{ name: 'hotels' }">找飯店<img src="../assets/images/icon/bed-o.svg" alt="飯店icon">
+          </router-link>
+        </li>
+        <li @click="menuShow = false">
+          <router-link class="nav-mobile-list-item" :class="{ active: $route.params.name === 'restaurants' }"
+            :to="{ name: 'restaurants' }">找餐廳<img src="../assets/images/icon/food-o.svg" alt="住宿icon">
+          </router-link>
+        </li>
       </ul>
       <ul class="nav-mobile-list">
-        <li><router-link class="nav-mobile-list-item-f" :to="{ name: 'favorites' }">我的旅程</router-link></li>
+        <li @click="menuShow = false">
+          <router-link class="nav-mobile-list-item-f" :to="{ name: 'favorites' }">我的旅程</router-link>
+        </li>
       </ul>
     </div>
   </nav>
