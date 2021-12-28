@@ -4,16 +4,16 @@ import foodIcon from "@/assets/images/icon/food-marker.svg";
 import hotelIcon from "@/assets/images/icon/hotel-marker.svg";
 import noImage from "@/assets/images/empty-img.png";
 
-import { determineType } from "./data-support";
+import { determineTypeByID } from "./data-support";
 
 export const determineIcon = (id) => {
-  const type = determineType(id);
+  const type = determineTypeByID(id);
   const icon = (type) => {
     switch (type) {
-      case "scenicspots": return scenicspotIcon;
-      case "activities": return scenicspotIcon;
-      case "restaurants": return foodIcon;
-      case "hotels": return hotelIcon;
+      case "ScenicSpot": return scenicspotIcon;
+      case "Activity": return scenicspotIcon;
+      case "Restaurant": return foodIcon;
+      case "Hotel": return hotelIcon;
       default: return null;
     }
   }

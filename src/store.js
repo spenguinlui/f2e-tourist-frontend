@@ -11,7 +11,7 @@ import {
 } from "./modules/api";
 
 import { determineIcon, createMarkerPopupObj } from "./modules/map-support";
-import { determineType, concatAndAddType } from "./modules/data-support";
+import { createCommonIDAndName, concatAndAddType } from "./modules/data-support";
 
 export const storeObject = {
   state: {
@@ -103,7 +103,8 @@ export const storeObject = {
     getSingleTypeDataList({ commit }, dataType) {
       const targetAjax = getSingleType_AJAX(dataType);
       targetAjax({}).then(res => {
-        commit("UPDATE_DATA_LIST", res.data);
+        const dataList = res.data.map((data) => createCommonIDAndName(data));
+        commit("UPDATE_DATA_LIST", dataList);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理
@@ -113,7 +114,7 @@ export const storeObject = {
     // 取得單一類型資料細節
     getSingleTypeDetail({ commit }, id) {
       AJAX_getDetail({ id }).then(res => {
-        return res.data[0];
+        return createCommonIDAndName(res.data[0]);
       }).then(data => {
         const position = {
           latitude: data.Position.PositionLat,
@@ -181,8 +182,9 @@ export const storeObject = {
     filterDataListWithTown({ commit }, { dataType, townName }) {
       const targetAjax = getSingleType_AJAX(dataType);
       targetAjax({ townName }).then(res => {
+        const dataList = res.data.map((data) => createCommonIDAndName(data));
         commit("TOGGLE_TOWN", townName);
-        commit("UPDATE_DATA_LIST", res.data);
+        commit("UPDATE_DATA_LIST", dataList);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理
@@ -194,8 +196,9 @@ export const storeObject = {
       const targetAjax = getSingleType_AJAX(dataType);
       const classObject = { dataType, classType };
       targetAjax({ classObject }).then(res => {
+        const dataList = res.data.map((data) => createCommonIDAndName(data));
         commit("TOGGLE_CLASS_TYPE", classType);
-        commit("UPDATE_DATA_LIST", res.data);
+        commit("UPDATE_DATA_LIST", dataList);
       }).catch((error) => {
         console.log(error);
         // 錯誤處理
@@ -217,7 +220,8 @@ export const storeObject = {
       }
       const targetAjax = getSingleType_AJAX(dataType);
       targetAjax(queryObj).then(res => {
-        commit("UPDATE_MORE_DATA_LIST", res.data);
+        const dataList = res.data.map((data) => createCommonIDAndName(data));
+        commit("UPDATE_MORE_DATA_LIST", dataList);
         commit("UPDATE_DATA_LOADING", false);
       }).catch((error) => {
         console.log(error);
@@ -261,7 +265,7 @@ export const storeObject = {
             {
               minWidth: 300,
               offset: [0, -30],
-              className: `map-card ${determineType(data.ID)}`
+              className: `map-card ${data.Type}`
             }
           )
           .addTo(markerLayer);
@@ -342,8 +346,8 @@ export const storeObject = {
       Promise.all(themeArray)
         .then(ress => {
           ress.map((res, index) => {
-            res.data.map((data) => data.Type = determineType(data.ID));
-            commit("UPDATE_THEME_DATA_LIST", { index, dataList: res.data })
+            const dataList = res.data.map((data) => createCommonIDAndName(data));
+            commit("UPDATE_THEME_DATA_LIST", { index: index + 1, dataList })
           })
         }).catch((error) => {
           console.log(error);
@@ -358,18 +362,19 @@ export const storeObject = {
         url: `${process.env.VUE_APP_BACKEND_DOMAIN}/api/v1/themes`,
         withCredentials: true
       }).then((res) => {
-        if (res.status === "200") {
-          const newTheme = res.reduce(
+        if (res.status === 200) {
+          const newThemes = res.data.reduce(
             (newObj, theme) => {
-              return newObj[theme.id] = {
+              newObj[theme.id] = {
                 themeId: theme.id,
                 themeName: theme.theme_name,
                 themeTags: theme.theme_tags,
                 themeDataList: []
               }
+              return newObj;
             }, {}
           );
-          commit("UPDATE_THEMES", newTheme);
+          commit("UPDATE_THEMES", newThemes);
         }
       }).catch((error) => {
         console.log(error);

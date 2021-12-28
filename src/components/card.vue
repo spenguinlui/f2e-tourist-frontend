@@ -1,5 +1,5 @@
 <template>
-  <div :class="`card ${classType || ''} ${type}`" @click="toDetail(item.ID)">
+  <div :class="`card ${classType || ''} ${type}`" @click="toDetail()">
     <div class="card-img">
       <img v-if="!item.Picture || !item.Picture.PictureUrl1" src="../assets/images/empty-img.png" alt="no-image'">
       <img v-if="item.Picture && item.Picture.PictureUrl1" :src="item.Picture.PictureUrl1" :alt="item.Picture.PictureDescription1">
@@ -45,8 +45,18 @@
       ...mapGetters(['favorites'])
     },
     methods: {
-      toDetail(id) {
-        this.$router.push(`/${this.type}/${id}`);
+      routeName(dataType) {
+        switch (dataType) {
+          case "ScenicSpot": return "scenicspots";
+          case "Restaurant": return "restaurants";
+          case "Hotel":      return "hotels";
+          case "Activity":   return "activities";
+          default:           return "";
+        }
+      },
+      toDetail() {
+        const routeName = this.routeName(this.item.Type);
+        this.$router.push(`/${routeName}/${this.item.ID}`);
       },
       changeFavorite(id, add) {
         !this.$store.getters.heartIsLoading && this.$store.dispatch("changeFavoriteToData", { dataId: id, add: add });
@@ -67,16 +77,16 @@
     padding: 1.25rem;
     box-shadow: 0px .25rem 1rem rgba(0, 0, 0, 0.2);
     border-radius: .5rem;
-    &.scenicspots {
+    &.scenicspots, &.ScenicSpot {
       border: 1px solid $primary-800;
     }
-    &.activities {
+    &.activities, &.Activity {
       border: 1px solid #09097c;
     }
-    &.restaurants {
+    &.restaurants, &.Restaurant {
       border: 1px solid $accent-800;
     }
-    &.hotels {
+    &.hotels, &.Hotel {
       border: 1px solid $alert-600;
     }
     &.full-card {

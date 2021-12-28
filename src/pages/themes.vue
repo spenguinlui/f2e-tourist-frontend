@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="theme-cards-slider">
-            <template v-if="theme.themeDataList.length > 0">
+            <template v-if="theme.themeDataList ? theme.themeDataList.length > 0 : false">
               <div v-for="item in theme.themeDataList" :key="item.ID" class="card-container">
                 <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
               </div>
@@ -43,6 +43,12 @@ export default {
       dataType: ""
     }
   },
+  watch: {
+    themes() {
+      console.log("資料變了", this.themes)
+      this.getThemeDataList();
+    }
+  },
   computed: {
     classType_zh() {
       switch (this.dataType) {
@@ -66,6 +72,7 @@ export default {
   },
   methods: {
     getThemeDataList() {
+      console.log("取得資料")
       const dataType = this.dataType = this.$route.params.type;
       this.$store.dispatch("getSingleTypeThemeDataList", dataType);
     }

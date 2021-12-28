@@ -17,17 +17,17 @@
     </section>
     <section class="home-theme">
       <h2 class="home-theme-title">你不能錯過的注目景點 !</h2>
-      <button><router-link :to="{ name: 'theme', params: { index: 1 } }" class="home-theme-btn">賞楓秘境看這裡</router-link></button>
+      <button><router-link :to="{ name: 'theme', params: { index: 2 } }" class="home-theme-btn">賞楓秘境看這裡</router-link></button>
     </section>
     <section class="home-section">
       <div class="home-section-title">
-        <h2 class="home-section-title-text">{{ themes[0].themeName }}</h2>
+        <h2 class="home-section-title-text">{{ themes[1].themeName }}</h2>
         <div class="home-section-title-right">
-          <button><router-link :to="{ name: 'theme', params: { index: 0 } }" class="home-section-title-btn">查看更多</router-link></button>
+          <button><router-link :to="{ name: 'theme', params: { index: 1 } }" class="home-section-title-btn">查看更多</router-link></button>
         </div>
       </div>
       <div class="home-cards-slider">
-        <div v-for="item in themes[0].themeDataList" :key="item.ID" class="card-container">
+        <div v-for="item in themes[1].themeDataList" :key="item.ID" class="card-container">
           <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default {
       this.$store.dispatch("getHotDataList");
     },
     getThemeDataList() {
-      this.$store.dispatch("getThemeDataList", this.themes[0]);
+      this.$store.dispatch("getThemeDataList", this.themes[1]);
     }
   },
   created() {

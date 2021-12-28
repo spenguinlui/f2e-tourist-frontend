@@ -6,7 +6,7 @@
 import L from 'leaflet';
 import { mapGetters } from 'vuex';
 import { determineIcon, createMarkerPopupObj } from "@/modules/map-support";
-import { determineType } from "@/modules/data-support";
+import { determineTypeByID } from "@/modules/data-support";
 
 export default {
   props: ['dataList'],
@@ -58,7 +58,7 @@ export default {
             {
               minWidth: 170,
               offset: [0, -30],
-              className: `nearby-map-card ${determineType(data.ID)}`
+              className: `nearby-map-card ${determineTypeByID(data.ID)}`
             }
           )
           .addTo(markerLayer);
@@ -119,16 +119,20 @@ export default {
         }
       }
     }
-    &.scenicspots .leaflet-popup-content-wrapper {
+    &.scenicspots .leaflet-popup-content-wrapper,
+    &.ScenicSpot .leaflet-popup-content-wrapper {
       border: 1px solid $primary-800;
     }
-    &.activities .leaflet-popup-content-wrapper {
+    &.activities .leaflet-popup-content-wrapper,
+    &.Activity .leaflet-popup-content-wrapper {
       border: 1px solid #09097c;
     }
-    &.restaurants .leaflet-popup-content-wrapper {
+    &.restaurants .leaflet-popup-content-wrapper,
+    &.Restaurant .leaflet-popup-content-wrapper {
       border: 1px solid $accent-800;
     }
-    &.hotels .leaflet-popup-content-wrapper {
+    &.hotels .leaflet-popup-content-wrapper,
+    &.Hotel .leaflet-popup-content-wrapper {
       border: 1px solid $alert-600;
     }
   }

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import jsSHA from "jssha";
+import { determineTypeByID } from "./data-support";
 
-const API_DOMAIN = "https://ptx.transportdata.tw/MOTC/v2/";
+const API_DOMAIN = "https://ptx.transportdata.tw/MOTC/v2/Tourism/";
 const APP_ID = process.env.VUE_APP_APP_ID;
 const APP_KEY = process.env.VUE_APP_APP_KEY;
 
@@ -20,17 +21,6 @@ export const authorizationHeader = () => {
 // 參數字串
 const createNearByStr = ({ latitude, longitude }, limit = 1000) => (latitude && longitude) ? `&$spatialFilter=nearby(${latitude},${longitude}, ${limit})` : "";
 const createSelectByStr = (select) => select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `, ${cur}`), "&$select=");
-
-const determineType = (id) => {
-  const type = id.slice(0, 2);
-  switch (type) {
-    case "C1": return "Tourism/ScenicSpot";
-    case "C2": return "Tourism/Activity";
-    case "C3": return "Tourism/Restaurant";
-    case "C4": return "Tourism/Hotel";
-    default: return null;
-  }
-}
 
 // 呼叫 API 的最終 URL
 export const urlQueryStr = (
@@ -60,20 +50,20 @@ export const urlQueryStr = (
   if (query.select) queryStr += createSelectByStr(query.select);
 
   // 指定資料過濾
-  if (query.id) queryStr += `&$filter=ID eq '${query.id}'`;
+  if (query.id) queryStr += `&$filter=${dataType}ID eq '${query.id}'`;
 
   // 地區過濾
   if (query.townName) queryStr += `&$filter=contains(Address, '${query.townName}')`;
   
   // 針對關鍵字過濾
-  if (query.keyword) queryStr += `&$filter=contains(Name, '${query.keyword}') or contains(Description, '${query.keyword}')`;
+  if (query.keyword) queryStr += `&$filter=contains(${dataType}Name, '${query.keyword}') or contains(Description, '${query.keyword}')`;
 
   // Tag 關鍵字過濾
   if (query.tags) {
     queryStr += query.tags.reduce(
       (tagsStr, cur, i) => {
         if (i !== 0) tagsStr += ' or ';
-        tagsStr += `contains(Name, '${cur}') or contains(Description, '${cur}')`;
+        tagsStr += `contains(${dataType}Name, '${cur}') or contains(Description, '${cur}')`;
         return tagsStr;
       }, "&$filter="
     )
@@ -84,7 +74,7 @@ export const urlQueryStr = (
     queryStr += query.ids.reduce(
       (idsStr, cur, i) => {
         if (i !== 0) idsStr += ' or ';
-        idsStr += `contains(ID, '${cur}')`;
+        idsStr += `contains(${dataType}ID, '${cur}')`;
         return idsStr;
       }, "&$filter="
     )
@@ -107,7 +97,7 @@ export const urlQueryStr = (
 
 // 景觀列表
 export const AJAX_getScenicSpot = (query) => {
-  const path = "Tourism/ScenicSpot";
+  const path = "ScenicSpot";
   return axios({
     method: 'get',
     url: urlQueryStr(path, query),
@@ -117,7 +107,7 @@ export const AJAX_getScenicSpot = (query) => {
 
 // 餐廳列表
 export const AJAX_getRestaurant = (query) => {
-  const path = "Tourism/Restaurant";
+  const path = "Restaurant";
   return axios({
     method: 'get',
     url: urlQueryStr(path, query),
@@ -127,7 +117,7 @@ export const AJAX_getRestaurant = (query) => {
 
 // 住宿列表
 export const AJAX_getHotel = (query) => {
-  const path = "Tourism/Hotel";
+  const path = "Hotel";
   return axios({
     method: 'get',
     url: urlQueryStr(path, query),
@@ -137,7 +127,7 @@ export const AJAX_getHotel = (query) => {
 
 // 活動列表
 export const AJAX_getActivity = (query) => {
-  const path = "Tourism/Activity";
+  const path = "Activity";
   return axios({
     method: 'get',
     url: urlQueryStr(path, query),
@@ -147,8 +137,8 @@ export const AJAX_getActivity = (query) => {
 
 // 指定項目細節
 export const AJAX_getDetail = ({ id }) => {
-  const path = determineType(id);
-  if (!determineType) console.log(`AJAX_getDetail 失敗, ID: ${id} 不正確`);
+  console.log(determineTypeByID(id))
+  const path = determineTypeByID(id);
   return axios({
     method: 'get',
     url: urlQueryStr(path, { id: id }),
