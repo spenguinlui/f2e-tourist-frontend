@@ -360,7 +360,7 @@ export const storeObject = {
       axios({
         method: 'get',
         url: `${process.env.VUE_APP_BACKEND_DOMAIN}/api/v1/themes`,
-        withCredentials: true
+        // withCredentials: true
       }).then((res) => {
         if (res.status === 200) {
           const newThemes = res.data.reduce(
