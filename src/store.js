@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import axios from 'axios';
 
 import {
   AJAX_getScenicSpot,
@@ -94,6 +95,8 @@ export const storeObject = {
     REMOVE_FAVORITES: (state, dataId) => state.favorites.splice(state.favorites.indexOf(dataId), 1),
 
     SET_MAP_MODE_OBJECT: (state, mapClass) => state.mapClass = mapClass,
+
+    UPDATE_THEMES: (state, themes) => state.themes = themes
   },
   actions: {
     // 取得單一類型資料集合
@@ -346,6 +349,32 @@ export const storeObject = {
           console.log(error);
           // 錯誤處理
         })
+    },
+
+    // 從後端要 Theme 資料
+    getThemesByServer({ commit }) {
+      axios({
+        method: 'get',
+        url: `${process.env.VUE_APP_BACKEND_DOMAIN}/api/v1/themes`,
+        withCredentials: true
+      }).then((res) => {
+        if (res.status === "200") {
+          const newTheme = res.reduce(
+            (newObj, theme) => {
+              return newObj[theme.id] = {
+                themeId: theme.id,
+                themeName: theme.theme_name,
+                themeTags: theme.theme_tags,
+                themeDataList: []
+              }
+            }, {}
+          );
+          commit("UPDATE_THEMES", newTheme);
+        }
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
     }
   }
 }
