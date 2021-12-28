@@ -35,14 +35,14 @@ export const storeObject = {
     hots: [],              // 熱門資料 ID 集合
     hotDataList: [],       // 熱門資料集合
     themes: {              // 主題物件 - 主題名稱、Tag 陣列、資料集合
-      "0": {
-        themeId: "0",
+      "1": {
+        themeId: "1",
         themeName: "Rainbow Life!",
         themeTags: ["彩虹", "七彩"],
         themeDataList: []
       },
-      "1": {
-        themeId: "1",
+      "2": {
+        themeId: "2",
         themeName: "賞楓秘境",
         themeTags: ["楓", "紅葉"],
         themeDataList: []
