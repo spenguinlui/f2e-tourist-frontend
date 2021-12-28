@@ -64,16 +64,10 @@ export default {
 
   .map-content {
     @include flex-row-flex-start-center;
-    @include content-padding(1.5rem, true);
+    @include content-padding(1.5rem);
     height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-m-height});
-    @include mobile {
-      @include flex-row-center-center;
-    }
     .card-aside {
-      @include flex-column-flex-start-center;
-      @include flex-col(12);
-      @include scroll;
-      height: 100%;
+      display: none;
       .card-container {
         width: 100%;
         padding: 1rem 1rem;
@@ -89,9 +83,13 @@ export default {
 
   @include screen-up {
     .map-content {
+      @include content-padding(1.5rem, true);
       height: calc(100vh - #{$nav-height} - #{$class-benner-height} - #{$footer-height});
       .card-aside {
+        @include flex-column-flex-start-center;
         @include flex-col(5);
+        @include scroll;
+        height: 100%;
         .card-container {
           &:nth-child(1) {
             padding-top: 0;

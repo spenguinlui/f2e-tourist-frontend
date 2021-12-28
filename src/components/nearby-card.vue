@@ -80,7 +80,7 @@
         flex-wrap: wrap;
         .card-tag {
           @include btn-tag-filled;
-          @include font-caption(700);
+          @include font-overline(700);
           margin-top: .2rem;
         }
       }

@@ -246,6 +246,12 @@
   letter-spacing: $letter-spacing-caption;
   font-weight: $b;
 }
+@mixin font-overline($b: normal) {
+  font-size: $font-size-overline;
+  line-height: $font-size-overline * $line-height-scale-overline;
+  letter-spacing: $letter-spacing-overline;
+  font-weight: $b;
+}
 
 @mixin font-inherit() {
   font-size: inherit;
