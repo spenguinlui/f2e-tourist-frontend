@@ -1,107 +1,112 @@
 <template>
   <div class="container-fluid">
-    <div class="container">
-      <section class="detail-header">
-        <section class="detail-header-title">
-          <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
-          <div class="detail-header-comment">
-            <Stars />
-            <div class="detail-header-comment-count">
-              {{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論
+    <template v-if="dataLoaing">
+      <MaskDetail/>
+    </template>
+    <template v-else>
+      <div class="container">
+        <section class="detail-header">
+          <section class="detail-header-title">
+            <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
+            <div class="detail-header-comment">
+              <Stars />
+              <div class="detail-header-comment-count">
+                {{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論
+              </div>
+            </div>
+            <ul class="detail-tags">
+              <!-- <li class="detail-tag" v-for="tag in ['文化活動', '熱鬧', '一年一度']" :key="tag">{{ tag }}</li> -->
+              <li class="detail-tag" v-if="!dataDetail.Class1">無標記</li>
+              <li class="detail-tag" v-if="dataDetail.Class1">{{ dataDetail.Class1 }}</li>
+              <li class="detail-tag" v-if="dataDetail.Class2">{{ dataDetail.Class2 }}</li>
+              <li class="detail-tag" v-if="dataDetail.Class3">{{ dataDetail.Class3 }}</li>
+            </ul>
+          </section>
+          <section class="detail-connect">
+            <a class="call-btn" :href="`tel:${dataDetail.Phone}`">撥打電話<img src="../assets/images/icon/phone.svg" alt="撥打電話icon"></a>
+            <a class="web-btn" :href="dataDetail.WebsiteUrl" target="_blank" formtarget="_blank"><img src="../assets/images/icon/web.svg" alt="前往網站icon"></a>
+            <button type="button"
+              :class="favorites.includes(dataDetail.ID) ? 'favorite-btn filled' : 'favorite-btn'"
+              @click.prevent.stop="changeFavorite(dataDetail.ID, !favorites.includes(dataDetail.ID))">
+              <img v-show="favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
+              <img v-show="!favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
+            </button>
+          </section>
+        </section>
+        <section class="detail-section-block">
+          <section class="detail-block-left">
+            <div class="detail-left-content">
+              <section class="detail-about">
+                <h2 class="detail-title">關於</h2>
+                <p class="detail-content">{{ dataDetail.Description }}</p>
+              </section>
+              <section class="detail-address">
+                <h2 class="detail-title">地址</h2>
+                <p class="detail-content">{{ dataDetail.Address }}</p>
+              </section>
+              <section class="detail-opentime">
+                <h2 class="detail-title">營業時間</h2>
+                <p class="detail-content opentime">{{ dataDetail.OpenTime }}</p>
+              </section>
+            </div>
+          </section>
+          <section class="detail-block-right">
+            <ImgPlayer :data="dataDetail" />
+          </section>
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-title">{{ classType_zh }}特色</h2>
+          <article v-if="dataDetail.DescriptionDetail" class="detail-content">{{ dataDetail.DescriptionDetail }}</article>
+          <template v-else><NoContent /></template>
+        </section>
+
+        <section class="detail-section" v-if="dataDetail === 'restaurants'">
+          <h2 class="detail-title">餐點推薦</h2>
+          <article v-if="dataDetail.Features2" class="detail-content">{{ dataDetail.Features2 }}</article>
+          <template v-else><NoContent /></template>
+        </section>
+
+        <section class="detail-section" v-if="dataDetail.ServiceInfo">
+          <h2 class="detail-title">服務設施</h2>
+          <article class="detail-content">{{ dataDetail.ServiceInfo }}</article>
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-title">交通方式</h2>
+          <article v-if="dataDetail.TravelInfo" class="detail-content">{{ dataDetail.TravelInfo }}</article>
+          <template v-else><NoContent /></template>
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-title">鄰近景點</h2>
+          <div class="detail-nearby">
+            <section class="detail-nearby-left">
+              <NearbyCard
+                v-for="item in dataDetail.NearbyDataList"
+                :key="item.ID" :item="item"/>
+            </section>
+            <section class="detail-nearby-right">
+              <NearbyMap :dataList="dataDetail.NearbyDataList"/>
+            </section>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-title">旅客評價</h2>
+          <Comment :dataDetail="dataDetail"/>
+        </section>
+
+        <section class="detail-section">
+          <h2 class="detail-title">這些景點大家也推</h2>
+          <div class="recommend-container">
+            <div v-for="item in hotDataList" :key="item.ID" class="card-container">
+              <Card :key="item.ID" :item="item" :type="item.Type" :classType="'commonCard'"/>
             </div>
           </div>
-          <ul class="detail-tags">
-            <!-- <li class="detail-tag" v-for="tag in ['文化活動', '熱鬧', '一年一度']" :key="tag">{{ tag }}</li> -->
-            <li class="detail-tag" v-if="!dataDetail.Class1">無標記</li>
-            <li class="detail-tag" v-if="dataDetail.Class1">{{ dataDetail.Class1 }}</li>
-            <li class="detail-tag" v-if="dataDetail.Class2">{{ dataDetail.Class2 }}</li>
-            <li class="detail-tag" v-if="dataDetail.Class3">{{ dataDetail.Class3 }}</li>
-          </ul>
         </section>
-        <section class="detail-connect">
-          <a class="call-btn" :href="`tel:${dataDetail.Phone}`">撥打電話<img src="../assets/images/icon/phone.svg" alt="撥打電話icon"></a>
-          <a class="web-btn" :href="dataDetail.WebsiteUrl" target="_blank" formtarget="_blank"><img src="../assets/images/icon/web.svg" alt="前往網站icon"></a>
-          <button type="button"
-            :class="favorites.includes(dataDetail.ID) ? 'favorite-btn filled' : 'favorite-btn'"
-            @click.prevent.stop="changeFavorite(dataDetail.ID, !favorites.includes(dataDetail.ID))">
-            <img v-show="favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
-            <img v-show="!favorites.includes(dataDetail.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
-          </button>
-        </section>
-      </section>
-      <section class="detail-section-block">
-        <section class="detail-block-left">
-          <div class="detail-left-content">
-            <section class="detail-about">
-              <h2 class="detail-title">關於</h2>
-              <p class="detail-content">{{ dataDetail.Description }}</p>
-            </section>
-            <section class="detail-address">
-              <h2 class="detail-title">地址</h2>
-              <p class="detail-content">{{ dataDetail.Address }}</p>
-            </section>
-            <section class="detail-opentime">
-              <h2 class="detail-title">營業時間</h2>
-              <p class="detail-content opentime">{{ dataDetail.OpenTime }}</p>
-            </section>
-          </div>
-        </section>
-        <section class="detail-block-right">
-          <ImgPlayer :data="dataDetail" />
-        </section>
-      </section>
-
-      <section class="detail-section">
-        <h2 class="detail-title">{{ classType_zh }}特色</h2>
-        <article v-if="dataDetail.DescriptionDetail" class="detail-content">{{ dataDetail.DescriptionDetail }}</article>
-        <template v-else><NoContent /></template>
-      </section>
-
-      <section class="detail-section" v-if="dataDetail === 'restaurants'">
-        <h2 class="detail-title">餐點推薦</h2>
-        <article v-if="dataDetail.Features2" class="detail-content">{{ dataDetail.Features2 }}</article>
-        <template v-else><NoContent /></template>
-      </section>
-
-      <section class="detail-section" v-if="dataDetail.ServiceInfo">
-        <h2 class="detail-title">服務設施</h2>
-        <article class="detail-content">{{ dataDetail.ServiceInfo }}</article>
-      </section>
-
-      <section class="detail-section">
-        <h2 class="detail-title">交通方式</h2>
-        <article v-if="dataDetail.TravelInfo" class="detail-content">{{ dataDetail.TravelInfo }}</article>
-        <template v-else><NoContent /></template>
-      </section>
-
-      <section class="detail-section">
-        <h2 class="detail-title">鄰近景點</h2>
-        <div class="detail-nearby">
-          <section class="detail-nearby-left">
-            <NearbyCard
-              v-for="item in dataDetail.NearbyDataList"
-              :key="item.ID" :item="item"/>
-          </section>
-          <section class="detail-nearby-right">
-            <NearbyMap :dataList="dataDetail.NearbyDataList"/>
-          </section>
-        </div>
-      </section>
-
-      <section class="detail-section">
-        <h2 class="detail-title">旅客評價</h2>
-        <Comment :dataDetail="dataDetail"/>
-      </section>
-
-      <section class="detail-section">
-        <h2 class="detail-title">這些景點大家也推</h2>
-        <div class="recommend-container">
-          <div v-for="item in hotDataList" :key="item.ID" class="card-container">
-            <Card :key="item.ID" :item="item" :type="item.Type" :classType="'commonCard'"/>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -114,6 +119,7 @@ import NearbyCard from "@/components/nearby-card.vue";
 import NearbyMap from "@/components/nearby-map.vue";
 import NoContent from '@/components/no-content.vue';
 import Comment from '@/components/comment.vue';
+import MaskDetail from '@/components/mask-detail.vue';
 
 export default {
   name: "detail",
@@ -133,7 +139,7 @@ export default {
         default: return "其他";
       }
     },
-    ...mapGetters(['dataDetail', 'favorites', 'hotDataList']),
+    ...mapGetters(['dataDetail', 'favorites', 'hotDataList', 'dataLoaing']),
     ...mapGetters('otherModule', ['adding'])
   },
   methods: {
@@ -156,6 +162,11 @@ export default {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   },
+  updated() {
+    if (Object.keys(this.dataDetail).length > 0) {
+      this.$store.commit("UPDATE_DATA_LOADING", false);
+    }
+  },
   components: {
     Stars,
     ImgPlayer,
@@ -163,7 +174,8 @@ export default {
     NearbyCard,
     NearbyMap,
     NoContent,
-    Comment
+    Comment,
+    MaskDetail
   }
 }
 </script>

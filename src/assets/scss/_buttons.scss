@@ -135,7 +135,7 @@
     background-color: $primary-100;
     box-shadow: inset 0px 0px 5px $primary-500;
   }
-  &:disabled {
+  &:disabled, .disabled {
     background-color: $grey-100;
     color:  $grey-300;
     border: 1px solid $grey-300;

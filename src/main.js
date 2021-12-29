@@ -33,6 +33,8 @@ const vm = new Vue({
 router.beforeEach((to, _, next) => {
   if (to.name === "scenicspots" || to.name === "restaurants" || to.name === "hotels") {
     vm.$store.commit("otherModule/TOGGLE_MAP_MODE", false);
+  } else if (to.name === "detail") {
+    vm.$store.commit("CLEAR_DATA_DETAIL");
   }
   next();
 })

@@ -10,9 +10,18 @@
         <button class="home-section-title-btn">查看更多</button>
       </div>
       <div class="home-cards-slider">
-        <div v-for="item in hotDataList" :key="item.ID" class="card-container">
-          <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
-        </div>
+        <!-- 資料讀取中 -->
+        <template v-if="dataLoaing">
+          <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
+            <MaskCard />
+          </div>
+        </template>
+        <!-- 資料完成 -->
+        <template v-else>
+          <div v-for="item in hotDataList" :key="item.ID" class="card-container">
+            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+          </div>
+        </template>
       </div>
     </section>
     <section class="home-theme">
@@ -27,22 +36,32 @@
         </div>
       </div>
       <div class="home-cards-slider">
-        <div v-for="item in themes[1].themeDataList" :key="item.ID" class="card-container">
-          <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
-        </div>
+        <!-- 資料讀取中 -->
+        <template v-if="dataLoaing">
+          <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
+            <MaskCard />
+          </div>
+        </template>
+        <!-- 資料完成 -->
+        <template v-else>
+          <div v-for="item in themes[1].themeDataList" :key="item.ID" class="card-container">
+            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+          </div>
+        </template>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import SearchBar from "@/components/search-bar.vue";
 import Card from "@/components/card.vue";
+import MaskCard from '@/components/mask-card.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters(['hotDataList', 'themes', 'themes'])
+    ...mapGetters(['hotDataList', 'themes', 'dataLoaing'])
   },
   methods: {
     getHotDataList() {
@@ -58,7 +77,8 @@ export default {
   },
   components: {
     SearchBar,
-    Card
+    Card,
+    MaskCard
   }
 }
 </script>

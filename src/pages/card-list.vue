@@ -1,18 +1,26 @@
 <template>
   <section class="content" @scroll="contentScroll">
-    <template v-if="dataList.length > 0">
-      <div v-for="item in dataList" :key="item.ID" class="card-container">
-        <Card :item="item" :type="dataType" :classType="'commonCard'"/>
+    <template v-if="dataLoaing">
+      <div v-for="(item, index) in new Array(9)" :key="index" class="card-container">
+        <MaskCard />
       </div>
     </template>
     <template v-else>
-      <NoContent/>
+      <template v-if="dataList.length > 0">
+        <div v-for="item in dataList" :key="item.ID" class="card-container">
+          <Card :item="item" :type="dataType" :classType="'commonCard'"/>
+        </div>
+      </template>
+      <template v-else>
+        <NoContent/>
+      </template>
     </template>
   </section>
 </template>
 
 <script>
   import Card from '@/components/card.vue';
+  import MaskCard from '@/components/mask-card.vue';
   import NoContent from '@/components/no-content.vue';
   import { mapGetters } from 'vuex';
 
@@ -23,7 +31,7 @@
       }
     },
     computed: {
-      ...mapGetters(['dataList', 'dataLoading']),
+      ...mapGetters(['dataList', 'dataLoaing', 'moreDataLoading']),
       dataType() {
         return this.$route.name
       },
@@ -31,14 +39,15 @@
     methods: {
       contentScroll(e) {
         const { scrollHeight, scrollTop } = e.target;
-        if (scrollHeight - scrollTop < (scrollHeight * 0.15) && !this.dataLoading) {
+        if (scrollHeight - scrollTop < (scrollHeight * 0.15) && !this.moreDataLoading) {
           this.$store.dispatch("getMoreDataList", this.dataType);
         }
       }
     },
     components: {
       Card,
-      NoContent
+      NoContent,
+      MaskCard
     }
   }
 </script>

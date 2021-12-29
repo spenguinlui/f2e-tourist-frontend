@@ -4,15 +4,24 @@
       <h1 class="benner-title">搜尋結果</h1>
     </header>
     <section class="content">
-      <!-- 查詢有資料 -->
-      <template v-if="allTypeDataList.length > 0">
-        <div v-for="item in allTypeDataList" :key="item.ID" class="card-container">
-          <Card :item="item" :type="item.Type"/>
+      <!-- 資料讀取中 -->
+      <template v-if="dataLoaing">
+        <div v-for="(item, index) in new Array(9)" :key="index" class="card-container">
+          <MaskCard />
         </div>
       </template>
-      <!-- 查詢無資料 -->
+      <!-- 資料完成 -->
       <template v-else>
-        <h2>無符合資料 !</h2>
+        <!-- 查詢有資料 -->
+        <template v-if="allTypeDataList.length > 0">
+          <div v-for="item in allTypeDataList" :key="item.ID" class="card-container">
+            <Card :item="item" :type="item.Type"/>
+          </div>
+        </template>
+        <!-- 查詢無資料 -->
+        <template v-else>
+          <h2>無符合資料 !</h2>
+        </template>
       </template>
     </section>
   </div>
@@ -20,15 +29,17 @@
 
 <script>
 import Card from '@/components/card.vue';
+import MaskCard from '@/components/mask-card.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'search',
   computed: {
-    ...mapGetters(['allTypeDataList', 'keyword']),
+    ...mapGetters(['allTypeDataList', 'keyword', 'dataLoaing']),
   },
   components: {
-    Card
+    Card,
+    MaskCard
   },
   created() {
     // 用網址進入的也要一次資料

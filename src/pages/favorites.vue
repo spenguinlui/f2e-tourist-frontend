@@ -4,13 +4,25 @@
       <h1 class="benner-title">我的旅程</h1>
     </header>
     <div class="content">
-      <template v-if="favoriteDataList.length > 0">
-        <div v-for="item in favoriteDataList" :key="item.ID" class="card-container">
-          <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+      <!-- 資料讀取中 -->
+      <template v-if="dataLoaing">
+        <div v-for="(item, index) in new Array(9)" :key="index" class="card-container">
+          <MaskCard />
         </div>
       </template>
+    
+      <!-- 資料完成 -->
       <template v-else>
-        <NoContent/>
+        <!-- 有資料 -->
+        <template v-if="favoriteDataList.length > 0">
+          <div v-for="item in favoriteDataList" :key="item.ID" class="card-container">
+            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+          </div>
+        </template>
+        <!-- 沒資料 -->
+        <template v-else>
+          <NoContent/>
+        </template>
       </template>
     </div>
   </div>
@@ -18,12 +30,13 @@
 
 <script>
   import Card from '@/components/card.vue';
+  import MaskCard from '@/components/mask-card.vue';
   import NoContent from '@/components/no-content.vue';
   import { mapGetters } from 'vuex';
 
   export default {
     computed: {
-      ...mapGetters(['favoriteDataList'])
+      ...mapGetters(['favoriteDataList', 'dataLoaing'])
     },
     methods: {
       getFavoriteDataList() {
@@ -35,7 +48,8 @@
     },
     components: {
       Card,
-      NoContent
+      NoContent,
+      MaskCard
     }
   }
 </script>
