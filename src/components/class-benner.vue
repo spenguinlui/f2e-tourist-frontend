@@ -67,30 +67,6 @@ export default {
       }
     }
   },
-  methods: {
-    showBlock(blockObject) {
-      if (blockObject.visible) {
-        this.hideBlock(this.areaBlock);
-        this.hideBlock(this.filterBlock);
-        this.hideBlock(this.areaMBlock);
-        this.hideBlock(this.filterMBlock);
-      } else {
-        this.areaBlock.visible = this.filterBlock.visible = this.areaMBlock.visible = this.filterMBlock.visible = false;
-        blockObject.visible = true;
-        document.addEventListener('click', blockObject.checkFn, false);
-      }
-    },
-    hideBlock(blockObject) {
-      blockObject.visible = false;
-      document.removeEventListener('click', blockObject.checkFn, false);
-    },
-    showDateBlock () {
-      this.window.alert('功能尚未開放');
-    },
-    toggleMapMode() {
-      this.$store.commit("TOGGLE_MAP_MODE", !this.mapMode);
-    }
-  },
   computed: {
     classType() {
       const currentPath = this.$route.name;
@@ -124,7 +100,31 @@ export default {
         default:            return `url(${require('../assets/images/tour-benner.png')})`;
       }
     },
-    ...mapGetters(['mapMode'])
+    ...mapGetters('otherModule', ['mapMode'])
+  },
+  methods: {
+    showBlock(blockObject) {
+      if (blockObject.visible) {
+        this.hideBlock(this.areaBlock);
+        this.hideBlock(this.filterBlock);
+        this.hideBlock(this.areaMBlock);
+        this.hideBlock(this.filterMBlock);
+      } else {
+        this.areaBlock.visible = this.filterBlock.visible = this.areaMBlock.visible = this.filterMBlock.visible = false;
+        blockObject.visible = true;
+        document.addEventListener('click', blockObject.checkFn, false);
+      }
+    },
+    hideBlock(blockObject) {
+      blockObject.visible = false;
+      document.removeEventListener('click', blockObject.checkFn, false);
+    },
+    showDateBlock () {
+      this.window.alert('功能尚未開放');
+    },
+    toggleMapMode() {
+      this.$store.commit("otherModule/TOGGLE_MAP_MODE", !this.mapMode);
+    }
   },
   components: {
     SelectAreaBlock,

@@ -46,7 +46,7 @@ export default {
         opacity: 0.5
       }).addTo(map);
 
-      this.$store.commit("SET_MAP_MODE_OBJECT", map);
+      this.$store.commit("otherModule/SET_MAP_MODE_OBJECT", map);
     }
   },
   mounted() {
@@ -78,6 +78,7 @@ export default {
       @include flex-col(12);
       height: 100%;
       border-radius: .5rem;
+      z-index: 0;
     }
   }
 

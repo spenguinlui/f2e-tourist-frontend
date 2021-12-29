@@ -42,7 +42,8 @@
       }
     },
     computed: {
-      ...mapGetters(['favorites'])
+      ...mapGetters(['favorites']),
+      ...mapGetters('otherModule', ['adding'])
     },
     methods: {
       routeName(dataType) {
@@ -59,7 +60,7 @@
         this.$router.push(`/${routeName}/${this.item.ID}`);
       },
       changeFavorite(id, add) {
-        !this.$store.getters.heartIsLoading && this.$store.dispatch("changeFavoriteToData", { dataId: id, add: add });
+        !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });
         this.$store.dispatch("getFavoriteDataList");
       }
     },

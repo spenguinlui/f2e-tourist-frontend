@@ -15,7 +15,7 @@ import MapList from "@/pages/map-list.vue";
 export default {
   name: 'hotels',
   computed: {
-    ...mapGetters(['mapMode'])
+    ...mapGetters('otherModule', ['mapMode'])
   },
   components: {
     ClassBenner,
@@ -26,7 +26,7 @@ export default {
     this.$store.dispatch("getSingleTypeDataList", "hotels");
   },
   updated() {
-    if (this.mapMode) this.$store.dispatch("setMarkerOnMap", 0);
+    if (this.mapMode) this.$store.dispatch("otherModule/setMarkerOnMap", 0);
   }
 }
 </script>

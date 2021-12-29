@@ -45,7 +45,6 @@ export default {
   },
   watch: {
     themes() {
-      console.log("資料變了", this.themes)
       this.getThemeDataList();
     }
   },
@@ -72,7 +71,6 @@ export default {
   },
   methods: {
     getThemeDataList() {
-      console.log("取得資料")
       const dataType = this.dataType = this.$route.params.type;
       this.$store.dispatch("getSingleTypeThemeDataList", dataType);
     }

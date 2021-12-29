@@ -1,6 +1,6 @@
 <template>
   <div class="img-player-container">
-    <div class="show-image" :style="showImageUrl" :alt="data.showPicture ? '景點大圖' : '找不到圖片'"></div>
+    <div class="show-image" :style="showImageUrl" :alt="showPicture ? '景點大圖' : '找不到圖片'"></div>
     <ul class="imgs-row">
       <template v-if="!data.Picture">
         <li v-for="item in imageList" :key="item" class="img-empty"><img src="../assets/images/icon/empty-img-sm.svg" alt="找不到圖片"></li>
@@ -21,6 +21,7 @@
 
 <script>
 import noImage from "@/assets/images/empty-img.png"
+import { mapGetters } from 'vuex'
 
 export default {
   props: ['data'],
@@ -31,21 +32,33 @@ export default {
   },
   computed: {
     showImageUrl() {
-      if (this.data.showPicture) {
-        return {
-          "backgroundImage" : `url(${this.data.showPicture})`
-        }
+      if (this.showPicture) {
+        return { "backgroundImage" : `url(${this.showPicture})`};
       } else {
-        return {
-          "backgroundImage": noImage
-        }
+        return { "backgroundImage": noImage };
       }
-    }
+    },
+    ...mapGetters('otherModule', ['showPicture'])
   },
   methods: {
+    getShowPicture() {
+      if (this.showPicture) { return; }
+      if (this.data.Picture && this.data.Picture.PictureUrl1) {
+        this.$store.commit("otherModule/SET_SHOW_PICTURE", this.data.Picture.PictureUrl1);
+      }
+    },
+    removeShowPicture() {
+      this.$store.commit("otherModule/REMOVE_SHOW_PICTURE");
+    },
     checkImage(PictureUrl) {
-      if (PictureUrl) this.$store.dispatch("changeDetailShowPicture", PictureUrl);
+      if (PictureUrl) this.$store.dispatch("otherModule/changeDetailShowPicture", PictureUrl);
     }
+  },
+  updated() {
+    this.getShowPicture();
+  },
+  beforeDestroy() {
+    this.removeShowPicture();
   }
 }
 </script>

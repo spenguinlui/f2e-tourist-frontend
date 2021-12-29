@@ -134,6 +134,7 @@ export default {
       }
     },
     ...mapGetters(['dataDetail', 'favorites', 'hotDataList']),
+    ...mapGetters('otherModule', ['adding'])
   },
   methods: {
     getDetail() {
@@ -142,11 +143,11 @@ export default {
       this.$store.dispatch("getSingleTypeDetail", id);
     },
     changeFavorite(id, add) {
-      !this.$store.getters.heartIsLoading && this.$store.dispatch("changeFavoriteToData", { dataId: id, add: add });
+      !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });
     },
     getHotDataList() {
       this.$store.dispatch("getHotDataList");
-    },
+    }
   },
   created() {
     this.getDetail();

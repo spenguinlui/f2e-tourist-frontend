@@ -17,8 +17,8 @@ export default {
     Footer
   },
   created() {
-    this.$store.dispatch("getThemesByServer");
-    this.$store.dispatch("getFavorites");
+    this.$store.dispatch("serverModule/getThemesByServer");
+    this.$store.dispatch("otherModule/getFavorites");
   }
 }
 </script>

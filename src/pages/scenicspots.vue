@@ -15,7 +15,7 @@ import MapList from "@/pages/map-list.vue";
 export default {
   name: 'scenicspots',
   computed: {
-    ...mapGetters(['mapMode', 'dataList'])
+    ...mapGetters('otherModule', ['mapMode'])
   },
   components: {
     ClassBenner,
@@ -26,7 +26,7 @@ export default {
     this.$store.dispatch("getSingleTypeDataList", "scenicspots");
   },
   updated() {
-    if (this.mapMode) this.$store.dispatch("setMarkerOnMap");
+    if (this.mapMode) this.$store.dispatch("otherModule/setMarkerOnMap");
   }
 }
 </script>

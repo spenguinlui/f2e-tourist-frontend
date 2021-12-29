@@ -1,11 +1,11 @@
 import Vue from 'vue';
-import App from './App.vue';
+import App from '@/App.vue';
 
 import Router from 'vue-router';
-import { routes } from './route';
+import { routes } from '@/route';
 
 import Vuex from 'vuex';
-import { storeObject } from './store';
+import { storeObject } from '@/store/index';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -32,7 +32,7 @@ const vm = new Vue({
 
 router.beforeEach((to, _, next) => {
   if (to.name === "scenicspots" || to.name === "restaurants" || to.name === "hotels") {
-    vm.$store.commit("TOGGLE_MAP_MODE", false);
+    vm.$store.commit("otherModule/TOGGLE_MAP_MODE", false);
   }
   next();
 })
