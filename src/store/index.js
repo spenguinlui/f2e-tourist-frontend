@@ -105,6 +105,8 @@ export const storeObject = {
     getSingleTypeDetail({ commit }, id) {
       commit("UPDATE_DATA_LOADING", true);
       AJAX_getDetail({ id }).then(res => {
+        // 向後端丟個資料
+        this.dispatch("serverModule/postEnterCountToSever", id);
         return createCommonIDAndName(res.data[0]);
       }).then(data => {
         const position = {
@@ -167,6 +169,10 @@ export const storeObject = {
         commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
         commit("UPDATE_KEYWORD", "");
         commit("UPDATE_DATA_LOADING", false);
+
+        const ids = datalist.map(data => data.ID);
+        // 向後端丟個資料
+        this.dispatch("serverModule/postSearchCountToSever", ids);
       }).catch((error) => {
         commit("UPDATE_DATA_LOADING", false);
         console.log(error);

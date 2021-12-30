@@ -171,12 +171,8 @@ export const getSingleType_AJAX = (dataType) => {
 }
 
 // ---- 與後端 server 交流
-export const getThemes_AJAX_S = () => {
+export const getServerPrefixUrl = (() => {
   const domain = process.env.NODE_ENV === "development" ? 
     process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
-  return axios({
-    method: 'get',
-    url: `${domain}/api/v1/themes`,
-    // withCredentials: true
-  })
-}
+  return `${domain}/api/v1`;
+})();
