@@ -137,7 +137,6 @@ export const AJAX_getActivity = (query) => {
 
 // 指定項目細節
 export const AJAX_getDetail = ({ id }) => {
-  console.log(determineTypeByID(id))
   const path = determineTypeByID(id);
   return axios({
     method: 'get',

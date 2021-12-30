@@ -382,15 +382,15 @@
 @mixin bgAnimate {
   background: linear-gradient(90deg, #f0f0f0, #d4d4d4, #f0f0f0);
   background-size: 600% 600%;
-  -webkit-animation: imgAnimate 3s ease infinite;
-  -moz-animation: imgAnimate 3s ease infinite;
-  animation: imgAnimate 3s ease infinite;
+  -webkit-animation: imgAnimate 1.5s ease infinite;
+  -moz-animation: imgAnimate 1.5s ease infinite;
+  animation: imgAnimate 1.5s ease infinite;
 }
 
 @mixin textAnimate {
   background: linear-gradient(90deg, #d4d4d4, #b8b8b8, #d4d4d4);
   background-size: 600% 600%;
-  -webkit-animation: blockAnimate 3s ease infinite;
-  -moz-animation: blockAnimate 3s ease infinite;
-  animation: blockAnimate 3s ease infinite;
+  -webkit-animation: blockAnimate 1.5s ease infinite;
+  -moz-animation: blockAnimate 1.5s ease infinite;
+  animation: blockAnimate 1.5s ease infinite;
 }
