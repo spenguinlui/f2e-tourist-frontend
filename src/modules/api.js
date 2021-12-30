@@ -20,7 +20,16 @@ export const authorizationHeader = () => {
 
 // 參數字串
 const createNearByStr = ({ latitude, longitude }, limit = 1000) => (latitude && longitude) ? `&$spatialFilter=nearby(${latitude},${longitude}, ${limit})` : "";
-const createSelectByStr = (select) => select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `, ${cur}`), "&$select=");
+const createSelectByStr = (dataType, select) => {
+  let str = select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `,${cur}`), "&$select=");
+  str += `,${dataType}ID,${dataType}Name`;
+  if (dataType === 'ScenicSpot') {
+    str += ',Class1,Class2,Class3';
+  } else if (dataType !== 'Activity') {
+    str += ',Class';
+  }
+  return str;
+};
 
 // 呼叫 API 的最終 URL
 export const urlQueryStr = (
@@ -47,7 +56,7 @@ export const urlQueryStr = (
   if (query.position) queryStr += createNearByStr(query.position);
   
   // 欄位選擇
-  if (query.select) queryStr += createSelectByStr(query.select);
+  if (query.select) queryStr += createSelectByStr(dataType, query.select);
 
   // 指定資料過濾
   if (query.id) queryStr += `&$filter=${dataType}ID eq '${query.id}'`;

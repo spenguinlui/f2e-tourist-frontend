@@ -90,7 +90,7 @@ export const storeObject = {
     getSingleTypeDataList({ commit }, dataType) {
       commit("UPDATE_DATA_LOADING", true);
       const targetAjax = getSingleType_AJAX(dataType);
-      targetAjax({}).then(res => {
+      targetAjax({ select: ['Picture'] }).then(res => {
         const dataList = res.data.map((data) => createCommonIDAndName(data));
         commit("UPDATE_DATA_LIST", dataList);
         commit("UPDATE_DATA_LOADING", false);
@@ -141,10 +141,10 @@ export const storeObject = {
       }
 
       Promise.all([
-        AJAX_getScenicSpot({ position }),
-        AJAX_getRestaurant({ position }),
-        AJAX_getHotel({ position }),
-        AJAX_getActivity({ position })
+        AJAX_getScenicSpot({ position, select: ['Picture', 'Position'] }),
+        AJAX_getRestaurant({ position, select: ['Picture', 'Position'] }),
+        AJAX_getHotel({ position, select: ['Picture', 'Position'] }),
+        AJAX_getActivity({ position, select: ['Picture', 'Position'] })
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
@@ -158,10 +158,10 @@ export const storeObject = {
     getAllTypeDataListWithKeyword({ commit }, keyword) {
       commit("UPDATE_DATA_LOADING", true);
       Promise.all([
-        AJAX_getScenicSpot({ keyword }),
-        AJAX_getRestaurant({ keyword }),
-        AJAX_getHotel({ keyword }),
-        AJAX_getActivity({ keyword })
+        AJAX_getScenicSpot({ keyword, select: ['Picture'] }),
+        AJAX_getRestaurant({ keyword, select: ['Picture'] }),
+        AJAX_getHotel({ keyword, select: ['Picture'] }),
+        AJAX_getActivity({ keyword, select: ['Picture'] })
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
@@ -178,7 +178,7 @@ export const storeObject = {
     filterDataListWithTown({ commit }, { dataType, townName }) {
       commit("UPDATE_DATA_LOADING", true);
       const targetAjax = getSingleType_AJAX(dataType);
-      targetAjax({ townName }).then(res => {
+      targetAjax({ townName, select: ['Picture'] }).then(res => {
         const dataList = res.data.map((data) => createCommonIDAndName(data));
         commit("TOGGLE_TOWN", townName);
         commit("UPDATE_DATA_LIST", dataList);
@@ -195,7 +195,7 @@ export const storeObject = {
       commit("UPDATE_DATA_LOADING", true);
       const targetAjax = getSingleType_AJAX(dataType);
       const classObject = { dataType, classType };
-      targetAjax({ classObject }).then(res => {
+      targetAjax({ classObject, select: ['Picture'] }).then(res => {
         const dataList = res.data.map((data) => createCommonIDAndName(data));
         commit("TOGGLE_CLASS_TYPE", classType);
         commit("UPDATE_DATA_LIST", dataList);
@@ -215,7 +215,8 @@ export const storeObject = {
       let queryObj = {
         skip: dataList.length,
         keyword,
-        townName: currentTown
+        townName: currentTown,
+        select: ['Picture']
       }
       if (currentClassType) {
         queryObj.classObject = { dataType, classType: currentClassType };
@@ -241,10 +242,10 @@ export const storeObject = {
       const hotArray = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"]
 
       Promise.all([
-        AJAX_getScenicSpot({ ids: hotArray }),
-        AJAX_getRestaurant({ ids: hotArray }),
-        AJAX_getHotel({ ids: hotArray }),
-        AJAX_getActivity({ ids: hotArray })
+        AJAX_getScenicSpot({ ids: hotArray, select: ['Picture'] }),
+        AJAX_getRestaurant({ ids: hotArray, select: ['Picture'] }),
+        AJAX_getHotel({ ids: hotArray, select: ['Picture'] }),
+        AJAX_getActivity({ ids: hotArray, select: ['Picture'] })
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_HOT_DATA_LIST", datalist);
@@ -262,10 +263,10 @@ export const storeObject = {
       const favoriteIds = state.favorites
 
       Promise.all([
-        AJAX_getScenicSpot({ ids: favoriteIds }),
-        AJAX_getRestaurant({ ids: favoriteIds }),
-        AJAX_getHotel({ ids: favoriteIds }),
-        AJAX_getActivity({ ids: favoriteIds })
+        AJAX_getScenicSpot({ ids: favoriteIds, select: ['Picture'] }),
+        AJAX_getRestaurant({ ids: favoriteIds, select: ['Picture'] }),
+        AJAX_getHotel({ ids: favoriteIds, select: ['Picture'] }),
+        AJAX_getActivity({ ids: favoriteIds, select: ['Picture'] })
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_FAVORITE_DATA_LIST", datalist);
@@ -282,10 +283,10 @@ export const storeObject = {
       commit("UPDATE_DATA_LOADING", true);
       const { themeTags, themeId } = theme;
       Promise.all([
-        AJAX_getScenicSpot({ top: 6, tags: themeTags }),
-        AJAX_getRestaurant({ top: 6, tags: themeTags }),
-        AJAX_getHotel({ top: 6, tags: themeTags }),
-        AJAX_getActivity({ top: 6, tags: themeTags })
+        AJAX_getScenicSpot({ top: 6, tags: themeTags, select: ['Picture'] }),
+        AJAX_getRestaurant({ top: 6, tags: themeTags, select: ['Picture'] }),
+        AJAX_getHotel({ top: 6, tags: themeTags, select: ['Picture'] }),
+        AJAX_getActivity({ top: 6, tags: themeTags, select: ['Picture'] })
       ]).then(ress => {
         const dataList = concatAndAddType(ress);
         commit("UPDATE_THEME_DATA_LIST", { index: themeId, dataList });
@@ -304,7 +305,7 @@ export const storeObject = {
       const themes = this.state.themes;
       let themeArray = new Array();
       for(let theme in themes) {
-        themeArray[themeArray.length] = targetAjax({ tags: themes[theme].themeTags })
+        themeArray[themeArray.length] = targetAjax({ tags: themes[theme].themeTags, select: ['Picture'] })
       }
       Promise.all(themeArray)
         .then(ress => {
