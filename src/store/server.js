@@ -19,20 +19,31 @@ export default {
         method: 'get',
         url: `${getServerPrefixUrl}/themes`,
       }).then((res) => {
-        if (res.status === 200) {
-          const newThemes = res.data.reduce(
-            (newObj, theme) => {
-              newObj[theme.id] = {
-                themeId: theme.id,
-                themeName: theme.theme_name,
-                themeTags: theme.theme_tags,
-                themeDataList: []
-              }
-              return newObj;
-            }, {}
-          );
-          commit("UPDATE_THEMES", newThemes, { root: true });
-        }
+        const newThemes = res.data.reduce(
+          (newObj, theme) => {
+            newObj[theme.id] = {
+              themeId: theme.id,
+              themeName: theme.theme_name,
+              themeTags: theme.theme_tags,
+              themeDataList: []
+            }
+            return newObj;
+          }, {}
+        );
+        commit("UPDATE_THEMES", newThemes, { root: true });
+      }).catch((error) => {
+        console.log(error);
+        // 錯誤處理
+      })
+    },
+
+    // 從後端要 hots id array
+    getHotsByServer({ commit }) {
+      axios({
+        method: 'get',
+        url: `${getServerPrefixUrl}/hots`,
+      }).then((res) => {
+        commit("UPDATE_HOTS", res.data, { root: true });
       }).catch((error) => {
         console.log(error);
         // 錯誤處理

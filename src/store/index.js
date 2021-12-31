@@ -62,6 +62,7 @@ export const storeObject = {
     moreDataLoading: state => state.moreDataLoading,
   },
   mutations: {
+    // 更改資料
     UPDATE_DATA_LIST: (state, dataList) => state.dataList = dataList,
     UPDATE_MORE_DATA_LIST: (state, dataList) => state.dataList = state.dataList.concat(dataList),
     UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
@@ -71,19 +72,24 @@ export const storeObject = {
     UPDATE_DATA_DETAIL: (state, dataDetail) => state.dataDetail = dataDetail,
     CLEAR_DATA_DETAIL: (state) => state.dataDetail = {},
 
+    // 改動過濾條件
     UPDATE_KEYWORD: (state, keyword) => state.keyword = keyword,
     TOGGLE_CITY: (state, cityName) => state.currentCity = cityName,
     TOGGLE_TOWN: (state, townName) => state.currentTown = townName,
     TOGGLE_CLASS_TYPE: (state, classType) => state.currentClassType = classType,
 
+    // 改動資料讀取判定
     UPDATE_DATA_LOADING: (state, toggle) => state.dataLoaing = toggle,
     UPDATE_MORE_DATA_LOADING: (state, toggle) => state.moreDataLoading = toggle,
 
+    // 改動我的最愛(旅程)
     SET_FAVORITES: (state, favorites) => state.favorites = favorites,
     ADD_FAVORITES: (state, dataId) => state.favorites.push(dataId),
     REMOVE_FAVORITES: (state, dataId) => state.favorites.splice(state.favorites.indexOf(dataId), 1),
 
+    // 從後端取得主題、熱門資料
     UPDATE_THEMES: (state, themes) => state.themes = themes,
+    UPDATE_HOTS: (state, hots) => state.hots = hots,
   },
   actions: {
     // 取得單一類型資料集合
@@ -122,7 +128,7 @@ export const storeObject = {
           const nearbyDataList = concatAndAddType(ress);
           data.NearbyDataList = nearbyDataList;
           commit("UPDATE_DATA_DETAIL", data);
-          // commit("UPDATE_DATA_LOADING", false);
+          commit("UPDATE_DATA_LOADING", false);
         }).catch((error) => {
           commit("UPDATE_DATA_LOADING", false);
           console.log(error);
@@ -240,18 +246,18 @@ export const storeObject = {
     },
 
     // 取得熱門景點資料集合
-    getHotDataList({ commit }) {
+    getHotDataList({ commit, state }) {
       commit("UPDATE_DATA_LOADING", true);
-      // const hotArray = getHotIds()  --- 從 db吐，然後存到 this.state.hots;
 
       // mock
-      const hotArray = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"]
+      // const hots = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"];
+      const { hots } = state;
 
       Promise.all([
-        AJAX_getScenicSpot({ ids: hotArray, select: ['Picture'] }),
-        AJAX_getRestaurant({ ids: hotArray, select: ['Picture'] }),
-        AJAX_getHotel({ ids: hotArray, select: ['Picture'] }),
-        AJAX_getActivity({ ids: hotArray, select: ['Picture'] })
+        AJAX_getScenicSpot({ ids: hots, select: ['Picture'] }),
+        AJAX_getRestaurant({ ids: hots, select: ['Picture'] }),
+        AJAX_getHotel({ ids: hots, select: ['Picture'] }),
+        AJAX_getActivity({ ids: hots, select: ['Picture'] })
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_HOT_DATA_LIST", datalist);

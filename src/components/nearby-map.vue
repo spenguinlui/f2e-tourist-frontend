@@ -21,13 +21,16 @@ export default {
   watch: {
     dataDetail: {
       handler() {
-        this.initMap(); // 有資料才掛上地圖，非同步資料一定會比 dom mouted 慢
+        this.initMap(); // 當資料變動時更新地圖 (保險起見)
       },
       deep: true
     }
   },
   methods: {
     initMap() {
+      // 沒資料就不做
+      if (Object.keys(this.dataDetail).length === 0) { return; }
+
       const currentPosition = {
         latitude: this.dataDetail.Position.PositionLat,
         longitude: this.dataDetail.Position.PositionLon
@@ -67,6 +70,9 @@ export default {
       if (map.tap) map.tap.disable();  // 這是防止部分瀏覽器 popup 失效
       this.mapClass = map;
     }
+  },
+  mounted() {
+    this.initMap(); // 直接從細節頁面網址進入
   },
   beforeDestroy(){
     // 離開前把 marker 都清光

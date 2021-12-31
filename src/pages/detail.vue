@@ -16,7 +16,7 @@
             </div>
             <ul class="detail-tags">
               <!-- <li class="detail-tag" v-for="tag in ['文化活動', '熱鬧', '一年一度']" :key="tag">{{ tag }}</li> -->
-              <li class="detail-tag" v-if="!dataDetail.Class1">無標記</li>
+              <li class="detail-tag" v-if="!dataDetail.Class && !dataDetail.Class1">無標記</li>
               <li class="detail-tag" v-if="dataDetail.Class1">{{ dataDetail.Class1 }}</li>
               <li class="detail-tag" v-if="dataDetail.Class2">{{ dataDetail.Class2 }}</li>
               <li class="detail-tag" v-if="dataDetail.Class3">{{ dataDetail.Class3 }}</li>
@@ -157,15 +157,9 @@ export default {
   },
   created() {
     this.getDetail();
-    this.getHotDataList();  // 先用熱門假資料代替
     // detail 點選其他卡片跳轉後位置要拉回頂端
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-  },
-  updated() {
-    if (Object.keys(this.dataDetail).length > 0) {
-      this.$store.commit("UPDATE_DATA_LOADING", false);
-    }
   },
   components: {
     Stars,

@@ -25,7 +25,9 @@ const createSelectByStr = (dataType, select) => {
   str += `,${dataType}ID,${dataType}Name`;
   if (dataType === 'ScenicSpot') {
     str += ',Class1,Class2,Class3';
-  } else if (dataType !== 'Activity') {
+  } else if (dataType == 'Activity') {
+    str += ',Class1, Class2';
+  } else {
     str += ',Class';
   }
   return str;

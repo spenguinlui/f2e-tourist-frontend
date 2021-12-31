@@ -54,7 +54,7 @@ export default {
       if (PictureUrl) this.$store.dispatch("otherModule/changeDetailShowPicture", PictureUrl);
     }
   },
-  beforeUpdate() {
+  created() {
     this.getShowPicture();
   },
   beforeDestroy() {

@@ -11,7 +11,7 @@
       </div>
       <div class="home-cards-slider">
         <!-- 資料讀取中 -->
-        <template v-if="dataLoaing">
+        <template v-if="!dataLoaing">
           <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
             <MaskCard />
           </div>
