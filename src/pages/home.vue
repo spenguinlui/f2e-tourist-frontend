@@ -46,10 +46,6 @@ export default {
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
 
-  section {
-    @include content-padding(2.5vh);
-  }
-
   .home {
     margin-bottom: $footer-m-height;
     &-benner {
@@ -67,6 +63,7 @@ export default {
       }
     }
     &-section {
+      @include content-padding(2.5vh);
       &-title {
         @include flex-row-space-between-center;
         &-text {
@@ -83,6 +80,7 @@ export default {
     &-theme {
       @include benner-background('../assets/images/theme-benner.png');
       @include flex-column-center-center;
+      @include content-padding(2.5vh);
       width: 100%;
       height: 50vh;
       &-title {
