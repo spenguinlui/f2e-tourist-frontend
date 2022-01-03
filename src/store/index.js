@@ -4,6 +4,7 @@ import {
   AJAX_getHotel,
   AJAX_getActivity,
   AJAX_getDetail,
+  AJAX_getOneData,
   getSingleType_AJAX
 } from "@/modules/api";
 
@@ -247,20 +248,17 @@ export const storeObject = {
     },
 
     // 取得熱門景點資料集合
-    getHotDataList({ commit, state }) {
+    getHotDataList({ commit, state }, count) {
       commit("UPDATE_DATA_LOADING", true);
 
-      // mock
-      // let hotsAry = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"];
       const { hots } = state;
-      // if (hots.length > 0) hotsAry = hots;
+      let hotArray = [];
 
-      Promise.all([
-        AJAX_getScenicSpot({ ids: hots, select: ['Picture'] }),
-        AJAX_getRestaurant({ ids: hots, select: ['Picture'] }),
-        AJAX_getHotel({ ids: hots, select: ['Picture'] }),
-        AJAX_getActivity({ ids: hots, select: ['Picture'] })
-      ]).then(ress => {
+      for (let i = 0; i <= (count || 6); i++) {
+        hotArray.push(AJAX_getOneData(hots[i]));
+      }
+
+      Promise.all(hotArray).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_HOT_DATA_LIST", datalist);
         commit("UPDATE_DATA_LOADING", false);

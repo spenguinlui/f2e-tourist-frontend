@@ -7,7 +7,7 @@
     <section class="home-section">
       <div class="home-section-title">
         <h2 class="home-section-title-text">熱門景點</h2>
-        <button class="home-section-title-btn">查看更多</button>
+        <!-- <button class="home-section-title-btn">查看更多</button> -->
       </div>
       <CardSlider :mode="'hot'"/>
     </section>

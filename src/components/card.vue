@@ -67,8 +67,8 @@
         }
       },
       toDetail() {
-        const routeName = this.routeName(this.item.Type);
-        this.$router.push(`/${routeName}/${this.item.ID}`);
+        const routeName = this.routeName(this.data.Type);
+        this.$router.push(`/${routeName}/${this.data.ID}`);
       },
       changeFavorite(id, add) {
         !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });

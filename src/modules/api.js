@@ -21,16 +21,20 @@ export const authorizationHeader = () => {
 // 參數字串
 const createNearByStr = ({ latitude, longitude }, limit = 1000) => (latitude && longitude) ? `&$spatialFilter=nearby(${latitude},${longitude}, ${limit})` : "";
 const createSelectByStr = (dataType, select) => {
-  let str = select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `,${cur}`), "&$select=");
-  str += `,${dataType}ID,${dataType}Name`;
-  if (dataType === 'ScenicSpot') {
-    str += ',Class1,Class2,Class3';
-  } else if (dataType == 'Activity') {
-    str += ',Class1, Class2';
+  if (select.length !== 0) {
+    let str = select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `,${cur}`), "&$select=");
+    str += `,${dataType}ID,${dataType}Name`;
+    if (dataType === 'ScenicSpot') {
+      str += ',Class1,Class2,Class3';
+    } else if (dataType == 'Activity') {
+      str += ',Class1, Class2';
+    } else {
+      str += ',Class';
+    }
+    return str;
   } else {
-    str += ',Class';
+    return '';
   }
-  return str;
 };
 
 // 呼叫 API 的最終 URL
@@ -71,24 +75,28 @@ export const urlQueryStr = (
 
   // Tag 關鍵字過濾
   if (query.tags) {
-    queryStr += query.tags.reduce(
-      (tagsStr, cur, i) => {
-        if (i !== 0) tagsStr += ' or ';
-        tagsStr += `contains(${dataType}Name, '${cur}') or contains(Description, '${cur}')`;
-        return tagsStr;
-      }, "&$filter="
-    )
+    if (query.tags.length !== 0) {
+      queryStr += query.tags.reduce(
+        (tagsStr, cur, i) => {
+          if (i !== 0) tagsStr += ' or ';
+          tagsStr += `contains(${dataType}Name, '${cur}') or contains(Description, '${cur}')`;
+          return tagsStr;
+        }, "&$filter="
+      )
+    }
   }
 
   // 多 ID 搜尋
   if (query.ids) { 
-    queryStr += query.ids.reduce(
-      (idsStr, cur, i) => {
-        if (i !== 0) idsStr += ' or ';
-        idsStr += `contains(${dataType}ID, '${cur}')`;
-        return idsStr;
-      }, "&$filter="
-    )
+    if (query.ids.length !== 0) {
+      queryStr += query.ids.reduce(
+        (idsStr, cur, i) => {
+          if (i !== 0) idsStr += ' or ';
+          idsStr += `contains(${dataType}ID, '${cur}')`;
+          return idsStr;
+        }, "&$filter="
+      )
+    }
   }
 
   // Class 類型過濾
@@ -152,6 +160,16 @@ export const AJAX_getDetail = ({ id }) => {
   return axios({
     method: 'get',
     url: urlQueryStr(path, { id: id }),
+    headers: authorizationHeader()
+  })
+}
+
+// 指定項目精簡版
+export const AJAX_getOneData = (id) => {
+  const path = determineTypeByID(id);
+  return axios({
+    method: 'get',
+    url: urlQueryStr(path, { id: id, select: ['Picture'] }),
     headers: authorizationHeader()
   })
 }
