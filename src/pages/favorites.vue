@@ -15,8 +15,8 @@
       <template v-else>
         <!-- 有資料 -->
         <template v-if="favoriteDataList.length > 0">
-          <div v-for="item in favoriteDataList" :key="item.ID" class="card-container">
-            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+          <div v-for="data in favoriteDataList" :key="data.ID" class="card-container">
+            <Card :data="data" :type="data.Type" :classType="'commonCard'"/>
           </div>
         </template>
         <!-- 沒資料 -->
