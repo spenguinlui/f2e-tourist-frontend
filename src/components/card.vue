@@ -1,29 +1,29 @@
 <template>
   <div :class="`card ${classType || ''} ${type}`" @click="toDetail()">
     <div class="card-img">
-      <img v-if="!item.Picture || !item.Picture.PictureUrl1" src="../assets/images/empty-img.png" alt="no-image'">
-      <img v-if="item.Picture && item.Picture.PictureUrl1" :src="item.Picture.PictureUrl1" :alt="item.Picture.PictureDescription1">
-      <div :class="favorites.includes(item.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(item.ID, !favorites.includes(item.ID))">
-        <img v-show="favorites.includes(item.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
-        <img v-show="!favorites.includes(item.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
+      <img v-if="isPicturePresent" :src="data.Picture.PictureUrl1" :alt="data.Picture.PictureDescription1">
+      <img v-else src="../assets/images/empty-img.png" alt="no-image'">
+      <div :class="favorites.includes(data.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(data.ID, !favorites.includes(data.ID))">
+        <img v-show="favorites.includes(data.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
+        <img v-show="!favorites.includes(data.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
       </div>
     </div>
     <div class="card-content">
-      <div class="card-content-title">{{ item.Name }}</div>
+      <div class="card-content-title">{{ data.Name }}</div>
       <Stars />
       <div class="card-content-tags">
-        <!-- <template v-for="(tag, index) in item.Tag">
+        <!-- <template v-for="(tag, index) in data.Tag">
           <div class="card-tag" :key="index">{{ tag }}</div>
         </template>
-        <div v-if="!item.Tag" class="card-tag">尚未建立</div> -->
-        <div class="card-tag" v-if="!item.Class && !item.Class1">無標記</div>
-        <div class="card-tag" v-if="item.Class">{{ item.Class }}</div>
-        <div class="card-tag" v-if="item.Class1">{{ item.Class1 }}</div>
-        <div class="card-tag" v-if="item.Class2">{{ item.Class2 }}</div>
-        <div class="card-tag" v-if="item.Class3">{{ item.Class3 }}</div>
+        <div v-if="!data.Tag" class="card-tag">尚未建立</div> -->
+        <div class="card-tag" v-if="!data.Class && !data.Class1">無標記</div>
+        <div class="card-tag" v-if="data.Class">{{ data.Class }}</div>
+        <div class="card-tag" v-if="data.Class1">{{ data.Class1 }}</div>
+        <div class="card-tag" v-if="data.Class2">{{ data.Class2 }}</div>
+        <div class="card-tag" v-if="data.Class3">{{ data.Class3 }}</div>
       </div>
       <div v-if="classType === 'full-card'" class="card-content-text">
-        {{ item.Description }}
+        {{ data.Description }}
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@
   import Stars from "@/components/stars.vue";
 
   export default {
-    props: ['item', 'type', 'classType'],
+    props: ['data', 'type', 'classType'],
     data () {
       return {
         // card 內的 dataType 是吃父元件傳進來的，因為一頁內可能會有多種類型
@@ -42,6 +42,17 @@
       }
     },
     computed: {
+      isPicturePresent() {
+        if (this.data.Picture) {
+          if (this.data.Picture.PictureUrl1) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      },
       ...mapGetters(['favorites']),
       ...mapGetters('otherModule', ['adding'])
     },

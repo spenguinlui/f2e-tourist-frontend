@@ -53,6 +53,7 @@ export const storeObject = {
     hotDataList: state => state.hotDataList,
     favoriteDataList: state => state.favoriteDataList,
     favorites: state => state.favorites,
+    hots: state => state.hots,
     themes: state => state.themes,
     keyword: state => state.keyword,
     currentCity: state => state.currentCity,

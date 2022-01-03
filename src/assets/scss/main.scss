@@ -19,34 +19,6 @@
   }
 }
 
-@-webkit-keyframes imgAnimate {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 51%}
-  100%{background-position:0% 50%}
-}
-@-moz-keyframes imgAnimate {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 51%}
-  100%{background-position:0% 50%}
-}
-@keyframes imgAnimate {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 51%}
-  100%{background-position:0% 50%}
-}
-
-@-webkit-keyframes blockAnimate {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 51%}
-  100%{background-position:0% 50%}
-}
-@-moz-keyframes blockAnimate {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 51%}
-  100%{background-position:0% 50%}
-}
-@keyframes blockAnimate {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 51%}
-  100%{background-position:0% 50%}
-}
+// section[class^="section"] {
+//   @include content-padding(2.5vh);
+// }

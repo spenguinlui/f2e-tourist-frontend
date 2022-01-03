@@ -9,20 +9,7 @@
         <h2 class="home-section-title-text">熱門景點</h2>
         <button class="home-section-title-btn">查看更多</button>
       </div>
-      <div class="home-cards-slider">
-        <!-- 資料讀取中 -->
-        <template v-if="dataLoaing">
-          <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
-            <MaskCard />
-          </div>
-        </template>
-        <!-- 資料完成 -->
-        <template v-else>
-          <div v-for="item in hotDataList" :key="item.ID" class="card-container">
-            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
-          </div>
-        </template>
-      </div>
+      <CardSlider :mode="'hot'"/>
     </section>
     <section class="home-theme">
       <h2 class="home-theme-title">你不能錯過的注目景點 !</h2>
@@ -35,50 +22,23 @@
           <button><router-link :to="{ name: 'theme', params: { index: 1 } }" class="home-section-title-btn">查看更多</router-link></button>
         </div>
       </div>
-      <div class="home-cards-slider">
-        <!-- 資料讀取中 -->
-        <template v-if="dataLoaing">
-          <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
-            <MaskCard />
-          </div>
-        </template>
-        <!-- 資料完成 -->
-        <template v-else>
-          <div v-for="item in themes[1].themeDataList" :key="item.ID" class="card-container">
-            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
-          </div>
-        </template>
-      </div>
+      <CardSlider :mode="'theme'" :theme="themes[1]"/>
     </section>
   </div>
 </template>
 
 <script>
 import SearchBar from "@/components/search-bar.vue";
-import Card from "@/components/card.vue";
-import MaskCard from '@/components/mask-card.vue';
+import CardSlider from '@/components/cards-slider.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   computed: {
     ...mapGetters(['hotDataList', 'themes', 'dataLoaing'])
   },
-  methods: {
-    getHotDataList() {
-      this.$store.dispatch("getHotDataList");
-    },
-    getThemeDataList() {
-      this.$store.dispatch("getThemeDataList", this.themes[1]);
-    }
-  },
-  created() {
-    this.getHotDataList();
-    this.getThemeDataList();
-  },
   components: {
     SearchBar,
-    Card,
-    MaskCard
+    CardSlider
   }
 }
 </script>
@@ -118,13 +78,6 @@ export default {
           @include btn-text;
           @include btn-filled;
         }
-      }
-    }
-    &-cards-slider {
-      @include flex-row-flex-start-center;
-      @include scroll;
-      .card-container {
-        @include card-flex;
       }
     }
     &-theme {

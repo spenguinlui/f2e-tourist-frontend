@@ -12,28 +12,7 @@
               <button><router-link :to="{ name: 'theme', params: { index: theme.themeId } }" class="theme-section-title-btn">查看更多</router-link></button>
             </div>
           </div>
-          <div class="theme-cards-slider">
-            <!-- 資料讀取中 -->
-            <template v-if="dataLoaing">
-              <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
-                <MaskCard />
-              </div>
-            </template>
-
-            <!-- 資料完成 -->
-            <template v-else>
-              <!-- 有資料 -->
-              <template v-if="theme.themeDataList ? theme.themeDataList.length > 0 : false">
-                <div v-for="item in theme.themeDataList" :key="item.ID" class="card-container">
-                  <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
-                </div>
-              </template>
-              <!-- 沒資料 -->
-              <template v-else>
-                <NoContent/>
-              </template>
-            </template>
-          </div>
+          <CardSlider :mode="'theme'" :theme="theme"/>
         </section>
       </template>
 
@@ -46,8 +25,7 @@
 </template>
 
 <script>
-import Card from '@/components/card.vue';
-import MaskCard from '@/components/mask-card.vue';
+import CardSlider from '@/components/cards-slider.vue';
 import NoContent from '@/components/no-content.vue';
 import { mapGetters } from 'vuex';
 
@@ -94,9 +72,8 @@ export default {
     this.getThemeDataList();
   },
   components: {
-    Card,
+    CardSlider,
     NoContent,
-    MaskCard
   }
 }
 </script>
