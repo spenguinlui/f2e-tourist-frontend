@@ -1,12 +1,12 @@
 <template>
   <div class="container-fluid">
     <header class="benner-container">
-      <h1 class="benner-title">{{ theme.themeName }}</h1>
+      <h1 class="benner-title" v-if="!dataLoaing">{{ theme.themeName }}</h1>
     </header>
     <div class="content">
       <!-- 資料讀取中 -->
       <template v-if="dataLoaing">
-        <div v-for="(item, index) in new Array(3)" :key="index" class="card-container">
+        <div v-for="(item, index) in new Array(9)" :key="index" class="card-container">
           <MaskCard />
         </div>
       </template>
@@ -15,8 +15,8 @@
       <template v-else>
         <!-- 有資料 -->
         <template v-if="theme.themeDataList.length > 0">
-          <div v-for="item in theme.themeDataList" :key="item.ID" class="card-container">
-            <Card :item="item" :type="item.Type" :classType="'commonCard'"/>
+          <div v-for="data in theme.themeDataList" :key="data.ID" class="card-container">
+            <Card :data="data" :type="data.Type" :classType="'commonCard'"/>
           </div>
         </template>
         <!-- 沒資料 -->
@@ -37,7 +37,9 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      themeIndex: ""
+      themeIndex: "",
+      timeout: {},
+      requestCount: 0
     }
   },
   computed: {
@@ -48,12 +50,21 @@ export default {
   },
   methods: {
     getThemeDataList() {
-      const index = this.themeIndex = this.$route.params.index;
-      this.$store.dispatch("getThemeDataList", this.themes[index]);
+      this.$store.dispatch("getThemeDataList", { theme: this.themes[this.themeIndex], count: 9 });
     }
   },
   created() {
-    this.getThemeDataList();
+    const vm = this;
+    vm.themeIndex = vm.$route.params.index;
+    vm.timeout = window.setInterval(() => {
+      vm.requestCount ++;
+      if (this.themeIndex) {
+        vm.getThemeDataList();
+      }
+      if (vm.theme || vm.requestCount >= 35) {
+        window.clearInterval(vm.timeout);
+      }
+    }, 1000);
   },
   components: {
     Card,

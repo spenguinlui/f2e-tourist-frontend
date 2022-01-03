@@ -272,13 +272,14 @@ export const storeObject = {
     // 取得我的旅程資料集合
     getFavoriteDataList({ commit, state }) {
       commit("UPDATE_DATA_LOADING", true);
-      const favoriteIds = state.favorites
+      const favoriteIds = state.favorites;
+      const queryObj = { ids: favoriteIds, select: ['Picture'] };
 
       Promise.all([
-        AJAX_getScenicSpot({ ids: favoriteIds, select: ['Picture'] }),
-        AJAX_getRestaurant({ ids: favoriteIds, select: ['Picture'] }),
-        AJAX_getHotel({ ids: favoriteIds, select: ['Picture'] }),
-        AJAX_getActivity({ ids: favoriteIds, select: ['Picture'] })
+        AJAX_getScenicSpot(queryObj),
+        AJAX_getRestaurant(queryObj),
+        AJAX_getHotel(queryObj),
+        AJAX_getActivity(queryObj)
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_FAVORITE_DATA_LIST", datalist);
@@ -291,14 +292,15 @@ export const storeObject = {
     },
 
     // 取得單一主題景點資料集合
-    getThemeDataList({ commit }, theme) {
+    getThemeDataList({ commit }, { theme, count }) {
       commit("UPDATE_DATA_LOADING", true);
       const { themeTags, themeId } = theme;
+      const queryObj = { top: count, tags: themeTags, select: ['Picture'] };
       Promise.all([
-        AJAX_getScenicSpot({ top: 6, tags: themeTags, select: ['Picture'] }),
-        AJAX_getRestaurant({ top: 6, tags: themeTags, select: ['Picture'] }),
-        AJAX_getHotel({ top: 6, tags: themeTags, select: ['Picture'] }),
-        AJAX_getActivity({ top: 6, tags: themeTags, select: ['Picture'] })
+        AJAX_getScenicSpot(queryObj),
+        AJAX_getRestaurant(queryObj),
+        AJAX_getHotel(queryObj),
+        AJAX_getActivity(queryObj)
       ]).then(ress => {
         const dataList = concatAndAddType(ress);
         commit("UPDATE_THEME_DATA_LIST", { index: themeId, dataList });

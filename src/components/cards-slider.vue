@@ -48,7 +48,7 @@ export default {
       this.dataLoaing = false;
     },
     async getThemeDataList() {
-      await this.$store.dispatch("getThemeDataList", this.theme);
+      await this.$store.dispatch("getThemeDataList", { theme: this.theme, count: 3 });
       this.dataLoaing = false;
     },
   },
