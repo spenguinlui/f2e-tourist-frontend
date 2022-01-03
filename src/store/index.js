@@ -251,15 +251,15 @@ export const storeObject = {
       commit("UPDATE_DATA_LOADING", true);
 
       // mock
-      let hotsAry = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"];
+      // let hotsAry = ["C1_315081100H_000021", "C3_382000000A_206463", "C2_315080000H_080485", "C4_315080000H_013058", "C1_376490000A_100032"];
       const { hots } = state;
-      if (hots.length > 0) hotsAry = hots;
+      // if (hots.length > 0) hotsAry = hots;
 
       Promise.all([
-        AJAX_getScenicSpot({ ids: hotsAry, select: ['Picture'] }),
-        AJAX_getRestaurant({ ids: hotsAry, select: ['Picture'] }),
-        AJAX_getHotel({ ids: hotsAry, select: ['Picture'] }),
-        AJAX_getActivity({ ids: hotsAry, select: ['Picture'] })
+        AJAX_getScenicSpot({ ids: hots, select: ['Picture'] }),
+        AJAX_getRestaurant({ ids: hots, select: ['Picture'] }),
+        AJAX_getHotel({ ids: hots, select: ['Picture'] }),
+        AJAX_getActivity({ ids: hots, select: ['Picture'] })
       ]).then(ress => {
         const datalist = concatAndAddType(ress);
         commit("UPDATE_HOT_DATA_LIST", datalist);

@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       dataLoaing: true,
+      timeout: {},
       requestCount: 0
     }
   },
@@ -52,17 +53,20 @@ export default {
     },
   },
   created() {
-    if (this.mode === "hot") {
-      const checkHotsUtilServer = setTimeout(() => {
-        if (this.hots.length > 0 || this.requestCount >= 30) {
-          this.requestCount ++;
-          this.getHotDataList();
-          clearTimeout(checkHotsUtilServer);
+    const vm = this;
+    if (vm.mode === "hot") {
+      vm.timeout = window.setInterval(() => {
+        vm.requestCount ++;
+        if (vm.hots.length > 0) {
+          vm.getHotDataList();
+        }
+        if (vm.hotDataList.length > 0 || vm.requestCount >= 35) {
+          window.clearInterval(vm.timeout);
         }
       }, 1000);
     }
-    if (this.mode === "theme") {
-      this.getThemeDataList();
+    if (vm.mode === "theme") {
+      vm.getThemeDataList();
     }
   },
   components: {
