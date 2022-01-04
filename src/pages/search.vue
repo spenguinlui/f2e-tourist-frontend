@@ -6,7 +6,7 @@
     <section class="content">
       <!-- 資料讀取中 -->
       <template v-if="dataLoaing">
-        <div v-for="(item, index) in new Array(9)" :key="index" class="card-container">
+        <div v-for="(data, index) in new Array(9)" :key="index" class="card-container">
           <MaskCard />
         </div>
       </template>
@@ -14,8 +14,8 @@
       <template v-else>
         <!-- 查詢有資料 -->
         <template v-if="allTypeDataList.length > 0">
-          <div v-for="item in allTypeDataList" :key="item.ID" class="card-container">
-            <Card :item="item" :type="item.Type"/>
+          <div v-for="data in allTypeDataList" :key="data.ID" class="card-container">
+            <Card :data="data" :type="data.Type"/>
           </div>
         </template>
         <!-- 查詢無資料 -->

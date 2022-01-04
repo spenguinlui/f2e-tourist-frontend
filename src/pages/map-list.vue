@@ -2,9 +2,9 @@
   <section class="map-content">
     <template v-if="dataList.length > 0">
       <aside class="card-aside">
-        <div v-for="item in dataList" :key="item.ID" class="card-container">
+        <div v-for="data in dataList" :key="data.ID" class="card-container">
           <Card
-            :item="item" :type="dataType"
+            :data="data" :type="dataType"
             :classType="'full-card'"
             />
         </div>

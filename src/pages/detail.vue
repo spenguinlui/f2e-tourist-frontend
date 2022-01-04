@@ -100,8 +100,8 @@
         <section class="detail-section">
           <h2 class="detail-title">這些景點大家也推</h2>
           <div class="recommend-container">
-            <div v-for="item in hotDataList" :key="item.ID" class="card-container">
-              <Card :key="item.ID" :item="item" :type="item.Type" :classType="'commonCard'"/>
+            <div v-for="data in hotDataList" :key="data.ID" class="card-container">
+              <Card :key="data.ID" :data="data" :type="data.Type" :classType="'commonCard'"/>
             </div>
           </div>
         </section>
