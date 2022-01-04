@@ -1,14 +1,14 @@
 <template>
   <section class="content" @scroll="contentScroll">
     <template v-if="dataLoaing">
-      <div v-for="(item, index) in new Array(9)" :key="index" class="card-container">
+      <div v-for="(data, index) in new Array(9)" :key="index" class="card-container">
         <MaskCard />
       </div>
     </template>
     <template v-else>
       <template v-if="dataList.length > 0">
-        <div v-for="item in dataList" :key="item.ID" class="card-container">
-          <Card :item="item" :type="dataType" :classType="'commonCard'"/>
+        <div v-for="data in dataList" :key="data.ID" class="card-container">
+          <Card :data="data" :type="dataType" :classType="'commonCard'"/>
         </div>
       </template>
       <template v-else>
