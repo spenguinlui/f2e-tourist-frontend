@@ -27,7 +27,8 @@
           <router-link :to="{ name: 'themes', params: { type: 'hotels' } }">嚴選住宿</router-link>
         </div>
         <div class="footer-item">
-          <router-link :to="{ name: 'login' }">會員登入</router-link>
+          <router-link :to="{ name: 'login' }" v-if="!userIsLogin">會員登入</router-link>
+          <router-link :to="{ name: 'favorites' }" v-else>我的旅程</router-link>
           <router-link :to="{ name: 'suppliers' }">商家專區</router-link>
         </div>
       </div>
@@ -37,8 +38,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
   export default {
-    
+    computed: {
+      ...mapGetters('serverModule', ['userIsLogin'])
+    }
   }
 </script>
 

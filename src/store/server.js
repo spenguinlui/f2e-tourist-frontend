@@ -11,15 +11,15 @@ export default {
   namespaced: true,
   state: {
     userActionMsg: "",
-    userAuthToken: ""
+    userIsLogin: false
   },
   getters: {
     userActionMsg: state => state.userActionMsg,
-    userAuthToken: state => state.userAuthToken,
+    userIsLogin: state => state.userIsLogin,
   },
   mutations: {
     UPDATE_USER_ACTION_MSG: (state, userActionMsg) => state.userActionMsg = userActionMsg,
-    UPDATE_USER_AUTH_TOKEN: (state, userAuthToken) => state.userAuthToken = userAuthToken
+    UPDATE_USER_LOGIN: (state, userIsLogin) => state.userIsLogin = userIsLogin
   },
   actions: {
     // 從後端要 Theme 資料
@@ -90,12 +90,20 @@ export default {
 
     // 使用者   ---------
     // 會員登入
-    loginUserOnServer({ commit }, userParams) {
+    loginUserOnServer({ commit }, { userParams, vm }) {
       AJAX_S_userSignIn(userParams)
       .then((res) => {
         const { message, auth_token, favorites } = res.data;
+        // 回傳登入訊息 - 開發用
         commit("UPDATE_USER_ACTION_MSG", message);
-        commit("UPDATE_USER_AUTH_TOKEN", auth_token);
+
+        // cookie 寫入登入狀態
+        vm.$cookie.set('_u', auth_token, '1M', null, null, true);
+
+        // 更新為已登入
+        commit("UPDATE_USER_LOGIN", true);
+
+        // 更新我的旅程為 db 內的
         commit("SET_FAVORITES", favorites, { root: true });
       })
       .catch((error) => {
@@ -105,12 +113,18 @@ export default {
     },
 
     // 加入會員
-    signUpUserOnServer({ commit, rootState }, userParams) {
+    signUpUserOnServer({ commit, rootState }, { userParams, vm }) {
       AJAX_S_userSignUp(userParams)
       .then((res) => {
         const { message, auth_token } = res.data;
+        // 回傳登入訊息 - 開發用
         commit("UPDATE_USER_ACTION_MSG", message);
-        commit("UPDATE_USER_AUTH_TOKEN", auth_token);
+
+        // cookie 寫入登入狀態
+        vm.$cookie.set('_u', auth_token, '1M', null, null, true);
+
+        // 更新為已登入
+        commit("UPDATE_USER_LOGIN", true);
         return auth_token
       })
       .then((userAuthToken) => {
@@ -119,6 +133,7 @@ export default {
         AJAX_S_changeFavorite(favoritesParams)
         .catch((error) => {
           console.log(error)
+          commit("UPDATE_USER_ACTION_MSG", error);
           // 錯誤處理
         })
       })
@@ -129,8 +144,8 @@ export default {
     },
 
     // 更新我的最愛
-    changeFavoriteToData({ commit, state, rootState }, { dataId, add }) {
-      commit("UPDATE_ADDING", true, { root: true });
+    changeFavoriteToData({ commit, rootState }, { dataId, add, vm }) {
+      commit("UPDATE_FAVORITE_ADDING", true, { root: true });
 
       if (add) {
         this.dispatch("serverModule/postFavoriteCountToSever", dataId, true);
@@ -139,7 +154,8 @@ export default {
         this.dispatch("serverModule/postFavoriteCountToSever", dataId, false);
         commit("REMOVE_FAVORITES", dataId, { root: true });
       }
-      const userAuthToken = state.userAuthToken;
+
+      const userAuthToken =  vm.$cookie.get('_u');
       const favoritesParams = { auth_token: userAuthToken, favorites: JSON.stringify(rootState.favorites) };
       
       AJAX_S_changeFavorite(favoritesParams)
@@ -148,7 +164,7 @@ export default {
         // 錯誤處理
       })
 
-      commit("UPDATE_ADDING", false, { root: true });
+      commit("UPDATE_FAVORITE_ADDING", false, { root: true });
     }
     
   }

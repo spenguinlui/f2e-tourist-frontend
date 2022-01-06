@@ -35,7 +35,7 @@ export const AJAX_S_postCount = (idsStr, type) => {
 
 // 會員登入
 export const AJAX_S_userSignIn = (userParams) => {
-  axios({
+  return axios({
     method: 'post',
     url: `${getServerPrefixUrl}/users/sign_in`,
     header: { "Content-Type": "application/json" },

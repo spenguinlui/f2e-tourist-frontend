@@ -139,8 +139,7 @@ export default {
         default: return "其他";
       }
     },
-    ...mapGetters(['dataDetail', 'favorites', 'hotDataList', 'dataLoaing']),
-    ...mapGetters('otherModule', ['adding'])
+    ...mapGetters(['dataDetail', 'favorites', 'favoriteAdding', 'hotDataList', 'dataLoaing']),
   },
   methods: {
     getDetail() {
@@ -149,7 +148,14 @@ export default {
       this.$store.dispatch("getSingleTypeDetail", id);
     },
     changeFavorite(id, add) {
-      !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });
+      if (this.favoriteAdding) { return; }
+
+      const favoriteParams = { dataId: id, add, vm: this };
+      if (this.userIsLogin) {
+        this.$store.dispatch("serverModule/changeFavoriteToData", favoriteParams);
+      } else {
+        this.$store.dispatch("otherModule/changeFavoriteToData", favoriteParams);
+      }
     },
     getHotDataList() {
       this.$store.dispatch("getHotDataList");

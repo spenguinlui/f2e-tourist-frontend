@@ -6,7 +6,6 @@ export default {
   namespaced: true,
   state: {
     showPicture: "",       // 頁面細節顯示大圖
-    adding: false,         // 加入我的最愛是否程序中
     mapMode: false,        // 是否切換地圖瀏覽模式
     mapClass: {},          // 全域地圖物件
   },
@@ -19,8 +18,6 @@ export default {
     SET_SHOW_PICTURE: (state, PictureUrl) => state.showPicture = PictureUrl,
     REMOVE_SHOW_PICTURE: state => state.showPicture = "",
     UPDATE_SHOW_PICTURE: (state, PictureUrl) => state.showPicture = PictureUrl,
-
-    UPDATE_ADDING: (state, isProgress) => state.adding = isProgress,
 
     TOGGLE_MAP_MODE: (state, mapMode) => state.mapMode = mapMode,
     SET_MAP_MODE_OBJECT: (state, mapClass) => state.mapClass = mapClass,
@@ -39,7 +36,7 @@ export default {
 
     // 將我的最愛更新後存入瀏覽器
     changeFavoriteToData({ commit, rootState }, { dataId, add }) {
-      commit("UPDATE_ADDING", true);
+      commit("UPDATE_FAVORITE_ADDING", true, { root: true });
       
       if (add) {
         // 向後端丟個資料
@@ -53,7 +50,7 @@ export default {
 
       localStorage.setItem("touristHeart", JSON.stringify(rootState.favorites));
 
-      commit("UPDATE_ADDING", false);
+      commit("UPDATE_FAVORITE_ADDING", false, { root: true });
     },
 
     // 在地圖上打入景點 marker

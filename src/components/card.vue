@@ -53,9 +53,8 @@
           return false;
         }
       },
-      ...mapGetters(['favorites']),
-      ...mapGetters('otherModule', ['adding']),
-      ...mapGetters('serverModule', ['userAuthToken']),
+      ...mapGetters(['favorites', 'favoriteAdding']),
+      ...mapGetters('serverModule', ['userIsLogin']),
     },
     methods: {
       routeName(dataType) {
@@ -71,12 +70,15 @@
         const routeName = this.routeName(this.data.Type);
         this.$router.push(`/${routeName}/${this.data.ID}`);
       },
-      changeFavorite(id, add) {
-        !this.adding && this.$store.dispatch("serverModule/changeFavoriteToData", { dataId: id, add: add });
-        // if (this.userAuthToken) {
-        // } else {
-        //   !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });
-        // }
+      async changeFavorite(id, add) {
+        if (this.favoriteAdding) { return; }
+
+        const favoriteParams = { dataId: id, add, vm: this };
+        if (this.userIsLogin) {
+          await this.$store.dispatch("serverModule/changeFavoriteToData", favoriteParams);
+        } else {
+          await this.$store.dispatch("otherModule/changeFavoriteToData", favoriteParams);
+        }
         this.$store.dispatch("getFavoriteDataList");
       }
     },

@@ -30,11 +30,11 @@ export default {
   methods: {
     login() {
       const userParams = { email: this.email, password: this.password };
-      this.$store.dispatch("serverModule/loginUserOnServer", userParams);
+      this.$store.dispatch("serverModule/loginUserOnServer", { userParams, vm: this });
     },
     signUp() {
       const userParams = { email: this.email, password: this.password };
-      this.$store.dispatch("serverModule/signUpUserOnServer", userParams)
+      this.$store.dispatch("serverModule/signUpUserOnServer", { userParams, vm: this })
     }
   }
 }

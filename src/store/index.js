@@ -26,6 +26,7 @@ export const storeObject = {
     
     dataLoaing: false,      // 一般資料是否載入中
     moreDataLoading: false, // 更多資料是否載入中
+    favoriteAdding: false,  // 加入我的最愛是否程序中
 
     // -- DB 交流
     favorites: [],          // 我的最愛 ID 集合
@@ -83,6 +84,7 @@ export const storeObject = {
     // 改動資料讀取判定
     UPDATE_DATA_LOADING: (state, toggle) => state.dataLoaing = toggle,
     UPDATE_MORE_DATA_LOADING: (state, toggle) => state.moreDataLoading = toggle,
+    UPDATE_FAVORITE_ADDING: (state, isProgress) => state.favoriteAdding = isProgress,
 
     // 改動我的最愛(旅程)
     SET_FAVORITES: (state, favorites) => state.favorites = favorites,

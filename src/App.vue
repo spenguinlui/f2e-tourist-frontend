@@ -16,10 +16,18 @@ export default {
     Navbar,
     Footer
   },
+  methods: {
+    checkUserIsLogin() {
+      const userAuthToken = this.$cookie.get('_u');
+      if (userAuthToken)
+        this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
+    }
+  },
   created() {
     this.$store.dispatch("serverModule/getHotsByServer");
     this.$store.dispatch("serverModule/getThemesByServer");
     this.$store.dispatch("otherModule/getFavorites");
+    this.checkUserIsLogin();
   }
 }
 </script>

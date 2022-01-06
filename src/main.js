@@ -9,6 +9,8 @@ import { storeObject } from '@/store/index';
 
 import 'leaflet/dist/leaflet.css';
 
+import VueCookie from 'vue-cookie';
+Vue.use(VueCookie);
 
 Vue.use(Router);
 const router = new Router({
