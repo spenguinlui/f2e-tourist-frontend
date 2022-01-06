@@ -4,6 +4,7 @@ import {
   AJAX_S_postCount,
   AJAX_S_userSignIn,
   AJAX_S_userSignUp,
+  AJAX_S_userSignOut,
   AJAX_S_changeFavorite
 } from "@/modules/server-api";
 
@@ -136,6 +137,20 @@ export default {
           commit("UPDATE_USER_ACTION_MSG", error);
           // 錯誤處理
         })
+      })
+      .catch((error) => {
+        commit("UPDATE_USER_ACTION_MSG", error);
+        // 錯誤處理
+      })
+    },
+
+    // 會員登出
+    signOutUserOnServer({ commit }, vm) {
+      const userAuthToken =  vm.$cookie.get('_u');
+      AJAX_S_userSignOut({ auth_token: userAuthToken })
+      .then(() => {
+        vm.$cookie.delete('_u');
+        commit("UPDATE_USER_LOGIN", false);
       })
       .catch((error) => {
         commit("UPDATE_USER_ACTION_MSG", error);

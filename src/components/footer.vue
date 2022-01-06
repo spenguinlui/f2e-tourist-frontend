@@ -28,7 +28,7 @@
         </div>
         <div class="footer-item">
           <router-link :to="{ name: 'login' }" v-if="!userIsLogin">會員登入</router-link>
-          <router-link :to="{ name: 'favorites' }" v-else>我的旅程</router-link>
+          <button v-else @click="logout">會員登出</button>
           <router-link :to="{ name: 'suppliers' }">商家專區</router-link>
         </div>
       </div>
@@ -43,6 +43,11 @@ import { mapGetters } from 'vuex';
   export default {
     computed: {
       ...mapGetters('serverModule', ['userIsLogin'])
+    },
+    methods: {
+      logout() {
+        this.$store.dispatch("serverModule/signOutUserOnServer", this);
+      }
     }
   }
 </script>
@@ -83,14 +88,19 @@ import { mapGetters } from 'vuex';
         @include flex-row-space-between-center;
         .footer-item {
           @include flex-column-center-center;
-          a {
+          a, button {
+            @include font-button(700);
             margin-bottom: .5rem;
             color: $grey-100;
+            cursor: pointer;
             &:visited {
               color: $grey-100;
             }
           }
         }
+      }
+      .footer-copyright {
+        @include font-button(500);
       }
     }
   }
