@@ -54,7 +54,8 @@
         }
       },
       ...mapGetters(['favorites']),
-      ...mapGetters('otherModule', ['adding'])
+      ...mapGetters('otherModule', ['adding']),
+      ...mapGetters('serverModule', ['userAuthToken']),
     },
     methods: {
       routeName(dataType) {
@@ -71,7 +72,11 @@
         this.$router.push(`/${routeName}/${this.data.ID}`);
       },
       changeFavorite(id, add) {
-        !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });
+        !this.adding && this.$store.dispatch("serverModule/changeFavoriteToData", { dataId: id, add: add });
+        // if (this.userAuthToken) {
+        // } else {
+        //   !this.adding && this.$store.dispatch("otherModule/changeFavoriteToData", { dataId: id, add: add });
+        // }
         this.$store.dispatch("getFavoriteDataList");
       }
     },

@@ -189,10 +189,3 @@ export const getSingleType_AJAX = (dataType) => {
   }
   return targetAjax;
 }
-
-// ---- 與後端 server 交流
-export const getServerPrefixUrl = (() => {
-  const domain = process.env.NODE_ENV === "development" ? 
-    process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
-  return `${domain}/api/v1`;
-})();

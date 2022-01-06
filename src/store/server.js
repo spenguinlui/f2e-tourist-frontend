@@ -1,24 +1,31 @@
-import axios from 'axios';
-import { getServerPrefixUrl } from "@/modules/api";
+import {
+  AJAX_S_getThemes,
+  AJAX_S_getHots,
+  AJAX_S_postCount,
+  AJAX_S_userSignIn,
+  AJAX_S_userSignUp,
+  AJAX_S_changeFavorite
+} from "@/modules/server-api";
 
 export default {
   namespaced: true,
   state: {
-
+    userActionMsg: "",
+    userAuthToken: ""
   },
   getters: {
-
+    userActionMsg: state => state.userActionMsg,
+    userAuthToken: state => state.userAuthToken,
   },
   mutations: {
-
+    UPDATE_USER_ACTION_MSG: (state, userActionMsg) => state.userActionMsg = userActionMsg,
+    UPDATE_USER_AUTH_TOKEN: (state, userAuthToken) => state.userAuthToken = userAuthToken
   },
   actions: {
     // 從後端要 Theme 資料
     getThemesByServer({ commit }) {
-      axios({
-        method: 'get',
-        url: `${getServerPrefixUrl}/themes`,
-      }).then((res) => {
+      AJAX_S_getThemes()
+      .then((res) => {
         const newThemes = res.data.reduce(
           (newObj, theme) => {
             newObj[theme.id] = {
@@ -31,7 +38,8 @@ export default {
           }, {}
         );
         commit("UPDATE_THEMES", newThemes, { root: true });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log(error);
         // 錯誤處理
       })
@@ -39,12 +47,11 @@ export default {
 
     // 從後端要 hots id array
     getHotsByServer({ commit }) {
-      axios({
-        method: 'get',
-        url: `${getServerPrefixUrl}/hots`,
-      }).then((res) => {
+      AJAX_S_getHots()
+      .then(res => {
         commit("UPDATE_HOTS", res.data, { root: true });
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.log(error);
         // 錯誤處理
       })
@@ -53,12 +60,8 @@ export default {
     // 搜尋查到的資料，給後端計數器累積
     postSearchCountToSever(_, ids) {
       const idsStr = JSON.stringify(ids);
-      axios({
-        method: 'post',
-        url: `${getServerPrefixUrl}/count/addSearch`,
-        header: { "Content-Type": "application/json" },
-        data: idsStr,
-      }).catch((error) => {
+      AJAX_S_postCount(idsStr, 'addSearch')
+      .catch((error) => {
         console.log(error);
         // 錯誤處理
       })
@@ -67,12 +70,8 @@ export default {
     // 進入細節頁面，給後端計數器累積
     postEnterCountToSever(_, id) {
       const idsStr = JSON.stringify([id]);
-      axios({
-        method: 'post',
-        url: `${getServerPrefixUrl}/count/addEnter`,
-        header: { "Content-Type": "application/json" },
-        data: idsStr,
-      }).catch((error) => {
+      AJAX_S_postCount(idsStr, 'addEnter')
+      .catch((error) => {
         console.log(error);
         // 錯誤處理
       })
@@ -82,15 +81,75 @@ export default {
     postFavoriteCountToSever(_, id, add) {
       const idsStr = JSON.stringify([id]);
       const addStr = add ? "add" : "remove";
-      axios({
-        method: 'post',
-        url: `${getServerPrefixUrl}/count/${addStr}Favorite`,
-        header: { "Content-Type": "application/json" },
-        data: idsStr,
-      }).catch((error) => {
+      AJAX_S_postCount(idsStr, `${addStr}Favorite`)
+      .catch((error) => {
         console.log(error);
         // 錯誤處理
       })
+    },
+
+    // 使用者   ---------
+    // 會員登入
+    loginUserOnServer({ commit }, userParams) {
+      AJAX_S_userSignIn(userParams)
+      .then((res) => {
+        const { message, auth_token, favorites } = res.data;
+        commit("UPDATE_USER_ACTION_MSG", message);
+        commit("UPDATE_USER_AUTH_TOKEN", auth_token);
+        commit("SET_FAVORITES", favorites, { root: true });
+      })
+      .catch((error) => {
+        commit("UPDATE_USER_ACTION_MSG", error);
+        // 錯誤處理
+      })
+    },
+
+    // 加入會員
+    signUpUserOnServer({ commit, rootState }, userParams) {
+      AJAX_S_userSignUp(userParams)
+      .then((res) => {
+        const { message, auth_token } = res.data;
+        commit("UPDATE_USER_ACTION_MSG", message);
+        commit("UPDATE_USER_AUTH_TOKEN", auth_token);
+        return auth_token
+      })
+      .then((userAuthToken) => {
+        // 將 localstorge 我的最愛加入會員資料
+        const favoritesParams = { auth_token: userAuthToken, favorites: JSON.stringify(rootState.favorites) };
+        AJAX_S_changeFavorite(favoritesParams)
+        .catch((error) => {
+          console.log(error)
+          // 錯誤處理
+        })
+      })
+      .catch((error) => {
+        commit("UPDATE_USER_ACTION_MSG", error);
+        // 錯誤處理
+      })
+    },
+
+    // 更新我的最愛
+    changeFavoriteToData({ commit, state, rootState }, { dataId, add }) {
+      commit("UPDATE_ADDING", true, { root: true });
+
+      if (add) {
+        this.dispatch("serverModule/postFavoriteCountToSever", dataId, true);
+        commit("ADD_FAVORITES", dataId, { root: true })
+      } else {
+        this.dispatch("serverModule/postFavoriteCountToSever", dataId, false);
+        commit("REMOVE_FAVORITES", dataId, { root: true });
+      }
+      const userAuthToken = state.userAuthToken;
+      const favoritesParams = { auth_token: userAuthToken, favorites: JSON.stringify(rootState.favorites) };
+      
+      AJAX_S_changeFavorite(favoritesParams)
+      .catch((error) => {
+        console.log(error)
+        // 錯誤處理
+      })
+
+      commit("UPDATE_ADDING", false, { root: true });
     }
+    
   }
 }

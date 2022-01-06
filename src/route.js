@@ -49,10 +49,15 @@ export const routes = [
     component: () => import('./pages/favorites'),
     name: 'favorites'
   },
-  
+  {
+    path: '/login',
+    component: () => import('./pages/login'),
+    name: 'login'
+  },
   // {
   //   path: '/suppliers',
   //   component: () => import('./pages/suppliers'),
-  //   name: 'suppliers'
+  //   name: 'suppliers',
+  //   meta: { requiresAuth: true }
   // },
 ]
