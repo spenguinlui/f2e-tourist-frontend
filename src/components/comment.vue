@@ -3,8 +3,8 @@
     <section class="comment-header">
       <section class="comment-header-left">
         <div class="border"></div>
-        <h3 class="comment-score">{{ mockStar }}</h3>
-        <Stars class="comment-stars" :score="mockStar"/>
+        <h3 class="comment-score">{{ dataDetail.CommentScore }}</h3>
+        <Stars class="comment-stars" :score="dataDetail.CommentScore"/>
         <p class="comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論</p>
       </section>
       <section class="comment-header-right">
@@ -13,8 +13,8 @@
       </section>
     </section>
     <section class="comment-content">
-      <template v-if="true || dataDetail.Comments">
-        <CommentCard v-for="comment in MockData" :comment="comment" :key="comment.id"/>
+      <template v-if="dataDetail.Comment">
+        <CommentCard v-for="comment in dataDetail.Comment" :comment="comment" :key="comment.id"/>
       </template>
       <template v-else><NoContent /></template>
     </section>

@@ -7,6 +7,14 @@ const getServerPrefixUrl = (() => {
   return `${domain}/api/v1`;
 })();
 
+// 取得本地版本資料
+export const AJAX_S_getDetail = (id) => {
+  return axios({
+    method: 'get',
+    url: `${getServerPrefixUrl}/local_item/${id}`,
+  })
+}
+
 // 取得主題列表
 export const AJAX_S_getThemes = () => {
   return axios({

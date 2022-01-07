@@ -8,6 +8,8 @@ import {
   getSingleType_AJAX
 } from "@/modules/api";
 
+import { AJAX_S_getDetail } from "@/modules/server-api";
+
 import { createCommonIDAndName, concatAndAddType } from "@/modules/data-support";
 
 import serverModule from "./server";
@@ -115,11 +117,18 @@ export const storeObject = {
     // 取得單一類型資料細節
     getSingleTypeDetail({ commit }, id) {
       commit("UPDATE_DATA_LOADING", true);
-      AJAX_getDetail({ id }).then(res => {
+
+      // 同時向兩邊的 API 要資料
+      Promise.all([AJAX_getDetail({ id }), AJAX_S_getDetail(id)])
+      .then(res => {
         // 向後端丟個資料
         this.dispatch("serverModule/postEnterCountToSever", id);
-        return createCommonIDAndName(res.data[0]);
-      }).then(data => {
+        let data = res[0].data[0];
+        data.Comment = res[1].data.comments;
+        data.CommentScore = res[1].data.average_score;
+        return createCommonIDAndName(data);
+      })
+      .then(data => {
         const position = {
           latitude: data.Position.PositionLat,
           longitude: data.Position.PositionLon
