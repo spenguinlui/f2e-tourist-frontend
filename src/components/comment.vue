@@ -3,8 +3,8 @@
     <section class="comment-header">
       <section class="comment-header-left">
         <div class="border"></div>
-        <h3 class="comment-score">3.5</h3>
-        <Stars class="comment-stars" :score="4"/>
+        <h3 class="comment-score">{{ mockStar }}</h3>
+        <Stars class="comment-stars" :score="mockStar"/>
         <p class="comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論</p>
       </section>
       <section class="comment-header-right">
@@ -74,6 +74,7 @@ export default {
     return {
       commentFormShow: false,
       commentStar: 0,
+      mockStar: 4.5,
       MockData: [
         {
           id: 0,

@@ -9,7 +9,7 @@
           <section class="detail-header-title">
             <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
             <div class="detail-header-comment">
-              <Stars :score="4"/>
+              <Stars :score="dataDetail.Comment && dataDetail.Comment.length || 4.5"/>
               <div class="detail-header-comment-count">
                 {{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論
               </div>
@@ -100,9 +100,12 @@
         <section class="detail-section">
           <h2 class="detail-title">這些景點大家也推</h2>
           <div class="recommend-container">
-            <div v-for="data in hotDataList" :key="data.ID" class="card-container">
-              <Card :key="data.ID" :data="data" :type="data.Type" :classType="'commonCard'"/>
-            </div>
+            <template v-if="hotDataList.length > 0">
+              <div v-for="data in hotDataList" :key="data.ID" class="card-container">
+                <Card :key="data.ID" :data="data" :type="data.Type" :classType="'commonCard'"/>
+              </div>
+            </template>
+            <template v-else><NoContent /></template>
           </div>
         </section>
       </div>

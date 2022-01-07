@@ -257,6 +257,7 @@ export const storeObject = {
       const { hots } = state;
       let hotArray = [];
 
+      if (hots.length === 0) return;
       for (let i = 0; i <= (count || 6); i++) {
         hotArray.push(AJAX_getOneData(hots[i]));
       }
