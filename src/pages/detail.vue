@@ -9,7 +9,7 @@
           <section class="detail-header-title">
             <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
             <div class="detail-header-comment">
-              <Stars />
+              <Stars :score="4"/>
               <div class="detail-header-comment-count">
                 {{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論
               </div>
@@ -163,6 +163,7 @@ export default {
   },
   created() {
     this.getDetail();
+    this.getHotDataList();
     // detail 點選其他卡片跳轉後位置要拉回頂端
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;

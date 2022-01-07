@@ -8,21 +8,7 @@
         <div class="comment-avatar-m"></div>
         <h5 class="comment-title">{{ comment.title }}</h5>
         <ul class="comment-score">
-          <li><img
-            :src="comment.score >= 1 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-            :alt="comment.score >= 1 ? '滿星icon' : '空星icon'"></li>
-          <li><img
-            :src="comment.score >= 2 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-            :alt="comment.score >= 2 ? '滿星icon' : '空星icon'"></li>
-          <li><img
-            :src="comment.score >= 3 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-            :alt="comment.score >= 4 ? '滿星icon' : '空星icon'"></li>
-          <li><img
-            :src="comment.score >= 4 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-            :alt="comment.score >= 4 ? '滿星icon' : '空星icon'"></li>
-          <li><img
-            :src="comment.score >= 5 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-            :alt="comment.score >= 5 ? '滿星icon' : '空星icon'"></li>
+          <Stars :score="comment.score"/>
         </ul>
       </section>
       <section class="comment-context">
@@ -33,8 +19,13 @@
 </template>
 
 <script>
+import Stars from "@/components/stars.vue";
+
 export default {
-  props: ['comment']
+  props: ['comment'],
+  components: {
+    Stars
+  }
 }
 </script>
 

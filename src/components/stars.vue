@@ -1,16 +1,26 @@
 <template>
   <ul class="stars">
-    <li><img src="../assets/images/icon/star-filled.svg" alt="滿星icon"></li>
-    <li><img src="../assets/images/icon/star-filled.svg" alt="滿星icon"></li>
-    <li><img src="../assets/images/icon/star-filled.svg" alt="滿星icon"></li>
-    <li><img src="../assets/images/icon/half-star-filled.svg" alt="半星icon"></li>
-    <li><img src="../assets/images/icon/star-outline.svg" alt="空星icon"></li>
+    <li><img
+      :src="score >= 1 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+      :alt="score >= 1 ? '滿星icon' : '空星icon'"></li>
+    <li><img
+      :src="score >= 2 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+      :alt="score >= 2 ? '滿星icon' : '空星icon'"></li>
+    <li><img
+      :src="score >= 3 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+      :alt="score >= 4 ? '滿星icon' : '空星icon'"></li>
+    <li><img
+      :src="score >= 4 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+      :alt="score >= 4 ? '滿星icon' : '空星icon'"></li>
+    <li><img
+      :src="score >= 5 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+      :alt="score >= 5 ? '滿星icon' : '空星icon'"></li>
   </ul>
 </template>
 
 <script>
 export default {
-  
+  props: ['score']
 }
 </script>
 

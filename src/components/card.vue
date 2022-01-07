@@ -10,7 +10,7 @@
     </div>
     <div class="card-content">
       <div class="card-content-title">{{ data.Name }}</div>
-      <Stars />
+      <Stars :score="4"/>
       <div class="card-content-tags">
         <!-- <template v-for="(tag, index) in data.Tag">
           <div class="card-tag" :key="index">{{ tag }}</div>

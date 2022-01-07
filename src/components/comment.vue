@@ -4,7 +4,7 @@
       <section class="comment-header-left">
         <div class="border"></div>
         <h3 class="comment-score">3.5</h3>
-        <Stars class="comment-stars"/>
+        <Stars class="comment-stars" :score="4"/>
         <p class="comment-count">{{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論</p>
       </section>
       <section class="comment-header-right">
