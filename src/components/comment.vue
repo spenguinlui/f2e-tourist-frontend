@@ -13,8 +13,8 @@
       </section>
     </section>
     <section class="comment-content">
-      <template v-if="dataDetail.Comments">
-        <!-- ... -->
+      <template v-if="true || dataDetail.Comments">
+        <CommentCard v-for="comment in MockData" :comment="comment" :key="comment.id"/>
       </template>
       <template v-else><NoContent /></template>
     </section>
@@ -64,7 +64,8 @@
 
 <script>
 import Stars from "@/components/stars.vue";
-import NoContent from '@/components/no-content.vue';
+import NoContent from "@/components/no-content.vue";
+import CommentCard from "@/components/comment-card.vue";
 
 export default {
   name: "comment",
@@ -72,7 +73,33 @@ export default {
   data() {
     return {
       commentFormShow: false,
-      commentStar: 0
+      commentStar: 0,
+      MockData: [
+        {
+          id: 0,
+          userId: 0,
+          title: "氣氛佳，料理美味！",
+          score: 5,
+          content: "用餐環境的氣氛非常棒，很適合跟朋友喝酒聊天。料理的味道也非常有特色，推薦炙燒韓味牛菲力跟烘蛋。是會想再回頭的餐廳！",
+          avatar: ""
+        },
+        {
+          id: 1,
+          userId: 1,
+          title: "好吃",
+          score: 4,
+          content: "酒吧風格的裝潢，搭配傳統兼創新的韓國料理。食物本身非常好吃，店內桌數不多，一定要事先訂位。價格中上，適合跟很多朋友來聚會！",
+          avatar: ""
+        },
+        {
+          id: 2,
+          userId: 3,
+          title: "創意的韓式料理，辣度夠好吃",
+          score: 4,
+          content: "晚餐時間沒有訂位室內客滿。坐到戶外區略微熱，但店家有提供冷風扇蠻貼心的，室內裝潢工業風還有遊戲台可以玩，最重要的是餐點很好吃，尤其是菲力牛讓同行的友人大為驚豔，下次再訪會想試試酒類飲料。",
+          avatar: ""
+        },
+      ]
     }
   },
   methods: {
@@ -82,7 +109,8 @@ export default {
   },
   components: {
     Stars,
-    NoContent
+    NoContent,
+    CommentCard
   }
 }
 </script>

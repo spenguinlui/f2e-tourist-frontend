@@ -39,14 +39,12 @@ export default {
       commit("UPDATE_FAVORITE_ADDING", true, { root: true });
       
       if (add) {
-        // 向後端丟個資料
-        this.dispatch("serverModule/postFavoriteCountToSever", dataId, true);
         commit("ADD_FAVORITES", dataId, { root: true })
       } else {
-        // 向後端丟個資料
-        this.dispatch("serverModule/postFavoriteCountToSever", dataId, false);
         commit("REMOVE_FAVORITES", dataId, { root: true });
       }
+      // 向後端丟個資料
+      this.dispatch("serverModule/postFavoriteCountToSever", { dataId, add });
 
       localStorage.setItem("touristHeart", JSON.stringify(rootState.favorites));
 

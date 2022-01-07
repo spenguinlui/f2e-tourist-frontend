@@ -80,9 +80,10 @@ export default {
     },
 
     // 按讚或收回讚，給後端計數器累積
-    postFavoriteCountToSever(_, id, add) {
-      const idsStr = JSON.stringify([id]);
+    postFavoriteCountToSever(_, { dataId, add }) {
+      const idsStr = JSON.stringify([dataId]);
       const addStr = add ? "add" : "remove";
+      console.log(add)
       AJAX_S_postCount(idsStr, `${addStr}Favorite`)
       .catch((error) => {
         console.log(error);
@@ -177,12 +178,12 @@ export default {
       commit("UPDATE_FAVORITE_ADDING", true, { root: true });
 
       if (add) {
-        this.dispatch("serverModule/postFavoriteCountToSever", dataId, true);
         commit("ADD_FAVORITES", dataId, { root: true })
       } else {
-        this.dispatch("serverModule/postFavoriteCountToSever", dataId, false);
         commit("REMOVE_FAVORITES", dataId, { root: true });
       }
+      // 向後端丟個資料
+      this.dispatch("serverModule/postFavoriteCountToSever", { dataId, add });
 
       const userAuthToken =  vm.$cookies.get('_u');
       const favoritesParams = { auth_token: userAuthToken, favorites: JSON.stringify(rootState.favorites) };

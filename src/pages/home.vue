@@ -36,6 +36,11 @@ export default {
   computed: {
     ...mapGetters(['hotDataList', 'themes', 'dataLoaing'])
   },
+  created() {
+    // 增加更新
+    this.$store.dispatch("serverModule/getHotsByServer");
+    this.$store.dispatch("serverModule/getThemesByServer");
+  },
   components: {
     SearchBar,
     CardSlider
