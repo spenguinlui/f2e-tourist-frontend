@@ -9,7 +9,7 @@ import { storeObject } from '@/store/index';
 
 import 'leaflet/dist/leaflet.css';
 
-import VueCookie from 'vue-cookie';
+import VueCookie from 'vue-cookies';
 Vue.use(VueCookie);
 
 Vue.use(Router);
@@ -31,6 +31,8 @@ const vm = new Vue({
   store,
   render: h => h(App),
 }).$mount('#app')
+
+vm.$cookies.config('30d')
 
 router.beforeEach((to, _, next) => {
   if (to.name === "scenicspots" || to.name === "restaurants" || to.name === "hotels") {

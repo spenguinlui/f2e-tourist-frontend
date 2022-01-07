@@ -28,13 +28,15 @@ export default {
     ...mapGetters('serverModule', ['userActionMsg'])
   },
   methods: {
-    login() {
+    async login() {
       const userParams = { email: this.email, password: this.password };
-      this.$store.dispatch("serverModule/loginUserOnServer", { userParams, vm: this });
+      await this.$store.dispatch("serverModule/loginUserOnServer", { userParams, vm: this });
+      this.$router.push('/favorites');
     },
-    signUp() {
+    async signUp() {
       const userParams = { email: this.email, password: this.password };
-      this.$store.dispatch("serverModule/signUpUserOnServer", { userParams, vm: this })
+      await this.$store.dispatch("serverModule/signUpUserOnServer", { userParams, vm: this });
+      this.$router.push('/favorites');
     }
   }
 }

@@ -5,6 +5,7 @@ import {
   AJAX_S_userSignIn,
   AJAX_S_userSignUp,
   AJAX_S_userSignOut,
+  AJAX_S_getFavorites,
   AJAX_S_changeFavorite
 } from "@/modules/server-api";
 
@@ -99,7 +100,7 @@ export default {
         commit("UPDATE_USER_ACTION_MSG", message);
 
         // cookie 寫入登入狀態
-        vm.$cookie.set('_u', auth_token, '1M', null, null, true);
+        vm.$cookies.set('_u', auth_token, null, null, null, true);
 
         // 更新為已登入
         commit("UPDATE_USER_LOGIN", true);
@@ -122,7 +123,7 @@ export default {
         commit("UPDATE_USER_ACTION_MSG", message);
 
         // cookie 寫入登入狀態
-        vm.$cookie.set('_u', auth_token, '1M', null, null, true);
+        vm.$cookies.set('_u', auth_token, null, null, null, true);
 
         // 更新為已登入
         commit("UPDATE_USER_LOGIN", true);
@@ -146,11 +147,24 @@ export default {
 
     // 會員登出
     signOutUserOnServer({ commit }, vm) {
-      const userAuthToken =  vm.$cookie.get('_u');
+      const userAuthToken =  vm.$cookies.get('_u');
       AJAX_S_userSignOut({ auth_token: userAuthToken })
       .then(() => {
-        vm.$cookie.delete('_u');
+        vm.$cookies.remove('_u');
         commit("UPDATE_USER_LOGIN", false);
+      })
+      .catch((error) => {
+        commit("UPDATE_USER_ACTION_MSG", error);
+        // 錯誤處理
+      })
+    },
+
+    // 取得使用者的我的最愛
+    getFavoritesByUser({ commit }, vm) {
+      const userAuthToken =  vm.$cookies.get('_u');
+      AJAX_S_getFavorites({ auth_token: userAuthToken })
+      .then((res) => {
+        commit("SET_FAVORITES", res.data.favorites, { root: true });
       })
       .catch((error) => {
         commit("UPDATE_USER_ACTION_MSG", error);
@@ -170,7 +184,7 @@ export default {
         commit("REMOVE_FAVORITES", dataId, { root: true });
       }
 
-      const userAuthToken =  vm.$cookie.get('_u');
+      const userAuthToken =  vm.$cookies.get('_u');
       const favoritesParams = { auth_token: userAuthToken, favorites: JSON.stringify(rootState.favorites) };
       
       AJAX_S_changeFavorite(favoritesParams)

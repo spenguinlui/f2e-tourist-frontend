@@ -63,6 +63,7 @@ export const storeObject = {
     currentClassType: state => state.currentClassType,
     dataLoaing: state => state.dataLoaing,
     moreDataLoading: state => state.moreDataLoading,
+    favoriteAdding: state => state.favoriteAdding
   },
   mutations: {
     // 更改資料
@@ -276,6 +277,8 @@ export const storeObject = {
       commit("UPDATE_DATA_LOADING", true);
       const favoriteIds = state.favorites;
       const queryObj = { ids: favoriteIds, select: ['Picture'] };
+
+      if (favoriteIds.length === 0) { commit("UPDATE_DATA_LOADING", false); return; }
 
       Promise.all([
         AJAX_getScenicSpot(queryObj),

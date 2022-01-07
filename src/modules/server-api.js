@@ -63,11 +63,21 @@ export const AJAX_S_userSignOut = (userParams) => {
   })
 }
 
+// 取得我的最愛
+export const AJAX_S_getFavorites = (userParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/user/favorites`,
+    header: { "Content-Type": "application/json" },
+    data: userParams,
+  })
+}
+
 // 更新我的最愛   ps.注意不是 put, 會蓋掉 user, 但 favorites array 本身是整個蓋掉
 export const AJAX_S_changeFavorite = (favoritesParams) => {
   return axios({
     method: 'patch',
-    url: `${getServerPrefixUrl}/user/favorites/0`,
+    url: `${getServerPrefixUrl}/user/favorite/update`,
     header: { "Content-Type": "application/json" },
     data: favoritesParams,
   })

@@ -17,16 +17,19 @@ export default {
     Footer
   },
   methods: {
-    checkUserIsLogin() {
-      const userAuthToken = this.$cookie.get('_u');
-      if (userAuthToken)
+    async checkUserIsLogin() {
+      const userAuthToken = this.$cookies.get('_u');
+      if (userAuthToken) {
         this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
+        await this.$store.dispatch("serverModule/getFavoritesByUser", this);
+      } else {
+        await this.$store.dispatch("otherModule/getFavorites");
+      }
     }
   },
   created() {
     this.$store.dispatch("serverModule/getHotsByServer");
     this.$store.dispatch("serverModule/getThemesByServer");
-    this.$store.dispatch("otherModule/getFavorites");
     this.checkUserIsLogin();
   }
 }

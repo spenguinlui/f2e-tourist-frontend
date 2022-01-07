@@ -36,11 +36,16 @@
 
   export default {
     computed: {
-      ...mapGetters(['favoriteDataList', 'dataLoaing'])
+      ...mapGetters(['favorites', 'favoriteDataList', 'dataLoaing'])
     },
     methods: {
       getFavoriteDataList() {
         this.$store.dispatch("getFavoriteDataList");
+      }
+    },
+    watch: {
+      favorites() {
+        this.getFavoriteDataList();
       }
     },
     created() {
