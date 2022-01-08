@@ -6,7 +6,8 @@ import {
   AJAX_S_userSignUp,
   AJAX_S_userSignOut,
   AJAX_S_getFavorites,
-  AJAX_S_changeFavorite
+  AJAX_S_changeFavorite,
+  AJAX_S_postComment
 } from "@/modules/server-api";
 
 export default {
@@ -83,11 +84,23 @@ export default {
     postFavoriteCountToSever(_, { dataId, add }) {
       const idsStr = JSON.stringify([dataId]);
       const addStr = add ? "add" : "remove";
-      console.log(add)
       AJAX_S_postCount(idsStr, `${addStr}Favorite`)
       .catch((error) => {
         console.log(error);
         // 錯誤處理
+      })
+    },
+
+    // 送出評論
+    postCommentToServer(_, { commentForm, id, vm }) {
+      const userAuthToken =  vm.$cookies.get('_u');
+      const dataForm = {
+        auth_token: userAuthToken,
+        ...commentForm
+      }
+      AJAX_S_postComment(dataForm, id)
+      .then((res) => {
+        console.log(res)
       })
     },
 

@@ -90,3 +90,13 @@ export const AJAX_S_changeFavorite = (favoritesParams) => {
     data: favoritesParams,
   })
 }
+
+// 送出評論
+export const AJAX_S_postComment = (commentParams, id) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/local_item/${id}/comment`,
+    header: { "Content-Type": "application/json" },
+    data: commentParams,
+  })
+}

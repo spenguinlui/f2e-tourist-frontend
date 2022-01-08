@@ -30,34 +30,34 @@
           </li>
           <li @mouseover="changeCommentStar(1)" @click="changeCommentStar(1)">
             <img
-              :src="commentStar >= 1 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-              :alt="commentStar >= 1 ? '滿星icon' : '空星icon'">
+              :src="commentForm.score >= 1 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentForm.score >= 1 ? '滿星icon' : '空星icon'">
           </li>
           <li @mouseover="changeCommentStar(2)" @click="changeCommentStar(2)">
             <img
-              :src="commentStar >= 2 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-              :alt="commentStar >= 2 ? '滿星icon' : '空星icon'">
+              :src="commentForm.score >= 2 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentForm.score >= 2 ? '滿星icon' : '空星icon'">
           </li>
           <li @mouseover="changeCommentStar(3)" @click="changeCommentStar(3)">
             <img
-              :src="commentStar >= 3 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-              :alt="commentStar >= 3 ? '滿星icon' : '空星icon'">
+              :src="commentForm.score >= 3 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentForm.score >= 3 ? '滿星icon' : '空星icon'">
           </li>
           <li @mouseover="changeCommentStar(4)" @click="changeCommentStar(4)">
             <img
-              :src="commentStar >= 4 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-              :alt="commentStar >= 4 ? '滿星icon' : '空星icon'">
+              :src="commentForm.score >= 4 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentForm.score >= 4 ? '滿星icon' : '空星icon'">
           </li>
           <li @mouseover="changeCommentStar(5)" @click="changeCommentStar(5)">
             <img
-              :src="commentStar >= 5 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
-              :alt="commentStar >= 5 ? '滿星icon' : '空星icon'">
+              :src="commentForm.score >= 5 ? require('../assets/images/icon/star-filled.svg') : require('../assets/images/icon/star-grey.svg')"
+              :alt="commentForm.score >= 5 ? '滿星icon' : '空星icon'">
           </li>
         </ul>
       </div>
-      <input type="text" placeholder="輸入標題" class="form-text">
-      <textarea placeholder="我覺得..." class="form-textarea"></textarea>
-      <button type="submit" class="form-btn">送出評論</button>
+      <input type="text" placeholder="輸入標題" v-model="commentForm.title" class="form-text">
+      <textarea placeholder="我覺得..." v-model="commentForm.content" class="form-textarea"></textarea>
+      <button type="submit" @click="sentForm" class="form-btn">送出評論</button>
     </section>
   </div>
 </template>
@@ -73,7 +73,11 @@ export default {
   data() {
     return {
       commentFormShow: false,
-      commentStar: 0,
+      commentForm: {
+        title: "",
+        content: "",
+        score: 0
+      },
       mockStar: 4.5,
       MockData: [
         {
@@ -104,8 +108,11 @@ export default {
     }
   },
   methods: {
-    changeCommentStar(score) {
-      this.commentStar = score;
+    changeCommentStar (score) {
+      this.commentForm.score = score;
+    },
+    sentForm () {
+      this.$store.dispatch("serverModule/postCommentToServer", { commentForm: this.commentForm, id: this.dataDetail.ID, vm: this })
     }
   },
   components: {
@@ -123,7 +130,6 @@ export default {
     @include flex-row-space-between-center;
     &-left {
       @include flex-row-flex-start-center;
-      @include flex-col(9);
       .border {
         display: none;
       }
@@ -143,7 +149,6 @@ export default {
     }
     &-right {
       @include flex-row-center-center;
-      @include flex-col(3);
       .sort-btn {
         @include text-icon-2-icon;
         @include btn-outline;

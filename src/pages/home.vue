@@ -7,7 +7,6 @@
     <section class="home-section">
       <div class="home-section-title">
         <h2 class="home-section-title-text">熱門景點</h2>
-        <!-- <button class="home-section-title-btn">查看更多</button> -->
       </div>
       <CardSlider :mode="'hot'"/>
     </section>
@@ -22,7 +21,8 @@
           <button><router-link :to="{ name: 'theme', params: { index: 1 } }" class="home-section-title-btn">查看更多</router-link></button>
         </div>
       </div>
-      <CardSlider :mode="'theme'" :theme="themes[1]"/>
+      <CardSlider v-if="themes[1].themeDataList" :mode="'theme'" :theme="themes[1]"/>
+      <template v-else><NoContent /></template>
     </section>
   </div>
 </template>
@@ -30,6 +30,7 @@
 <script>
 import SearchBar from "@/components/search-bar.vue";
 import CardSlider from '@/components/cards-slider.vue';
+import NoContent from '@/components/no-content.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -43,7 +44,8 @@ export default {
   },
   components: {
     SearchBar,
-    CardSlider
+    CardSlider,
+    NoContent
   }
 }
 </script>

@@ -20,14 +20,14 @@
 </template>
 
 <script>
-import noImage from "@/assets/images/empty-img.png"
-import { mapGetters } from 'vuex'
+import noImage from "@/assets/images/empty-img.png";
 
 export default {
   props: ['data'],
   data() {
     return {
-      imageList: new Array(3)
+      imageList: new Array(3),
+      showPicture: ""
     }
   },
   computed: {
@@ -38,23 +38,22 @@ export default {
         return { "backgroundImage": noImage };
       }
     },
-    ...mapGetters('otherModule', ['showPicture'])
   },
   methods: {
     getShowPicture() {
       if (this.showPicture) { return; }
       if (this.data.Picture && this.data.Picture.PictureUrl1) {
-        this.$store.commit("otherModule/SET_SHOW_PICTURE", this.data.Picture.PictureUrl1);
+        this.showPicture = this.data.Picture.PictureUrl1;
       }
     },
     removeShowPicture() {
       this.$store.commit("otherModule/REMOVE_SHOW_PICTURE");
     },
     checkImage(PictureUrl) {
-      if (PictureUrl) this.$store.dispatch("otherModule/changeDetailShowPicture", PictureUrl);
+      if (PictureUrl) this.showPicture = PictureUrl;
     }
   },
-  created() {
+  updated() {
     this.getShowPicture();
   },
   beforeDestroy() {

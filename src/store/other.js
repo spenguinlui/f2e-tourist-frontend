@@ -5,17 +5,14 @@ import { determineIcon, createMarkerPopupObj } from "@/modules/map-support";
 export default {
   namespaced: true,
   state: {
-    showPicture: "",       // 頁面細節顯示大圖
     mapMode: false,        // 是否切換地圖瀏覽模式
     mapClass: {},          // 全域地圖物件
   },
   getters: {
-    showPicture: state => state.showPicture,
     adding: state => state.adding,
     mapMode: state => state.mapMode,
   },
   mutations: {
-    SET_SHOW_PICTURE: (state, PictureUrl) => state.showPicture = PictureUrl,
     REMOVE_SHOW_PICTURE: state => state.showPicture = "",
     UPDATE_SHOW_PICTURE: (state, PictureUrl) => state.showPicture = PictureUrl,
 
@@ -23,11 +20,6 @@ export default {
     SET_MAP_MODE_OBJECT: (state, mapClass) => state.mapClass = mapClass,
   },
   actions: {
-    // 更改細節頁面目前顯示大圖
-    changeDetailShowPicture({ commit }, PictureUrl) {
-      commit("UPDATE_SHOW_PICTURE", PictureUrl);
-    },
-
     // 從瀏覽器取得我的最愛
     getFavorites({ commit }) {
       const heartArray = JSON.parse(localStorage.getItem("touristHeart"));
@@ -54,6 +46,7 @@ export default {
     // 在地圖上打入景點 marker
     setMarkerOnMap({ state, rootState }) {
       if (rootState.dataList.length === 0) return;
+
       const mapClass = state.mapClass;
       const markerLayer = new L.LayerGroup().addTo(mapClass);
 

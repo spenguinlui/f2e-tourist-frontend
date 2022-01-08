@@ -103,7 +103,7 @@ export const storeObject = {
     getSingleTypeDataList({ commit }, dataType) {
       commit("UPDATE_DATA_LOADING", true);
       const targetAjax = getSingleType_AJAX(dataType);
-      targetAjax({ select: ['Picture'] }).then(res => {
+      targetAjax({ select: ['Picture', 'Position'] }).then(res => {
         const dataList = res.data.map((data) => createCommonIDAndName(data));
         commit("UPDATE_DATA_LIST", dataList);
         commit("UPDATE_DATA_LOADING", false);

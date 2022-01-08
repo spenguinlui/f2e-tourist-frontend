@@ -82,9 +82,12 @@
           <h2 class="detail-title">鄰近景點</h2>
           <div class="detail-nearby">
             <section class="detail-nearby-left">
-              <NearbyCard
+              <template v-if="dataDetail.NearbyDataList && dataDetail.NearbyDataList.length > 1">
+                <NearbyCard
                 v-for="item in dataDetail.NearbyDataList"
                 :key="item.ID" :item="item"/>
+              </template>
+              <template v-else><NoContent /></template>
             </section>
             <section class="detail-nearby-right">
               <NearbyMap :dataList="dataDetail.NearbyDataList"/>
