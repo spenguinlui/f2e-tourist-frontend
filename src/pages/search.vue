@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <header class="benner-container">
       <h1 class="benner-title">搜尋結果</h1>
     </header>

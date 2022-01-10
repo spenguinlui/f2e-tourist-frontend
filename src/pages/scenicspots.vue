@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <ClassBenner/>
     <CardList v-if="!mapMode"/>
     <MapList v-else/>

@@ -60,4 +60,9 @@ export const routes = [
   //   name: 'suppliers',
   //   meta: { requiresAuth: true }
   // },
+  {
+    path: '*',
+    component: () => import('./pages/notfound'),
+    name: 'notfound'
+  }
 ]

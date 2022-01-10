@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <template v-if="dataLoaing">
       <MaskDetail/>
     </template>

@@ -11,11 +11,13 @@
 
 .container-fluid {
   width: 100vw;
+  min-height: calc(100vh - #{$nav-height} - #{$footer-m-height});
   position: relative;
   margin-top: $nav-height;
   margin-bottom: $footer-m-height;
   overflow: hidden;
   @include screen-up {
+    min-height: calc(100vh - #{$nav-height} - #{$footer-height});
     margin-bottom: $footer-height;
   }
 }

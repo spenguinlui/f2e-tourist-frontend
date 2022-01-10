@@ -9,11 +9,11 @@
       </section>
       <section class="comment-header-right">
         <button type="button" class="sort-btn">排序<img src="../assets/images/icon/sort.svg" alt="排序icon"></button>
-        <button type="button" class="comment-btn" @click="commentFormShow = !commentFormShow">撰寫評論<img src="../assets/images/icon/pin.svg" alt="撰寫評論icon"></button>
+        <button type="button" class="comment-btn" @click="expandCommentForm">撰寫評論<img src="../assets/images/icon/pin.svg" alt="撰寫評論icon"></button>
       </section>
     </section>
     <section class="comment-content">
-      <template v-if="dataDetail.Comment">
+      <template v-if="dataDetail.Comment && dataDetail.Comment.length > 0">
         <CommentCard v-for="comment in dataDetail.Comment" :comment="comment" :key="comment.id"/>
       </template>
       <template v-else><NoContent /></template>
@@ -55,7 +55,7 @@
           </li>
         </ul>
       </div>
-      <input type="text" placeholder="輸入標題" v-model="commentForm.title" class="form-text">
+      <input type="text" placeholder="輸入標題" ref="formTitle" v-model="commentForm.title" class="form-text">
       <textarea placeholder="我覺得..." v-model="commentForm.content" class="form-textarea"></textarea>
       <button type="submit" @click="sentForm" class="form-btn">送出評論</button>
     </section>
@@ -108,11 +108,21 @@ export default {
     }
   },
   methods: {
+    expandCommentForm() {
+      this.commentFormShow = !this.commentFormShow;
+      this.$refs.formTitle.focus();
+    },
     changeCommentStar (score) {
       this.commentForm.score = score;
     },
     sentForm () {
-      this.$store.dispatch("serverModule/postCommentToServer", { commentForm: this.commentForm, id: this.dataDetail.ID, vm: this })
+      this.$store.dispatch("serverModule/postCommentToServer", { commentForm: this.commentForm, id: this.dataDetail.ID, vm: this });
+      this.commentForm = {
+        title: "",
+        content: "",
+        score: 0
+      };
+      window.alert("評論更新！");
     }
   },
   components: {

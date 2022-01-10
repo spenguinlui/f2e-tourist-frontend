@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <header class="benner-container">
       <h1 class="benner-title" v-if="!dataLoaing">{{ theme.themeName }}</h1>
     </header>

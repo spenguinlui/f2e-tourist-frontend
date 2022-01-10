@@ -1,16 +1,14 @@
 <template>
-  <div class="container-fluid">
-    <div class="container">
-      <form action="post" class="form">
-        <input type="text" v-model="email" class="form-input">
-        <input type="text" v-model="password" class="form-input">
-        <div class="btn-group">
-          <button type="submit" @click.prevent.stop="login" class="form-btn">登入</button>
-          <button type="submit" @click.prevent.stop="signUp" class="form-btn">加入會員</button>
-        </div>
-      </form>
-      <p class="res-msg">回應內容: {{ userActionMsg }}</p>
-    </div>
+  <div class="container">
+    <form action="post" class="form">
+      <input type="text" v-model="email" class="form-input">
+      <input type="text" v-model="password" class="form-input">
+      <div class="btn-group">
+        <button type="submit" @click.prevent.stop="login" class="form-btn">登入</button>
+        <button type="submit" @click.prevent.stop="signUp" class="form-btn">加入會員</button>
+      </div>
+    </form>
+    <p class="res-msg">回應內容: {{ userActionMsg }}</p>
   </div>
 </template>
 

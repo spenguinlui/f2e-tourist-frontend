@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <header class="benner-container" :style="{ backgroundImage: bgImage }">
       <h1 class="benner-title">主題{{ classType_zh }}</h1>
     </header>

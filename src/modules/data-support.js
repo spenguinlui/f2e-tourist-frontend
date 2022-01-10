@@ -1,3 +1,7 @@
+export const deepCopy = (object) => {
+  return JSON.parse(JSON.stringify(object));
+}
+
 export const determineType = (data) => {
   if (data.ScenicSpotID) {
     return "ScenicSpot";
