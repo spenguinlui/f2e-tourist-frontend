@@ -21,8 +21,8 @@
 import { mapGetters } from 'vuex';
 import L from 'leaflet';
 
-import Card from "../components/card.vue";
-import NoContent from '../components/no-content.vue';
+import Card from "@/components/card.vue";
+import NoContent from '@/components/no-content.vue';
 
 export default {
   computed: {

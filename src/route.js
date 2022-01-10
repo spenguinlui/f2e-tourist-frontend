@@ -54,12 +54,17 @@ export const routes = [
     component: () => import('./pages/login'),
     name: 'login'
   },
-  // {
-  //   path: '/suppliers',
-  //   component: () => import('./pages/suppliers'),
-  //   name: 'suppliers',
-  //   meta: { requiresAuth: true }
-  // },
+  {
+    path: '/suppliers',
+    component: () => import('./pages/suppliers'),
+    name: 'suppliers',
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/supplier-login',
+    component: () => import('./pages/supplier-login'),
+    name: 'supplier-login'
+  },
   {
     path: '*',
     component: () => import('./pages/notfound'),

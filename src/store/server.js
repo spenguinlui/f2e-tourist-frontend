@@ -7,7 +7,8 @@ import {
   AJAX_S_userSignOut,
   AJAX_S_getFavorites,
   AJAX_S_changeFavorite,
-  AJAX_S_postComment
+  AJAX_S_postComment,
+  AJAX_S_supplierSignIn
 } from "@/modules/server-api";
 
 import { deepCopy } from "@/modules/data-support";
@@ -16,7 +17,7 @@ export default {
   namespaced: true,
   state: {
     userActionMsg: "",
-    userIsLogin: false
+    userIsLogin: false,
   },
   getters: {
     userActionMsg: state => state.userActionMsg,
@@ -24,7 +25,7 @@ export default {
   },
   mutations: {
     UPDATE_USER_ACTION_MSG: (state, userActionMsg) => state.userActionMsg = userActionMsg,
-    UPDATE_USER_LOGIN: (state, userIsLogin) => state.userIsLogin = userIsLogin
+    UPDATE_USER_LOGIN: (state, userIsLogin) => state.userIsLogin = userIsLogin,
   },
   actions: {
     // 從後端要 Theme 資料
@@ -225,6 +226,22 @@ export default {
       });
 
       commit("UPDATE_FAVORITE_ADDING", false, { root: true });
+    },
+
+    // 廠商 ----
+    // 廠商登入
+    loginSupplierOnServer(_, { supplierParams, vm }) {
+      AJAX_S_supplierSignIn(supplierParams)
+      .then(res => {
+        const { auth_token } = res.data;
+
+        // cookie 寫入登入狀態
+        vm.$cookies.set('_s', auth_token, null, null, null, true);
+      })
+      .catch(error => {
+        console.log(`loginSupplierOnServer: ${error}`);
+        // 錯誤處理
+      });
     },
   }
 }

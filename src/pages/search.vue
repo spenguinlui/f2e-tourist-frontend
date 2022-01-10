@@ -20,7 +20,7 @@
         </template>
         <!-- 查詢無資料 -->
         <template v-else>
-          <h2>無符合資料 !</h2>
+          <NoContent />
         </template>
       </template>
     </section>
@@ -30,6 +30,7 @@
 <script>
 import Card from '@/components/card.vue';
 import MaskCard from '@/components/mask-card.vue';
+import NoContent from '@/components/no-content.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -39,7 +40,8 @@ export default {
   },
   components: {
     Card,
-    MaskCard
+    MaskCard,
+    NoContent
   },
   created() {
     // 用網址進入的也要一次資料

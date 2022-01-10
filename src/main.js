@@ -12,6 +12,8 @@ import 'leaflet/dist/leaflet.css';
 import VueCookie from 'vue-cookies';
 Vue.use(VueCookie);
 
+import { AJAX_S_checkSupplierLogin } from '@/modules/server-api'
+
 Vue.use(Router);
 const router = new Router({
   linkExactActiveClass: 'active',
@@ -39,6 +41,20 @@ router.beforeEach((to, _, next) => {
     vm.$store.commit("otherModule/TOGGLE_MAP_MODE", false);
   } else if (to.name === "detail") {
     vm.$store.commit("CLEAR_DATA_DETAIL");
+  }
+
+  if (to.meta.requiresAuth) {
+    const supplierAuthToken = vm.$cookies.get('_s');
+    const supplierParams = { auth_token: supplierAuthToken }
+    AJAX_S_checkSupplierLogin(supplierParams)
+    .then(res => {
+      if (res.data.success) {
+        next();
+      }
+    })
+    .catch(() => {
+      next({ name: 'supplier-login' })
+    })
   }
   next();
 })

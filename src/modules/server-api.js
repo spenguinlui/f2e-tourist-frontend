@@ -45,7 +45,7 @@ export const AJAX_S_postCount = (idsStr, type) => {
 export const AJAX_S_userSignIn = (userParams) => {
   return axios({
     method: 'post',
-    url: `${getServerPrefixUrl}/users/sign_in`,
+    url: `${getServerPrefixUrl}/user/sign_in`,
     header: { "Content-Type": "application/json" },
     data: userParams,
   });
@@ -55,7 +55,7 @@ export const AJAX_S_userSignIn = (userParams) => {
 export const AJAX_S_userSignUp = (userParams) => {
   return axios({
     method: 'post',
-    url: `${getServerPrefixUrl}/users`,
+    url: `${getServerPrefixUrl}/user/sign_up`,
     header: { "Content-Type": "application/json" },
     data: userParams,
   });
@@ -65,7 +65,7 @@ export const AJAX_S_userSignUp = (userParams) => {
 export const AJAX_S_userSignOut = (userParams) => {
   return axios({
     method: 'delete',
-    url: `${getServerPrefixUrl}/users/sign_out`,
+    url: `${getServerPrefixUrl}/user/sign_out`,
     header: { "Content-Type": "application/json" },
     data: userParams,
   });
@@ -98,5 +98,25 @@ export const AJAX_S_postComment = (commentParams, id) => {
     url: `${getServerPrefixUrl}/local_item/${id}/comment`,
     header: { "Content-Type": "application/json" },
     data: commentParams,
+  });
+}
+
+// 確認廠商
+export const AJAX_S_checkSupplierLogin = (supplierParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/supplier/check`,
+    header: { "Content-Type": "application/json" },
+    data: supplierParams,
+  })
+}
+
+// 廠商登入
+export const AJAX_S_supplierSignIn = (supplierParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/supplier/sign_in`,
+    header: { "Content-Type": "application/json" },
+    data: supplierParams,
   });
 }
