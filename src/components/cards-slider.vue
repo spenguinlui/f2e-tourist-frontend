@@ -27,7 +27,9 @@ export default {
     return {
       dataLoaing: true,
       timeout: {},
-      requestCount: 0
+      themeTimeout: {},
+      requestCount: 0,
+      themeRequestCount: 0
     }
   },
   computed: {
@@ -66,7 +68,13 @@ export default {
       }, 1000);
     }
     if (vm.mode === "theme") {
-      vm.getThemeDataList();
+      vm.themeTimeout = window.setInterval(() => {
+        vm.themeRequestCount ++;
+        vm.getThemeDataList();
+        if (this.themes[this.theme.themeId].themeDataList.length > 0 || vm.themeRequestCount >= 35) {
+          window.clearInterval(vm.themeTimeout);
+        }
+      }, 1000);
     }
   },
   components: {
