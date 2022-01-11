@@ -31,6 +31,16 @@ export const AJAX_S_getHots = () => {
   });
 }
 
+// 取得一列表內每項目的評分
+export const AJAX_S_getScoreByDataList = (idsStr) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/local_items/average_scores`,
+    header: { "Content-Type": "application/json" },
+    data: idsStr,
+  });
+}
+
 // 增加計數器 - [addSearch, addEnter, addFavorite, removeFavorite]
 export const AJAX_S_postCount = (idsStr, type) => {
   return axios({

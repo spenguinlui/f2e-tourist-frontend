@@ -9,7 +9,7 @@
           <section class="detail-header-title">
             <h1 class="detail-header-title-text">{{ dataDetail.Name }}</h1>
             <div class="detail-header-comment">
-              <Stars :score="dataDetail.Comment && dataDetail.Comment.length || 4.5"/>
+              <Stars :score="dataDetail.CommentScore || 3.5"/>
               <div class="detail-header-comment-count">
                 {{ dataDetail.Comment && dataDetail.Comment.length || '0' }} 則評論
               </div>

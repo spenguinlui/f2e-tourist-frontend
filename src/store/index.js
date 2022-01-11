@@ -8,9 +8,12 @@ import {
   getSingleType_AJAX
 } from "@/modules/api";
 
-import { AJAX_S_getDetail } from "@/modules/server-api";
+import {
+  AJAX_S_getDetail,
+  AJAX_S_getScoreByDataList
+} from "@/modules/server-api";
 
-import { createCommonIDAndName, concatAndAddType } from "@/modules/data-support";
+import { createCommonIDAndName, determineType, addCommentScore, concatAndAddType } from "@/modules/data-support";
 
 import serverModule from "./server";
 import otherModule from "./other";
@@ -105,9 +108,13 @@ export const storeObject = {
       commit("UPDATE_DATA_LOADING", true);
       targetAjax({ select: ['Picture', 'Position'] })
       .then(res => {
-        const dataList = res.data.map(data => createCommonIDAndName(data));
-        commit("UPDATE_DATA_LIST", dataList);
-        commit("UPDATE_DATA_LOADING", false);
+        const ids = res.data.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(res.data, res1.data.average_scores);
+          commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_LOADING", false);
+        })
       })
       .catch(error => {
         commit("UPDATE_DATA_LOADING", false);
@@ -142,10 +149,16 @@ export const storeObject = {
           AJAX_getActivity({ position })
         ])
         .then(ress => {
-          const nearbyDataList = concatAndAddType(ress);
-          data.NearbyDataList = nearbyDataList;
-          commit("UPDATE_DATA_DETAIL", data);
-          commit("UPDATE_DATA_LOADING", false);
+          let allNearbyDataList = concatAndAddType(ress);
+          const ids = allNearbyDataList.map(data => data[`${determineType(data)}ID`]);
+          AJAX_S_getScoreByDataList({ ids })
+          .then(res1 => {
+            const nearbyDataList = addCommentScore(allNearbyDataList, res1.data.average_scores);
+            data.NearbyDataList = nearbyDataList;
+            commit("UPDATE_DATA_DETAIL", data);
+            commit("UPDATE_DATA_LOADING", false);
+          })
+          
         })
         .catch(error => {
           commit("UPDATE_DATA_LOADING", false);
@@ -193,12 +206,18 @@ export const storeObject = {
         AJAX_getActivity({ keyword, select: ['Picture'] })
       ])
       .then(ress => {
-        const datalist = concatAndAddType(ress);
-        const ids = datalist.map(data => data.ID);
+        let allDatalist = concatAndAddType(ress);
 
-        commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
-        commit("UPDATE_KEYWORD", "");
-        commit("UPDATE_DATA_LOADING", false);
+        // 資料集合
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("UPDATE_ALL_TYPE_DATA_LIST", dataList);
+          commit("UPDATE_KEYWORD", "");
+          commit("UPDATE_DATA_LOADING", false);
+        })
 
         // 向後端丟個資料
         this.dispatch("serverModule/postSearchCountToSever", ids);
@@ -216,10 +235,15 @@ export const storeObject = {
       commit("UPDATE_DATA_LOADING", true);
       targetAjax({ townName, select: ['Picture'] })
       .then(res => {
-        const dataList = res.data.map(data => createCommonIDAndName(data));
-        commit("TOGGLE_TOWN", townName);
-        commit("UPDATE_DATA_LIST", dataList);
-        commit("UPDATE_DATA_LOADING", false);
+        let allDatalist = res.data.map(data => createCommonIDAndName(data));
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("TOGGLE_TOWN", townName);
+          commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_LOADING", false);
+        })
       })
       .catch(error => {
         commit("UPDATE_DATA_LOADING", false);
@@ -235,10 +259,15 @@ export const storeObject = {
       const classObject = { dataType, classType };
       targetAjax({ classObject, select: ['Picture'] })
       .then(res => {
-        const dataList = res.data.map(data => createCommonIDAndName(data));
-        commit("TOGGLE_CLASS_TYPE", classType);
-        commit("UPDATE_DATA_LIST", dataList);
-        commit("UPDATE_DATA_LOADING", false);
+        let allDatalist = res.data.map(data => createCommonIDAndName(data));
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("TOGGLE_CLASS_TYPE", classType);
+          commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_LOADING", false);
+        })
       })
       .catch(error => {
         commit("UPDATE_DATA_LOADING", false);
@@ -264,9 +293,14 @@ export const storeObject = {
       }
       targetAjax(queryObj)
       .then(res => {
-        const dataList = res.data.map(data => createCommonIDAndName(data));
-        commit("UPDATE_MORE_DATA_LIST", dataList);
-        commit("UPDATE_MORE_DATA_LOADING", false);
+        let allDatalist = res.data.map(data => createCommonIDAndName(data));
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("UPDATE_MORE_DATA_LIST", dataList);
+          commit("UPDATE_MORE_DATA_LOADING", false);
+        })
       })
       .catch(error => {
         commit("UPDATE_MORE_DATA_LOADING", false);
@@ -289,9 +323,14 @@ export const storeObject = {
 
       Promise.all(hotArray)
       .then(ress => {
-        const datalist = concatAndAddType(ress);
-        commit("UPDATE_HOT_DATA_LIST", datalist);
-        commit("UPDATE_DATA_LOADING", false);
+        const allDatalist = concatAndAddType(ress);
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("UPDATE_HOT_DATA_LIST", dataList);
+          commit("UPDATE_DATA_LOADING", false);
+        })
       })
       .catch((error) => {
         commit("UPDATE_DATA_LOADING", false);
@@ -315,9 +354,14 @@ export const storeObject = {
         AJAX_getActivity(queryObj)
       ])
       .then(ress => {
-        const datalist = concatAndAddType(ress);
-        commit("UPDATE_FAVORITE_DATA_LIST", datalist);
-        commit("UPDATE_DATA_LOADING", false);
+        const allDatalist = concatAndAddType(ress);
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("UPDATE_FAVORITE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_LOADING", false);
+        })
       })
       .catch(error => {
         commit("UPDATE_DATA_LOADING", false);
@@ -338,9 +382,14 @@ export const storeObject = {
         AJAX_getActivity(queryObj)
       ])
       .then(ress => {
-        const dataList = concatAndAddType(ress);
-        commit("UPDATE_THEME_DATA_LIST", { index: themeId, dataList });
-        commit("UPDATE_DATA_LOADING", false);
+        const allDatalist = concatAndAddType(ress);
+        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+        AJAX_S_getScoreByDataList({ ids })
+        .then(res1 => {
+          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+          commit("UPDATE_THEME_DATA_LIST", { index: themeId, dataList });
+          commit("UPDATE_DATA_LOADING", false);
+        })
       })
       .catch((error) => {
         commit("UPDATE_DATA_LOADING", false);
@@ -363,9 +412,14 @@ export const storeObject = {
       Promise.all(themeArray)
       .then(ress => {
         ress.map((res, index) => {
-          const dataList = res.data.map(data => createCommonIDAndName(data));
-          commit("UPDATE_THEME_DATA_LIST", { index: index + 1, dataList });
-          commit("UPDATE_DATA_LOADING", false);
+          let allDatalist = res.data.map(data => createCommonIDAndName(data));
+          const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
+          AJAX_S_getScoreByDataList({ ids })
+          .then(res1 => {
+            const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+            commit("UPDATE_THEME_DATA_LIST", { index: index + 1, dataList });
+            commit("UPDATE_DATA_LOADING", false);
+          })
         })
       })
       .catch(error => {

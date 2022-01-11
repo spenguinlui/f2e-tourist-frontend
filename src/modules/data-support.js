@@ -27,6 +27,20 @@ export const determineTypeByID = (id) => {
   }
 }
 
+export const switchDataType = (type) => {
+  switch (type) {
+    case "ScenicSpot": return "scenicspots";
+    case "Activity": return "activities";
+    case "Restaurant": return "restaurants";
+    case "Hotel": return "hotels";
+    case "scenicspots": return "ScenicSpot";
+    case "activities": return "Activity";
+    case "restaurants": return "Restaurant";
+    case "hotels": return "Hotel";
+    default: return null;
+  }
+}
+
 export const createCommonIDAndName = (data) => {
   const dataType = determineType(data);
   data.Type = dataType;
@@ -35,7 +49,6 @@ export const createCommonIDAndName = (data) => {
   return data;
 }
 
-
 export const concatAndAddType = (dataArray) => {
   return dataArray.reduce(
     (collection, res) => {
@@ -43,4 +56,16 @@ export const concatAndAddType = (dataArray) => {
       return collection.concat(res.data);
     }, []
   )
+}
+
+export const addCommentScore = (dataList, commentList) => {
+  return dataList.map(data => {
+    const dataType = determineType(data);
+    commentList.map(comment => {
+      if (comment.id === data[`${dataType}ID`]) {
+        data.CommentScore = comment.average_score;
+      }
+    })
+    return createCommonIDAndName(data);
+  });
 }
