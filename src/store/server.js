@@ -9,7 +9,10 @@ import {
   AJAX_S_changeFavorite,
   AJAX_S_postComment,
   AJAX_S_supplierSignIn,
-  AJAX_S_adminSignIn
+  AJAX_S_adminSignIn,
+  AJAX_S_patchTheme,
+  AJAX_S_addTheme,
+  AJAX_S_deleteTheme
 } from "@/modules/server-api";
 
 import { deepCopy } from "@/modules/data-support";
@@ -274,5 +277,89 @@ export default {
         window.alert("管理員登入失敗");
       });
     },
+
+    // 主題修改
+    updateThemeToServer({ commit }, { themeId, themeParams, vm }) {
+      const adminAuthToken = vm.$cookies.get('_a');
+      themeParams.auth_token = adminAuthToken;
+      AJAX_S_patchTheme(themeId, themeParams)
+      .then(res => {
+        const newThemes = res.data.reduce(
+          (newObj, theme) => {
+            newObj[theme.id] = {
+              themeId: theme.id,
+              themeName: theme.theme_name,
+              themeTags: theme.theme_tags,
+              themeDataList: []
+            }
+            return newObj;
+          }, {}
+        );
+        commit("UPDATE_THEMES", newThemes, { root: true });
+        window.alert("主題修改成功");
+      })
+      .catch(error => {
+        console.log(`updateThemeToServer: ${error}`);
+        // 錯誤處理
+        window.alert("主題修改失敗");
+      });
+    },
+
+    // 主題新增
+    addThemeToServer({ commit }, { themeParams, vm }) {
+      const adminAuthToken = vm.$cookies.get('_a');
+      themeParams.auth_token = adminAuthToken;
+      AJAX_S_addTheme(themeParams)
+      .then(res => {
+        const newThemes = res.data.reduce(
+          (newObj, theme) => {
+            newObj[theme.id] = {
+              themeId: theme.id,
+              themeName: theme.theme_name,
+              themeTags: theme.theme_tags,
+              themeDataList: []
+            }
+            return newObj;
+          }, {}
+        );
+        commit("UPDATE_THEMES", newThemes, { root: true });
+        window.alert("主題新增成功");
+      })
+      .catch(error => {
+        console.log(`updateThemeToServer: ${error}`);
+        // 錯誤處理
+        window.alert("主題新增失敗");
+      });
+    },
+
+    // 主題刪除
+    deleteThemeToServer({ commit }, { themeId, vm }) {
+      const adminAuthToken = vm.$cookies.get('_a');
+      const themeParams = {
+        auth_token: adminAuthToken,
+        id: themeId
+      }
+      AJAX_S_deleteTheme(themeParams)
+      .then((res) => {
+        const newThemes = res.data.reduce(
+          (newObj, theme) => {
+            newObj[theme.id] = {
+              themeId: theme.id,
+              themeName: theme.theme_name,
+              themeTags: theme.theme_tags,
+              themeDataList: []
+            }
+            return newObj;
+          }, {}
+        );
+        commit("UPDATE_THEMES", newThemes, { root: true });
+        window.alert("主題刪除成功");
+      })
+      .catch(error => {
+        console.log(`updateThemeToServer: ${error}`);
+        // 錯誤處理
+        window.alert("主題刪除失敗");
+      });
+    }
   }
 }

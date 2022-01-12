@@ -150,3 +150,33 @@ export const AJAX_S_adminSignIn = (adminParams) => {
     data: adminParams,
   });
 }
+
+// 主題修改
+export const AJAX_S_patchTheme = (themeId, themeParams) => {
+  return axios({
+    method: 'patch',
+    url: `${getServerPrefixUrl}/admin/themes/${themeId}`,
+    header: { "Content-Type": "application/json" },
+    data: themeParams,
+  });
+}
+
+// 主題新增
+export const AJAX_S_addTheme = (themeParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/admin/themes`,
+    header: { "Content-Type": "application/json" },
+    data: themeParams,
+  });
+}
+
+// 主題刪除
+export const AJAX_S_deleteTheme = (themeParams) => {
+  return axios({
+    method: 'delete',
+    url: `${getServerPrefixUrl}/admin/themes/${themeParams.id}`,
+    header: { "Content-Type": "application/json" },
+    data: themeParams,
+  });
+}
