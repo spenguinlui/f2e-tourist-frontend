@@ -34,7 +34,6 @@ export default {
     async signUp() {
       const userParams = { email: this.email, password: this.password };
       await this.$store.dispatch("serverModule/signUpUserOnServer", { userParams, vm: this });
-      this.$router.push('/favorites');
     }
   }
 }

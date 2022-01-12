@@ -134,11 +134,13 @@ export default {
 
         // 更新我的旅程為 db 內的
         commit("SET_FAVORITES", favorites, { root: true });
+        vm.$router.push('/favorites');
       })
       .catch(error => {
         commit("UPDATE_USER_ACTION_MSG", error);
         console.log(`loginUserOnServer: ${error}`);
         // 錯誤處理
+        window.alert("登入失敗");
       });
     },
 
@@ -161,17 +163,25 @@ export default {
       .then(userAuthToken => {
         // 將 localstorge 我的最愛加入會員資料
         const favoritesParams = { auth_token: userAuthToken, favorites };
+
         AJAX_S_changeFavorite(favoritesParams)
+        .then(() => {
+          vm.$router.push('/favorites');
+        })
         .catch(error => {
           commit("UPDATE_USER_ACTION_MSG", error);
           console.log(`signUpUserOnServer: ${error}`);
           // 錯誤處理
+          vm.$router.push('/');
+          window.alert("加入會員失敗");
         });
       })
       .catch(error => {
         commit("UPDATE_USER_ACTION_MSG", error);
         console.log(`signUpUserOnServer: ${error}`);
         // 錯誤處理
+        vm.$router.push('/');
+        window.alert("加入會員失敗");
       });
     },
 
