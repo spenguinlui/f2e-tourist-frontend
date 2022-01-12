@@ -1,5 +1,38 @@
 export const routes = [
   {
+    path: '/admin',
+    component: () => import('./pages/admin/index'),
+    name: 'admin',
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'themes',
+        component: () => import('./pages/admin/themes'),
+        name: 'admin-themes'
+      },
+      {
+        path: 'users',
+        component: () => import('./pages/admin/users'),
+        name: 'admin-users'
+      },
+      {
+        path: 'suppliers',
+        component: () => import('./pages/admin/suppliers'),
+        name: 'admin-suppliers'
+      },
+      {
+        path: 'setting',
+        component: () => import('./pages/admin/setting'),
+        name: 'admin-setting'
+      },
+    ]
+  },
+  {
+    path: '/admin-login',
+    component: () => import('./pages/admin/admin-login'),
+    name: 'admin-login'
+  },
+  {
     path: '/',
     component: () => import('./pages/home'),
     name: 'home'

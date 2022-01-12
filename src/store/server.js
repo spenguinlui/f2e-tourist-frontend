@@ -8,7 +8,8 @@ import {
   AJAX_S_getFavorites,
   AJAX_S_changeFavorite,
   AJAX_S_postComment,
-  AJAX_S_supplierSignIn
+  AJAX_S_supplierSignIn,
+  AJAX_S_adminSignIn
 } from "@/modules/server-api";
 
 import { deepCopy } from "@/modules/data-support";
@@ -247,10 +248,30 @@ export default {
 
         // cookie 寫入登入狀態
         vm.$cookies.set('_s', auth_token, null, null, null, true);
+        vm.$router.push({ name: 'suppliers' });
       })
       .catch(error => {
         console.log(`loginSupplierOnServer: ${error}`);
         // 錯誤處理
+        window.alert("廠商登入失敗");
+      });
+    },
+
+    // 管理者 ----
+    // 管理者登入
+    loginAdminOnServer(_, { adminParams, vm }) {
+      AJAX_S_adminSignIn(adminParams)
+      .then(res => {
+        const { auth_token } = res.data;
+
+        // cookie 寫入登入狀態
+        vm.$cookies.set('_a', auth_token, null, null, null, true);
+        vm.$router.push({ name: 'admin' });
+      })
+      .catch(error => {
+        console.log(`loginAdminOnServer: ${error}`);
+        // 錯誤處理
+        window.alert("管理員登入失敗");
       });
     },
   }

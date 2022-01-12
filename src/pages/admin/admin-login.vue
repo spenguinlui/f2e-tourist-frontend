@@ -4,8 +4,7 @@
       <input type="text" v-model="email" class="form-input">
       <input type="text" v-model="password" class="form-input">
       <div class="btn-group">
-        <button type="submit" @click.prevent.stop="login" class="form-btn">登入</button>
-        <button type="submit" @click.prevent.stop="signUp" class="form-btn">我想成為商家</button>
+        <button type="submit" @click.prevent.stop="login" class="form-btn">管理者登入</button>
       </div>
     </form>
   </div>
@@ -21,11 +20,8 @@ export default {
   },
   methods: {
     async login() {
-      const supplierParams = { email: this.email, password: this.password };
-      await this.$store.dispatch("serverModule/loginSupplierOnServer", { supplierParams, vm: this });
-    },
-    signUp () {
-      window.alert("尚未開放！");
+      const adminParams = { email: this.email, password: this.password };
+      await this.$store.dispatch("serverModule/loginAdminOnServer", { adminParams, vm: this });
     }
   }
 }

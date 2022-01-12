@@ -130,3 +130,23 @@ export const AJAX_S_supplierSignIn = (supplierParams) => {
     data: supplierParams,
   });
 }
+
+// 確認管理者是否登入
+export const AJAX_S_checkAdminLogin = (adminParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/admin/check`,
+    header: { "Content-Type": "application/json" },
+    data: adminParams,
+  })
+}
+
+// 管理者登入
+export const AJAX_S_adminSignIn = (adminParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/admin/sign_in`,
+    header: { "Content-Type": "application/json" },
+    data: adminParams,
+  });
+}
