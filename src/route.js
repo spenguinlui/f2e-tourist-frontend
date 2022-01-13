@@ -8,7 +8,10 @@ export const routes = [
       {
         path: 'themes',
         component: () => import('./pages/admin/themes'),
-        name: 'admin-themes'
+        name: 'admin-themes',
+        beforeRouteEnter(to, from, next) {
+          console.log(to, from, next)
+        }
       },
       {
         path: 'users',

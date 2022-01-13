@@ -12,8 +12,25 @@
 </template>
 
 <script>
+import { AJAX_S_checkAdminLogin } from '@/modules/server-api';
+
 export default {
-  
+  created() {
+    // 防止 router 守衛沒啟動
+    const adminAuthToken = this.$cookies.get('_a');
+      const adminParams = { auth_token: adminAuthToken };
+      AJAX_S_checkAdminLogin(adminParams)
+      .then(res => {
+        if (res.data.success) {
+          return;
+        } else {
+          this.$router.push({ name: 'admin-login' });
+        }
+      })
+      .catch(() => {
+        this.$router.push({ name: 'admin-login' });
+      })
+  }
 }
 </script>
 
