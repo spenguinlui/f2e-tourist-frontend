@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>參數設定</h2>
+    <span>說明: 熱門景點評分 = 搜尋次數 X (search_weight) + 進入詳細頁面次數 X (enter_weight) + (被加入喜愛次數 - 移除喜愛次數) X (favorite_weight)</span>
     <table>
       <thead>
         <tr>
