@@ -14,10 +14,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="theme in themes" :key="theme.themeId">
+        <tr v-for="(theme, index) in themes" :key="theme.themeId">
           <td><input type="text" v-model="theme.themeName" style="border: 1px #ddd solid"></td>
           <td><input type="text" v-model="theme.themeTags" style="border: 1px #ddd solid"></td>
-          <td><button @click="updateTheme(theme.themeId)" style="border: 2px #666 solid">更新</button></td>
+          <td><button @click="updateTheme(theme.themeId, index)" style="border: 2px #666 solid">更新</button></td>
           <td><button @click="deleteTheme(theme.themeId)" style="border: 2px #666 solid">刪除</button></td>
         </tr>
       </tbody>
@@ -36,16 +36,13 @@ export default {
     }
   },
   computed: {
-    // localTheme() {
-    //   return this.themes;
-    // },
     ...mapGetters(['themes'])
   },
   methods: {
-    updateTheme(themeId) {
+    updateTheme(themeId, index) {
       const themeParams = {
-        theme_name: this.themes[themeId].themeName,
-        theme_tags: this.themes[themeId].themeTags
+        theme_name: this.themes[index].themeName,
+        theme_tags: this.themes[index].themeTags
       };
       this.$store.dispatch("serverModule/updateThemeToServer", { themeId, themeParams, vm: this });
       this.$store.dispatch("serverModule/getThemesByServer");

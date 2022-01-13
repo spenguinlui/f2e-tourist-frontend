@@ -180,3 +180,33 @@ export const AJAX_S_deleteTheme = (themeParams) => {
     data: themeParams,
   });
 }
+
+// 使用者列表
+export const AJAX_S_getUsers = (userParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/admin/userslist`,
+    header: { "Content-Type": "application/json" },
+    data: userParams,
+  });
+}
+
+// 取得設定參數列表
+export const AJAX_S_getSetting = (userParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/admin/setting`,
+    header: { "Content-Type": "application/json" },
+    data: userParams,
+  });
+}
+
+// 修改設定參數
+export const AJAX_S_patchSetting = (settingParams) => {
+  return axios({
+    method: 'patch',
+    url: `${getServerPrefixUrl}/admin/setting/${settingParams.settingId}`,
+    header: { "Content-Type": "application/json" },
+    data: settingParams,
+  });
+}

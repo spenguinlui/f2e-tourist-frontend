@@ -12,7 +12,10 @@ import {
   AJAX_S_adminSignIn,
   AJAX_S_patchTheme,
   AJAX_S_addTheme,
-  AJAX_S_deleteTheme
+  AJAX_S_deleteTheme,
+  AJAX_S_getUsers,
+  AJAX_S_getSetting,
+  AJAX_S_patchSetting
 } from "@/modules/server-api";
 
 import { deepCopy } from "@/modules/data-support";
@@ -22,14 +25,20 @@ export default {
   state: {
     userActionMsg: "",
     userIsLogin: false,
+    users: [],
+    settings: []
   },
   getters: {
     userActionMsg: state => state.userActionMsg,
     userIsLogin: state => state.userIsLogin,
+    users: state => state.users,
+    settings: state => state.settings,
   },
   mutations: {
     UPDATE_USER_ACTION_MSG: (state, userActionMsg) => state.userActionMsg = userActionMsg,
     UPDATE_USER_LOGIN: (state, userIsLogin) => state.userIsLogin = userIsLogin,
+    UPDATE_USERS: (state, users) => state.users = users,
+    UPDATE_SETTINGS: (state, settings) => state.settings = settings
   },
   actions: {
     // 從後端要 Theme 資料
@@ -359,6 +368,47 @@ export default {
         console.log(`updateThemeToServer: ${error}`);
         // 錯誤處理
         window.alert("主題刪除失敗");
+      });
+    },
+
+    // 取得使用者
+    getUsersByServer({ commit }, { vm }) {
+      const adminAuthToken = vm.$cookies.get('_a');
+      AJAX_S_getUsers({ auth_token: adminAuthToken })
+      .then(res => {
+        commit("UPDATE_USERS", res.data);
+      })
+      .catch(error => {
+        console.log(`getUsersByServer: ${error}`);
+        // 錯誤處理
+      });
+    },
+
+    // 取得參數設定列表
+    getSettingByServer({ commit }, { vm }) {
+      const adminAuthToken = vm.$cookies.get('_a');
+      AJAX_S_getSetting({ auth_token: adminAuthToken })
+      .then(res => {
+        commit("UPDATE_SETTINGS", res.data);
+      })
+      .catch(error => {
+        console.log(`getUsersByServer: ${error}`);
+        // 錯誤處理
+      });
+    },
+
+    // 修改參數設定
+    updateSettingToServer({ commit }, { settingParams, vm }) {
+      const adminAuthToken = vm.$cookies.get('_a');
+      settingParams.auth_token = adminAuthToken;
+      AJAX_S_patchSetting(settingParams)
+      .then(res => {
+        commit("UPDATE_SETTINGS", res.data);
+        window.alert("設定修改成功");
+      })
+      .catch(error => {
+        console.log(`getUsersByServer: ${error}`);
+        window.alert("設定修改失敗");
       });
     }
   }
