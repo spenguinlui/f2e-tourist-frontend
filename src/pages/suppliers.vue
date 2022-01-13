@@ -8,6 +8,7 @@
 import { AJAX_S_checkSupplierLogin } from '@/modules/server-api';
 
 export default {
+  
   created() {
     // 防止 router 守衛沒啟動
     const supplierAuthToken = this.$cookies.get('_s');

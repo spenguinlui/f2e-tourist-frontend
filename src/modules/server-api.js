@@ -210,3 +210,13 @@ export const AJAX_S_patchSetting = (settingParams) => {
     data: settingParams,
   });
 }
+
+// 取得廠商資料
+export const AJAX_S_getSupppliers = (supplierParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/admin/supplierlist`,
+    header: { "Content-Type": "application/json" },
+    data: supplierParams,
+  });
+}

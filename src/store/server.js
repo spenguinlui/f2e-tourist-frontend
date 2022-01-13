@@ -15,7 +15,8 @@ import {
   AJAX_S_deleteTheme,
   AJAX_S_getUsers,
   AJAX_S_getSetting,
-  AJAX_S_patchSetting
+  AJAX_S_patchSetting,
+  AJAX_S_getSupppliers
 } from "@/modules/server-api";
 
 import { deepCopy } from "@/modules/data-support";
@@ -26,19 +27,22 @@ export default {
     userActionMsg: "",
     userIsLogin: false,
     users: [],
-    settings: []
+    settings: [],
+    suppliers: []
   },
   getters: {
     userActionMsg: state => state.userActionMsg,
     userIsLogin: state => state.userIsLogin,
     users: state => state.users,
     settings: state => state.settings,
+    suppliers: state => state.suppliers
   },
   mutations: {
     UPDATE_USER_ACTION_MSG: (state, userActionMsg) => state.userActionMsg = userActionMsg,
     UPDATE_USER_LOGIN: (state, userIsLogin) => state.userIsLogin = userIsLogin,
     UPDATE_USERS: (state, users) => state.users = users,
-    UPDATE_SETTINGS: (state, settings) => state.settings = settings
+    UPDATE_SETTINGS: (state, settings) => state.settings = settings,
+    UPDATE_SUPPLIERS: (state, suppliers) => state.suppliers = suppliers
   },
   actions: {
     // 從後端要 Theme 資料
@@ -335,7 +339,7 @@ export default {
         window.alert("主題新增成功");
       })
       .catch(error => {
-        console.log(`updateThemeToServer: ${error}`);
+        console.log(`addThemeToServer: ${error}`);
         // 錯誤處理
         window.alert("主題新增失敗");
       });
@@ -365,7 +369,7 @@ export default {
         window.alert("主題刪除成功");
       })
       .catch(error => {
-        console.log(`updateThemeToServer: ${error}`);
+        console.log(`deleteThemeToServer: ${error}`);
         // 錯誤處理
         window.alert("主題刪除失敗");
       });
@@ -392,7 +396,7 @@ export default {
         commit("UPDATE_SETTINGS", res.data);
       })
       .catch(error => {
-        console.log(`getUsersByServer: ${error}`);
+        console.log(`getSettingByServer: ${error}`);
         // 錯誤處理
       });
     },
@@ -407,8 +411,23 @@ export default {
         window.alert("設定修改成功");
       })
       .catch(error => {
-        console.log(`getUsersByServer: ${error}`);
+        console.log(`updateSettingToServer: ${error}`);
         window.alert("設定修改失敗");
+      });
+    },
+
+    // 取得廠商資料
+    getSupplier({ commit }, { vm }) {
+      const supplierAuthToken = vm.$cookies.get('_a');
+      const supplierParams = {
+        auth_token: supplierAuthToken
+      }
+      AJAX_S_getSupppliers(supplierParams)
+      .then(res => {
+        commit("UPDATE_SUPPLIERS", res.data);
+      })
+      .catch(error => {
+        console.log(`getSupplier: ${error}`);
       });
     }
   }
