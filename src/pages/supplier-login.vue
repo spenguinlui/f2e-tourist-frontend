@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <form action="post" class="form">
-      <input type="text" v-model="email" class="form-input">
-      <input type="text" v-model="password" class="form-input">
+      <input type="text" v-model="email" placeholder="請填寫 Email" class="form-input">
+      <input type="text" v-model="password" placeholder="請填寫密碼" class="form-input">
       <div class="btn-group">
         <button type="submit" @click.prevent.stop="login" class="form-btn">登入</button>
         <button type="submit" @click.prevent.stop="signUp" class="form-btn">我想成為商家</button>
