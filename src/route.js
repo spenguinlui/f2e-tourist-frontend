@@ -83,9 +83,9 @@ export const routes = [
     name: 'favorites'
   },
   {
-    path: '/login',
-    component: () => import('./pages/login'),
-    name: 'login'
+    path: '/user-login',
+    component: () => import('./pages/user-login'),
+    name: 'user-login'
   },
   {
     path: '/suppliers',

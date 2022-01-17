@@ -12,7 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import VueCookie from 'vue-cookies';
 Vue.use(VueCookie);
 
-import { AJAX_S_checkSupplierLogin, AJAX_S_checkAdminLogin } from '@/modules/server-api'
+import { AJAX_S_checkSupplierLogin, AJAX_S_checkAdminLogin } from '@/modules/server-api';
 
 Vue.use(Router);
 const router = new Router({

@@ -151,7 +151,7 @@ export default {
 
         // 更新我的旅程為 db 內的
         commit("SET_FAVORITES", favorites, { root: true });
-        vm.$router.push('/favorites');
+        vm.$router.push({ name: "favorites" });
       })
       .catch(error => {
         commit("UPDATE_USER_ACTION_MSG", error);
