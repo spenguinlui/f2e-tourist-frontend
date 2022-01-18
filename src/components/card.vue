@@ -12,11 +12,7 @@
       <div class="card-content-title">{{ data.Name }}</div>
       <Stars :score="data.CommentScore || 3.5"/>
       <div class="card-content-tags">
-        <!-- <template v-for="(tag, index) in data.Tag">
-          <div class="card-tag" :key="index">{{ tag }}</div>
-        </template>
-        <div v-if="!data.Tag" class="card-tag">尚未建立</div> -->
-        <div class="card-tag" v-if="!data.Class && !data.Class1">無標記</div>
+        <div class="card-tag" v-if="!data.Class && !data.Class1 && !data.Class2 && !data.Class3">無標記</div>
         <div class="card-tag" v-if="data.Class">{{ data.Class }}</div>
         <div class="card-tag" v-if="data.Class1">{{ data.Class1 }}</div>
         <div class="card-tag" v-if="data.Class2">{{ data.Class2 }}</div>
