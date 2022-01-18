@@ -151,6 +151,8 @@ export default {
 
         // 更新我的旅程為 db 內的
         commit("SET_FAVORITES", favorites, { root: true });
+
+        window.alert("登入成功");
         vm.$router.push({ name: "favorites" });
       })
       .catch(error => {
@@ -183,7 +185,8 @@ export default {
 
         AJAX_S_changeFavorite(favoritesParams)
         .then(() => {
-          vm.$router.push('/favorites');
+          window.alert("申請成功");
+          vm.$router.push({ name: "favorites" });
         })
         .catch(error => {
           commit("UPDATE_USER_ACTION_MSG", error);
@@ -264,6 +267,8 @@ export default {
 
         // cookie 寫入登入狀態
         vm.$cookies.set('_s', auth_token, null, null, null, true);
+
+        window.alert("登入成功");
         vm.$router.push({ name: 'suppliers' });
       })
       .catch(error => {
@@ -282,6 +287,8 @@ export default {
 
         // cookie 寫入登入狀態
         vm.$cookies.set('_a', auth_token, null, null, null, true);
+
+        window.alert("登入成功");
         vm.$router.push({ name: 'admin' });
       })
       .catch(error => {

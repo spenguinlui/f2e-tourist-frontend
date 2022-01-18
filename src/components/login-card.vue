@@ -10,13 +10,13 @@
       </header>
       <section class="login-card-section">
         <form action="post" class="form">
-          <input type="email" v-model="email" placeholder="信箱" class="form-input">
-          <input type="password" v-model="password" placeholder="密碼" class="form-input">
-          <input type="password" v-show="!isLogin" v-model="confirmPassword" placeholder="再次輸入密碼" class="form-input">
+          <input type="email" v-model="email" placeholder="信箱" class="form-input" required="required">
+          <input type="password" v-model="password" placeholder="密碼" class="form-input" required="required">
+          <input type="password" v-show="!isLogin" v-model="confirmPassword" placeholder="再次輸入密碼" class="form-input" required="required">
           <a href="#" class="forget" @click.prevent.stop="forgetPassword">忘記密碼？</a>
           <div class="btn-group">
-            <button type="submit" v-show="isLogin" @click.prevent.stop="login({email, password})" class="form-btn">登入</button>
-            <button type="submit" v-show="!isLogin" @click.prevent.stop="signUp({email, password})" class="form-btn">註冊</button>
+            <button type="submit" v-show="isLogin" @click.prevent.stop="formValidate(login)" class="form-btn">登入</button>
+            <button type="submit" v-show="!isLogin" @click.prevent.stop="formValidate(signUp)" class="form-btn">註冊</button>
           </div>
         </form>
         <template v-if="identity === 'user'">
@@ -67,6 +67,18 @@ export default {
   methods: {
     forgetPassword() {
       window.alert("尚未開放！")
+    },
+    formValidate(callbackFunc) {
+      const { isLogin, email, password, confirmPassword } = this;
+      if (!email || !password) {
+        window.alert("信箱或密碼不得留空！");
+        return;
+      }
+      if (!isLogin && password !== confirmPassword) {
+        window.alert("確認密碼不符！");
+        return;
+      }
+      callbackFunc({ email, password });
     }
   },
   created() {

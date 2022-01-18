@@ -8,12 +8,6 @@
 import LoginCard from "@/components/login-card.vue";
 
 export default {
-  data() {
-    return {
-      email: "",
-      password: ""
-    }
-  },
   methods: {
     async login() {
       const adminParams = { email: this.email, password: this.password };
