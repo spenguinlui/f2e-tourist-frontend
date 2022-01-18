@@ -1,16 +1,12 @@
 <template>
   <div class="container">
-    <form action="post" class="form">
-      <input type="text" v-model="email" placeholder="請填寫 Email" class="form-input">
-      <input type="text" v-model="password" placeholder="請填寫密碼" class="form-input">
-      <div class="btn-group">
-        <button type="submit" @click.prevent.stop="login" class="form-btn">管理者登入</button>
-      </div>
-    </form>
+    <LoginCard :login="login" :signUp="signUp" :identity="'admin'"/>
   </div>
 </template>
 
 <script>
+import LoginCard from "@/components/login-card.vue";
+
 export default {
   data() {
     return {
@@ -22,7 +18,13 @@ export default {
     async login() {
       const adminParams = { email: this.email, password: this.password };
       await this.$store.dispatch("serverModule/loginAdminOnServer", { adminParams, vm: this });
+    },
+    signUp() {
+      window.alert("尚不開放");
     }
+  },
+  components: {
+    LoginCard
   }
 }
 </script>

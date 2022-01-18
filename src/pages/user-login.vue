@@ -1,17 +1,13 @@
 <template>
   <div class="container">
-    <LoginCard :login="login" :signUp="signUp"/>
+    <LoginCard :login="login" :signUp="signUp" :identity="'user'"/>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import LoginCard from "@/components/login-card.vue";
 
 export default {
-  computed: {
-    ...mapGetters('serverModule', ['userActionMsg'])
-  },
   methods: {
     async login(userParams) {
       await this.$store.dispatch("serverModule/loginUserOnServer", { userParams, vm: this });
