@@ -1,9 +1,9 @@
 <template>
   <div class="login-card-container">
-    <div class="bg-card" :style="{ height: cardHight + 'px', backgroundImage: bgImg }">
+    <div class="bg-card" :style="{ height: `${cardHight}px`, backgroundImage: bgImg }">
       <h1>實現<br />夢想旅程</h1>
     </div>
-    <div class="login-card" ref="loginCard" id="login-card">
+    <div class="login-card" ref="loginCard">
       <header class="login-card-header">
         <div class="login-card-header-btn" :class="{ active: isLogin }" @click="isLogin = !isLogin">{{ identityZh }}登入</div>
         <div class="login-card-header-btn" :class="{ active: !isLogin }" @click="isLogin = !isLogin">{{ identity === 'user' ? '新戶註冊' : identity === 'supplier' ? '廠商申請' : '--' }}</div>
@@ -102,9 +102,8 @@ export default {
       display: none;
     }
     .login-card {
+      @include card-shadow;
       width: 90%;
-      box-shadow: 0px .25rem 1rem rgba(0, 0, 0, 0.2);
-      border-radius: .5rem;
       background: $grey-100;
       &-header {
         @include flex-row-center-center;
@@ -204,7 +203,6 @@ export default {
         width: calc(40vw * 0.618);
         margin-right: -0.5rem;
         border-radius: .5rem 0 0 .5rem;
-        // background-image: url("../assets/images/login-bg.png");
         background-size: cover;
         &::before {
           content: " ";

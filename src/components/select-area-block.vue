@@ -1,5 +1,5 @@
 <template>
-  <nav class="select-area-block">
+  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: visible ? 0 : `-${blockHeight}px` }">
     <div class="area-container">
       <section v-for="area in areaList" :key="area.area" class="area">
         <h3 class="v-area">{{ area.area }}</h3>
@@ -30,11 +30,12 @@ import citys from "@/json/citys.json";
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['areaBlock', 'dataType', 'hideBlock'],
+  props: ['areaBlock', 'dataType', 'hideBlock', 'visible'],
   data () {
     return {
       areaList: citys,
       localCityName: "臺北市",
+      blockHeight: 0
     }
   },
   methods: {
@@ -46,6 +47,11 @@ export default {
       this.$store.dispatch("filterDataListWithTown", { dataType: this.dataType, townName });
       this.hideBlock(this.areaBlock);
     }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.blockHeight = this.$refs.selectBlock.offsetHeight;
+    })
   },
   computed: {
     ...mapGetters(['currentCity', 'currentTown'])
@@ -61,13 +67,13 @@ export default {
     position: fixed;
     left: 0;
     top: initial;
-    bottom: 0;
     padding: 1.5rem;
     background-color: $grey-100;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
     border-radius: 0.5rem 0.5rem 0 0;
     z-index: 1;
     cursor: default;
+    transition: $trsi;
     .area-container {
       @include scroll;
       height: 50vh;
@@ -88,17 +94,8 @@ export default {
               @include font-content(700);
             }
             .title-icon {
+              @include triangle;
               margin-left: 0.5rem;
-              // 以下三角型設定
-              width: 0;
-              height: 0;
-              border-style: solid;
-              border-width: 6px 0 6px 10px;
-              border-color: transparent transparent transparent $grey-600;
-              transition: .2s ease-in-out;
-            }
-            .title-icon.show {
-              transform: rotate(90deg); // 控制去增加這個
             }
           }
           .area-list {
@@ -127,7 +124,7 @@ export default {
       position: absolute;
       top: 40px;
       bottom: initial;
-      border-radius: 0.5rem;
+      border-radius: $normal-bora;
     }
   }
 </style>

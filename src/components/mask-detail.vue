@@ -147,13 +147,10 @@ export default {
         @include flex-row-flex-start-center;
         margin: .25rem 0;
         margin-bottom: 1rem;
-        li {
-          img {
-            width: 100%;
-          }
+        > li > img {
+          width: 100%;
         }
       }
-
     }
     .detail-tags {
       @include tags-row;

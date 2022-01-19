@@ -24,21 +24,18 @@ import { deepCopy } from "@/modules/data-support";
 export default {
   namespaced: true,
   state: {
-    userActionMsg: "",
     userIsLogin: false,
     users: [],
     settings: [],
     suppliers: []
   },
   getters: {
-    userActionMsg: state => state.userActionMsg,
     userIsLogin: state => state.userIsLogin,
     users: state => state.users,
     settings: state => state.settings,
     suppliers: state => state.suppliers
   },
   mutations: {
-    UPDATE_USER_ACTION_MSG: (state, userActionMsg) => state.userActionMsg = userActionMsg,
     UPDATE_USER_LOGIN: (state, userIsLogin) => state.userIsLogin = userIsLogin,
     UPDATE_USERS: (state, users) => state.users = users,
     UPDATE_SETTINGS: (state, settings) => state.settings = settings,
@@ -139,12 +136,10 @@ export default {
     loginUserOnServer({ commit }, { userParams, vm }) {
       AJAX_S_userSignIn(userParams)
       .then(res => {
-        const { message, auth_token, favorites } = res.data;
-        // 回傳登入訊息 - 開發用
-        commit("UPDATE_USER_ACTION_MSG", message);
+        const { auth_token, favorites } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_u', auth_token, null, null, null, true);
+        vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
 
         // 更新為已登入
         commit("UPDATE_USER_LOGIN", true);
@@ -156,7 +151,6 @@ export default {
         vm.$router.push({ name: "favorites" });
       })
       .catch(error => {
-        commit("UPDATE_USER_ACTION_MSG", error);
         console.log(`loginUserOnServer: ${error}`);
         // 錯誤處理
         window.alert("登入失敗");
@@ -168,12 +162,10 @@ export default {
       const favorites = JSON.stringify(rootState.favorites);
       AJAX_S_userSignUp(userParams)
       .then(res => {
-        const { message, auth_token } = res.data;
-        // 回傳登入訊息 - 開發用
-        commit("UPDATE_USER_ACTION_MSG", message);
+        const { auth_token } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_u', auth_token, null, null, null, true);
+        vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
 
         // 更新為已登入
         commit("UPDATE_USER_LOGIN", true);
@@ -189,7 +181,6 @@ export default {
           vm.$router.push({ name: "favorites" });
         })
         .catch(error => {
-          commit("UPDATE_USER_ACTION_MSG", error);
           console.log(`signUpUserOnServer: ${error}`);
           // 錯誤處理
           vm.$router.push('/');
@@ -197,7 +188,6 @@ export default {
         });
       })
       .catch(error => {
-        commit("UPDATE_USER_ACTION_MSG", error);
         console.log(`signUpUserOnServer: ${error}`);
         // 錯誤處理
         vm.$router.push('/');
@@ -210,11 +200,11 @@ export default {
       const userAuthToken =  vm.$cookies.get('_u');
       AJAX_S_userSignOut({ auth_token: userAuthToken })
       .then(() => {
-        vm.$cookies.remove('_u');
         commit("UPDATE_USER_LOGIN", false);
+        vm.$cookies.remove('_u');
+        vm.$router.push({ name: "home" });
       })
       .catch(error => {
-        commit("UPDATE_USER_ACTION_MSG", error);
         console.log(`signOutUserOnServer: ${error}`);
         // 錯誤處理
       });
@@ -266,7 +256,7 @@ export default {
         const { auth_token } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_s', auth_token, null, null, null, true);
+        vm.$cookies.set('_s', auth_token, '1d', null, window.location.hostname, true);
 
         window.alert("登入成功");
         vm.$router.push({ name: 'suppliers' });
@@ -286,7 +276,7 @@ export default {
         const { auth_token } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_a', auth_token, null, null, null, true);
+        vm.$cookies.set('_a', auth_token, '1d', null, window.location.hostname, true);
 
         window.alert("登入成功");
         vm.$router.push({ name: 'admin' });

@@ -44,7 +44,7 @@ export default {
       .comment-avatar {
         width: 100%;
         height: 100%;
-        border-radius: 50%;
+        border-radius: $cycle-bora;
         background-color: #ddd;
       }
     }
@@ -57,7 +57,7 @@ export default {
           display: block;
           width: 2rem;
           height: 2rem;
-          border-radius: 50%;
+          border-radius: $cycle-bora;
           background-color: #ddd;
         }
         .comment-title {
@@ -90,12 +90,6 @@ export default {
         .comment-header {
           .comment-avatar-m {
             display: none;
-          }
-          .comment-title {
-
-          }
-          .comment-score {
-
           }
         }
       }

@@ -145,7 +145,7 @@ export default {
     flex-wrap: wrap;
     background-color: $grey-200;
     padding: .5rem 0;
-    transition: all 0.3s ease-in-out;
+    transition: $trsi;
     z-index: calc(#{$nav-bar-z} - 1);
     &.expanding {
       top: $nav-height;

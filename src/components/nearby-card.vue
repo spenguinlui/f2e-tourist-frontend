@@ -1,30 +1,26 @@
 <template>
   <div class="card" @click="toDetail(item.ID)" v-if="item.ID !== dataDetail.ID">
     <div class="card-img">
-      <img v-if="!item.Picture || !item.Picture.PictureUrl1" src="../assets/images/empty-img.png" alt="no-image'">
-      <img v-if="item.Picture && item.Picture.PictureUrl1" :src="item.Picture.PictureUrl1" :alt="item.Picture.PictureDescription1">
+      <img :src="pictureUrl" :alt="pictureAlt">
     </div>
     <div class="card-content">
       <div class="card-content-title">{{ item.Name }}</div>
       <Stars :score="4.5"/>
-      <div class="card-content-tags">
-        <!-- <template v-for="(tag, index) in item.Tag">
-          <div class="card-tag" :key="index">{{ tag }}</div>
-        </template>
-        <div v-if="!item.Tag" class="card-tag">尚未建立</div> -->
-        <div class="card-tag" v-if="!item.Class1 && !item.Class">無標記</div>
-        <div class="card-tag" v-if="item.Class">{{ item.Class }}</div>
-        <div class="card-tag" v-if="item.Class1">{{ item.Class1 }}</div>
-        <div class="card-tag" v-if="item.Class2">{{ item.Class2 }}</div>
-        <div class="card-tag" v-if="item.Class3">{{ item.Class3 }}</div>
-      </div>
+      <ul class="card-content-tags">
+        <li class="card-tag" v-if="noTags">無標記</li>
+        <li class="card-tag" v-if="item.Class">{{ item.Class }}</li>
+        <li class="card-tag" v-if="item.Class1">{{ item.Class1 }}</li>
+        <li class="card-tag" v-if="item.Class2">{{ item.Class2 }}</li>
+        <li class="card-tag" v-if="item.Class3">{{ item.Class3 }}</li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-  import Stars from "@/components/stars.vue";
   import { mapGetters } from 'vuex';
+  import Stars from "@/components/stars.vue";
+  import EmptyImg from "@/assets/images/empty-img.png";
 
   export default {
     props: ['item'],
@@ -35,6 +31,15 @@
       }
     },
     computed: {
+      pictureUrl() {
+        return this.item.Picture && this.item.Picture.PictureUrl1 ? this.item.Picture.PictureUrl1 : EmptyImg;
+      },
+      pictureAlt() {
+        return this.item.Picture && this.item.Picture.PictureDescription1 ? this.item.Picture.PictureDescription1 : 'no-image';
+      },
+      noTags() {
+        return !this.item.Class && !this.item.Class1 && !this.item.Class2 && !this.item.Class3;
+      },
       ...mapGetters(['dataDetail'])
     },
     components: {

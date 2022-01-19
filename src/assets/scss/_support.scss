@@ -281,6 +281,12 @@
   }
 }
 
+// 卡片陰影
+@mixin card-shadow() {
+  box-shadow: 0px .25rem 1rem rgba(0, 0, 0, 0.2);
+  border-radius: $normal-bora;
+}
+
 // 隱藏過多文字
 @mixin ellipsis-text($n: 1) {
   overflow: hidden;
@@ -377,6 +383,19 @@
   background-size: cover;
   background-position: center;
   background-blend-mode: darken;
+}
+
+// 三角形轉動按鈕
+@mixin triangle {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 6px 10px;
+  border-color: transparent transparent transparent $grey-600;
+  transition: .2s ease-in-out;
+  &.show {
+    transform: rotate(90deg); // 控制去增加這個
+  }
 }
 
 // mask 動畫

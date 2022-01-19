@@ -31,9 +31,8 @@ export default {
 
   .card {
     @include flex-column-center-baseline;
+    @include card-shadow;
     padding: 1.25rem;
-    box-shadow: 0px .25rem 1rem rgba(0, 0, 0, 0.2);
-    border-radius: $normal-bora;
     .card-img {
       width: 100%;
       height: 25vh;
@@ -42,7 +41,7 @@ export default {
         @include bgAnimate;
         width: 100%;
         height: 100%;
-        border-radius: .5rem;
+        border-radius: $normal-bora;
       }
       .favorite-btn {
         @include btn-icon;
@@ -70,10 +69,8 @@ export default {
       &-stars {
         @include flex-row-flex-start-center;
         margin: .25rem 0;
-        li {
-          img {
-            width: 100%;
-          }
+        > li > img {
+          width: 100%;
         }
       }
       &-tags {

@@ -26,10 +26,6 @@
 
   export default {
     name: 'card-list',
-    data () {
-      return {
-      }
-    },
     computed: {
       ...mapGetters(['dataList', 'dataLoaing', 'moreDataLoading']),
       dataType() {

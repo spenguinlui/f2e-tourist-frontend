@@ -6,7 +6,7 @@
         <div class="left-btn">
           <div class="relative">
             <button class="choose-btn" @click.prevent.stop="showBlock(areaBlock)">選擇地區</button>
-            <SelectAreaBlock v-show="areaBlock.visible" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
+            <SelectAreaBlock  v-show="areaMBlock.visible" :visible="areaBlock.visible" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
           </div>
           <button class="choose-btn" @click="showDateBlock">選擇日期</button>
         </div>
@@ -14,8 +14,7 @@
           <button type="button" class="filter-btn" @click.prevent.stop="showBlock(filterBlock)">篩選<img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
           <FilterBlock  v-show="filterBlock.visible" ref="filterBlockContainer" :dataType="classType" :filterBlock="filterBlock" :hideBlock="hideBlock"/>
           <button type="button" class="filter-icon-btn" @click="toggleMapMode">
-            <img v-show="mapMode" src="../assets/images/icon/list-f.svg" alt="切換列表icon">
-            <img v-show="!mapMode" src="../assets/images/icon/map-f.svg" alt="切換地圖icon">
+            <img :src="modeIcon" :alt="mapMode ? '切換地圖icon' : '切換列表icon'">
           </button>
         </div>
       </div>
@@ -25,15 +24,14 @@
       <div class="benner-m-menu-left-block">
         <button class="left-btn" @click.prevent.stop="showBlock(areaMBlock)">選擇地區</button>
         <button class="left-btn">選擇日期</button>
-        <SelectAreaBlock v-show="areaMBlock.visible" ref="areaMBlockContainer" :dataType="classType" :areaBlock="areaMBlock" :hideBlock="hideBlock"/>
+        <SelectAreaBlock :visible="areaMBlock.visible" ref="areaMBlockContainer" :dataType="classType" :areaBlock="areaMBlock" :hideBlock="hideBlock"/>
       </div>
 
       <div class="benner-m-menu-right-block">
         <button class="right-btn" @click.prevent.stop="showBlock(filterMBlock)"><img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
-        <FilterBlock  v-show="filterMBlock.visible" ref="filterMBlockContainer" :dataType="classType" :filterBlock="filterMBlock" :hideBlock="hideBlock"/>
+        <FilterBlock  :visible="filterMBlock.visible" ref="filterMBlockContainer" :dataType="classType" :filterBlock="filterMBlock" :hideBlock="hideBlock"/>
         <button class="right-btn" @click="toggleMapMode">
-          <img v-show="mapMode" src="../assets/images/icon/list-f.svg" alt="切換列表icon">
-          <img v-show="!mapMode" src="../assets/images/icon/map-f.svg" alt="切換地圖icon">
+          <img :src="modeIcon" :alt="mapMode ? '切換地圖icon' : '切換列表icon'">
         </button>
       </div>
     </div>
@@ -44,6 +42,8 @@
 import { mapGetters } from 'vuex';
 import SelectAreaBlock from '@/components/select-area-block.vue';
 import FilterBlock from '@/components/filter-block.vue';
+import ListIcon from "@/assets/images/icon/list-f.svg";
+import MapIcon from "@/assets/images/icon/map-f.svg";
 
 export default {
   props: ['type'],
@@ -68,6 +68,9 @@ export default {
     }
   },
   computed: {
+    modeIcon() {
+      return this.mapMode ? MapIcon : ListIcon;
+    },
     classType() {
       const currentPath = this.$route.name;
       if (currentPath.indexOf("activities") >= 0) {
@@ -201,9 +204,6 @@ export default {
             @include btn-filled;
           }
         }
-        // .left-btn > div:nth-child(2), .right-btn > div:nth-child(2) {
-        //   margin-left: 1.25rem;
-        // }
       }
     }
     .benner-m-menu {

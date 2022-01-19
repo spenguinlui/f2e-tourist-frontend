@@ -1,12 +1,11 @@
 <template>
-  <nav class="select-area-block">
+  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: visible ? 0 : `-${blockHeight}px` }">
     <div class="area-container">
       <section class="area-block">
         <div class="area-title" @click.prevent.stop="toggleList()">
           <h4 class="title-text">{{ dataObject.title }}</h4>
-          <div class="title-icon" :class="{ show: typeListShow  }"></div>
+          <div class="title-icon" :class="{ show: typeListShow }"></div>
         </div>
-
         <ul class="area-list" v-show="typeListShow">
           <li
             v-for="type in dataObject.typeList" :key="type"
@@ -25,10 +24,11 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['filterBlock', 'dataType', 'hideBlock'],
+  props: ['filterBlock', 'dataType', 'hideBlock', 'visible'],
   data () {
     return {
       typeListShow: true,
+      blockHeight: 0,
       scenicspots: {
         title: "景點類型",
         typeList: ["文化類", "生態類", "遊憩類", "藝術類", "自然風景類", "國家風景區類", "觀光工廠類", "廟宇類", "體育健身類", "休閒農業類", "古蹟類", "溫泉類", "小吃/特產類"],
@@ -66,6 +66,11 @@ export default {
       this.hideBlock(this.filterBlock);
     }
   },
+  created() {
+    this.$nextTick(() => {
+      this.blockHeight = this.$refs.selectBlock.offsetHeight;
+    })
+  },
 }
 </script>
 
@@ -82,9 +87,10 @@ export default {
     padding: 1.5rem;
     background-color: $grey-100;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    border-radius: 0.5rem 0.5rem 0 0;
+    border-radius: $normal-bora $normal-bora 0 0;
     z-index: 1;
     cursor: default;
+    transition: $trsi;
     .area-container {
       @include scroll;
       width: 100%;
@@ -97,17 +103,8 @@ export default {
             @include font-content(700);
           }
           .title-icon {
+            @include triangle;
             margin-left: 0.5rem;
-            // 以下三角型設定
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 6px 0 6px 10px;
-            border-color: transparent transparent transparent $grey-600;
-            transition: .2s ease-in-out;
-          }
-          .title-icon.show {
-            transform: rotate(90deg); // 控制去增加這個
           }
         }
         .area-list {
@@ -135,7 +132,7 @@ export default {
       position: absolute;
       top: 40px;
       bottom: initial;
-      border-radius: 0.5rem;
+      border-radius: $normal-bora;
     }
   }
 </style>

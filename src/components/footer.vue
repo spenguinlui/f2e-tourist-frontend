@@ -48,7 +48,6 @@ import { mapGetters } from 'vuex';
       logout() {
         this.$store.dispatch("serverModule/signOutUserOnServer", this);
         this.$store.dispatch("otherModule/getFavorites");
-        this.$router.push({ name: "home" });
       }
     }
   }

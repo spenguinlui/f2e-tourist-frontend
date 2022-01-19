@@ -71,23 +71,20 @@ export default {
   .img-player-container {
     border: 8px solid $grey-800;
     .show-image {
+      @include benner-background("../assets/images/empty-img.png");
       height: $show-image-h;
-      background-image: url("../assets/images/empty-img.png");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
     }
     .imgs-row {
       @include flex-row-center-center;
       height: $imgs-h;
       border-top: .5rem solid $grey-800;
+      border-collapse: collapse;
       li {
         border-right: .5rem solid $grey-800;
+        &:last-child {
+          border-right: none;
+        }
       }
-      li:last-child {
-        border-right: none;
-      }
-      border-collapse: collapse;
       .img-small {
         width: 100%;
         height: 100%;

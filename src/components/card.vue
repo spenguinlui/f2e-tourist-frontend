@@ -1,23 +1,23 @@
 <template>
   <div :class="`card ${classType || ''} ${type}`" @click="toDetail()">
     <div class="card-img">
-      <img v-if="isPicturePresent" :src="data.Picture.PictureUrl1" :alt="data.Picture.PictureDescription1">
-      <img v-else src="../assets/images/empty-img.png" alt="no-image'">
-      <div :class="favorites.includes(data.ID) ? 'favorite-btn filled' : 'favorite-btn'" @click.prevent.stop="changeFavorite(data.ID, !favorites.includes(data.ID))">
-        <img v-show="favorites.includes(data.ID)" src="../assets/images/icon/heart-filled.svg" alt="加入我的最愛icon">
-        <img v-show="!favorites.includes(data.ID)" src="../assets/images/icon/heart-outline.svg" alt="加入我的最愛icon">
+      <img :src="pictureUrl" :alt="pictureAlt">
+      <div
+        :class="favorites.includes(data.ID) ? 'favorite-btn filled' : 'favorite-btn'"
+        @click.prevent.stop="changeFavorite(data.ID, !favorites.includes(data.ID))">
+        <img :src="favoriteImg" alt="加入我的最愛icon">
       </div>
     </div>
     <div class="card-content">
       <div class="card-content-title">{{ data.Name }}</div>
       <Stars :score="data.CommentScore || 3.5"/>
-      <div class="card-content-tags">
-        <div class="card-tag" v-if="!data.Class && !data.Class1 && !data.Class2 && !data.Class3">無標記</div>
-        <div class="card-tag" v-if="data.Class">{{ data.Class }}</div>
-        <div class="card-tag" v-if="data.Class1">{{ data.Class1 }}</div>
-        <div class="card-tag" v-if="data.Class2">{{ data.Class2 }}</div>
-        <div class="card-tag" v-if="data.Class3">{{ data.Class3 }}</div>
-      </div>
+      <ul class="card-content-tags">
+        <li class="card-tag" v-if="noTags">無標記</li>
+        <li class="card-tag" v-if="data.Class">{{ data.Class }}</li>
+        <li class="card-tag" v-if="data.Class1">{{ data.Class1 }}</li>
+        <li class="card-tag" v-if="data.Class2">{{ data.Class2 }}</li>
+        <li class="card-tag" v-if="data.Class3">{{ data.Class3 }}</li>
+      </ul>
       <div v-if="classType === 'full-card'" class="card-content-text">
         {{ data.Description }}
       </div>
@@ -28,6 +28,9 @@
 <script>
   import { mapGetters } from "vuex";
   import Stars from "@/components/stars.vue";
+  import EmptyImg from "@/assets/images/empty-img.png";
+  import OutlineHeart from "@/assets/images/icon/heart-outline.svg";
+  import FilledHeart from "@/assets/images/icon/heart-filled.svg";
 
   export default {
     props: ['data', 'type', 'classType'],
@@ -38,16 +41,17 @@
       }
     },
     computed: {
-      isPicturePresent() {
-        if (this.data.Picture) {
-          if (this.data.Picture.PictureUrl1) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
+      pictureUrl() {
+        return this.data.Picture && this.data.Picture.PictureUrl1 ? this.data.Picture.PictureUrl1 : EmptyImg;
+      },
+      pictureAlt() {
+        return this.data.Picture && this.data.Picture.PictureDescription1 ? this.data.Picture.PictureDescription1 : 'no-image';
+      },
+      favoriteImg() {
+        return this.favorites.includes(this.data.ID) ? FilledHeart : OutlineHeart;
+      },
+      noTags() {
+        return !this.data.Class && !this.data.Class1 && !this.data.Class2 && !this.data.Class3;
       },
       ...mapGetters(['favorites', 'favoriteAdding']),
       ...mapGetters('serverModule', ['userIsLogin']),
@@ -68,13 +72,13 @@
       },
       async changeFavorite(id, add) {
         if (this.favoriteAdding) { return; }
-
         const favoriteParams = { dataId: id, add, vm: this };
-        if (this.userIsLogin) {
+
+        // 有登入就讀取 DB，沒有就讀取瀏覽器
+        if (this.userIsLogin)
           await this.$store.dispatch("serverModule/changeFavoriteToData", favoriteParams);
-        } else {
+        else
           await this.$store.dispatch("otherModule/changeFavoriteToData", favoriteParams);
-        }
         this.$store.dispatch("getFavoriteDataList");
       }
     },
@@ -89,9 +93,8 @@
 
   .card {
     @include flex-column-center-baseline;
+    @include card-shadow;
     padding: 1.25rem;
-    box-shadow: 0px .25rem 1rem rgba(0, 0, 0, 0.2);
-    border-radius: .5rem;
     &.scenicspots, &.ScenicSpot {
       border: 1px solid $primary-800;
     }
@@ -116,7 +119,7 @@
         height: 100%;
         object-fit: cover;
         object-position: center;
-        border-radius: .5rem;
+        border-radius: $normal-bora;
       }
       .favorite-btn {
         @include btn-icon;
