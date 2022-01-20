@@ -205,6 +205,9 @@ export default {
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
+        commit("UPDATE_USER_LOGIN", false);
+        vm.$cookies.remove('_u');
+        vm.$router.push({ name: "home" });
         console.log(`signOutUserOnServer: ${error}`);
         // 錯誤處理
       });
