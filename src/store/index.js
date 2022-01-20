@@ -158,7 +158,6 @@ export const storeObject = {
             commit("UPDATE_DATA_DETAIL", data);
             commit("UPDATE_DATA_LOADING", false);
           })
-          
         })
         .catch(error => {
           commit("UPDATE_DATA_LOADING", false);

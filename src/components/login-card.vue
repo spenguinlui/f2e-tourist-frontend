@@ -25,8 +25,8 @@
             <span class="text">快速登入</span>
           </div>
           <div class="img-row">
-            <img src="../assets/images/icon/facebook-login.svg" alt="facebook-icon">
-            <img src="../assets/images/icon/google-login.svg" alt="facebook-icon">
+            <img @click="loginByFacebook" src="../assets/images/icon/facebook-login.svg" alt="facebook-icon">
+            <img @click="loginByGoogle" src="../assets/images/icon/google-login.svg" alt="facebook-icon">
           </div>
         </template>
       </section>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   props: ["login", "signUp", "identity"],
@@ -79,6 +80,28 @@ export default {
         return;
       }
       callbackFunc({ email, password });
+    },
+    async loginByGoogle() {
+      const authCode = await this.$gAuth.getAuthCode();
+      axios.post('http://localhost:3000/api/v1/user/sign_in_by_google', { code: authCode })
+      .then((res) => {
+        this.$cookies.set('_u', res.data.token, '1d', null, window.location.hostname, true);
+        this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
+        window.alert("登入成功");
+        this.$router.push({ name: "favorites" });
+      })
+      .catch((error) => {
+        console.log(`loginByGoogle: ${error}`);
+        window.alert("登入失敗");
+      })
+    },
+    async loginByFacebook() {
+      // window.FB.getLoginStatus(function(response) {
+      //   console.log(response);
+      // });
+      window.FB.login(function(response) {
+        console.log(response)
+      }, {scope: 'public_profile, email'});
     }
   },
   created() {
