@@ -83,7 +83,9 @@ export default {
     },
     async loginByGoogle() {
       const authCode = await this.$gAuth.getAuthCode();
-      axios.post('http://localhost:3000/api/v1/user/sign_in_by_google', { code: authCode })
+      const domain = process.env.NODE_ENV === "development" ? 
+        process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
+      axios.post(`${domain}/api/v1/user/sign_in_by_google`, { code: authCode })
       .then((res) => {
         this.$cookies.set('_u', res.data.token, '1d', null, window.location.hostname, true);
         this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
