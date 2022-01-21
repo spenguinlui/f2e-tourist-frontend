@@ -23,6 +23,7 @@ export default {
     // 從瀏覽器取得我的最愛
     getFavorites({ commit }) {
       const heartArray = JSON.parse(localStorage.getItem("touristHeart"));
+      console.log("瀏覽器Favorites", heartArray)
       if (heartArray) commit("SET_FAVORITES", heartArray, { root: true });
     },
 

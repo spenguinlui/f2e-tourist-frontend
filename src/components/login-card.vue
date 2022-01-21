@@ -99,7 +99,6 @@ export default {
       const vm = this;
       const domain = process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
       window.FB.login(function(response) {
-        console.log(response)
         axios.post(`${domain}/api/v1/user/sign_in_by_facebook`, { code: response.authResponse.accessToken, userId: response.authResponse.userID })
         .then(res => {
           vm.loginAndRedirect(res.data.token);

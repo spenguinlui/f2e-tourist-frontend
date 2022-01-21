@@ -344,7 +344,11 @@ export const storeObject = {
       const favoriteIds = state.favorites;
       const queryObj = { ids: favoriteIds, select: ['Picture'] };
 
-      if (favoriteIds.length === 0) { commit("UPDATE_DATA_LOADING", false); return; }
+      // 無條件去搜尋會得到一般結果，所以要直接丟回空陣列
+      if (favoriteIds.length === 0) {
+        commit("UPDATE_FAVORITE_DATA_LIST", []);
+        commit("UPDATE_DATA_LOADING", false); return;
+      }
 
       Promise.all([
         AJAX_getScenicSpot(queryObj),

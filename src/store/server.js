@@ -218,30 +218,28 @@ export default {
       const userAuthToken =  vm.$cookies.get('_u');
       AJAX_S_getFavorites({ auth_token: userAuthToken })
       .then(res => {
-        commit("SET_FAVORITES", res.data.favorites, { root: true });
+        if (res.data.favorites) {
+          console.log("伺服器Favorites", res.data.favorites)
+          commit("SET_FAVORITES", res.data.favorites, { root: true });
+        }
       })
       .catch(error => {
-        commit("UPDATE_USER_ACTION_MSG", error);
         console.log(`getFavoritesByUser: ${error}`);
         // 錯誤處理
       });
     },
 
     // 更新我的最愛
-    changeFavoriteToData({ commit, rootState }, { dataId, add, vm }) {
-      const favorites = JSON.stringify(rootState.favorites);
+    async changeFavoriteToData({ commit, rootState }, { dataId, add, vm }) {
       const userAuthToken =  vm.$cookies.get('_u');
-      const favoritesParams = { auth_token: userAuthToken, favorites };
       commit("UPDATE_FAVORITE_ADDING", true, { root: true });
-
-      if (add) {
-        commit("ADD_FAVORITES", dataId, { root: true });
-      } else {
-        commit("REMOVE_FAVORITES", dataId, { root: true });
-      }
-      // 向後端丟個資料
-      this.dispatch("serverModule/postFavoriteCountToSever", { dataId, add });
-
+      
+      // 先更改 vuex 中的 favorites
+      await commit(add ? 'ADD_FAVORITES' : 'REMOVE_FAVORITES', dataId, { root: true });
+      
+      // 更新 server user 的 favorites
+      const favorites = JSON.stringify(rootState.favorites);
+      const favoritesParams = { auth_token: userAuthToken, favorites };
       AJAX_S_changeFavorite(favoritesParams)
       .catch(error => {
         console.log(`changeFavoriteToData: ${error}`);
@@ -249,6 +247,8 @@ export default {
       });
 
       commit("UPDATE_FAVORITE_ADDING", false, { root: true });
+      // 向後端丟個計數器
+      this.dispatch("serverModule/postFavoriteCountToSever", { dataId, add });
     },
 
     // 廠商 ----
