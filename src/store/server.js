@@ -274,6 +274,7 @@ export default {
     // 管理者 ----
     // 管理者登入
     loginAdminOnServer(_, { adminParams, vm }) {
+      console.log(adminParams)
       AJAX_S_adminSignIn(adminParams)
       .then(res => {
         const { auth_token } = res.data;

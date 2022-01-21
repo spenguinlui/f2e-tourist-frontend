@@ -9,8 +9,7 @@ import LoginCard from "@/components/login-card.vue";
 
 export default {
   methods: {
-    async login() {
-      const supplierParams = { email: this.email, password: this.password };
+    async login(supplierParams) {
       await this.$store.dispatch("serverModule/loginSupplierOnServer", { supplierParams, vm: this });
     },
     signUp () {
