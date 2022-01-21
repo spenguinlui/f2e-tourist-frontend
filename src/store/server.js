@@ -202,9 +202,9 @@ export default {
       .then(() => {
         commit("UPDATE_USER_LOGIN", false);
         vm.$cookies.remove('_u');
+        console.log(vm.$cookies)
         console.log("刪除cookie")
         console.log(vm.$cookies.get('_u'));
-        vm.$cookies.delete('_u');
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
