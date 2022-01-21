@@ -40,7 +40,6 @@
     },
     methods: {
       getFavoriteDataList() {
-        console.log("更新我的最愛")
         this.$store.dispatch("getFavoriteDataList");
       }
     },

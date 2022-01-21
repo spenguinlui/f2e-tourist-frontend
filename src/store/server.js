@@ -10,6 +10,7 @@ import {
   AJAX_S_changeFavorite,
   AJAX_S_postComment,
   AJAX_S_supplierSignIn,
+  AJAX_S_supplierSignOut,
   AJAX_S_adminSignIn,
   AJAX_S_patchTheme,
   AJAX_S_addTheme,
@@ -203,9 +204,6 @@ export default {
       .then(() => {
         commit("UPDATE_USER_LOGIN", false);
         vm.$cookies.remove('_u');
-        console.log(vm.$cookies)
-        console.log("刪除cookie")
-        console.log(vm.$cookies.get('_u'));
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
@@ -224,7 +222,6 @@ export default {
       .then(res => {
         const { auth_token, favorites } = res.data;
         vm.$cookies.remove('_u');
-        console.log("會員有效 重新核發", auth_token, favorites)
         vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
         commit("SET_FAVORITES", favorites, { root: true });
         commit("UPDATE_USER_LOGIN", true);
@@ -280,7 +277,7 @@ export default {
         const { auth_token } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_s', auth_token, '1d', null, window.location.hostname, true);
+        vm.$cookies.set('_s', auth_token, '1d', null, null, true);
 
         window.alert("登入成功");
         vm.$router.push({ name: 'suppliers' });
@@ -292,10 +289,25 @@ export default {
       });
     },
 
+    // 廠商登出
+    signOutSupplierOnServer(_, vm) {
+      const supplierAuthToken =  vm.$cookies.get('_s');
+      AJAX_S_supplierSignOut({ auth_token: supplierAuthToken })
+      .then(() => {
+        vm.$cookies.remove('_s');
+        vm.$router.push({ name: "home" });
+      })
+      .catch(error => {
+        vm.$cookies.remove('_s');
+        vm.$router.push({ name: "home" });
+        console.log(`signOutSupplierOnServer: ${error}`);
+        // 錯誤處理
+      });
+    },
+
     // 管理者 ----
     // 管理者登入
     loginAdminOnServer(_, { adminParams, vm }) {
-      console.log(adminParams)
       AJAX_S_adminSignIn(adminParams)
       .then(res => {
         const { auth_token } = res.data;

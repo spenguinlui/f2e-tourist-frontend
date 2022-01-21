@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>廠商專區</h1>
+    <button @click="signOut">廠商登出</button>
   </div>
 </template>
 
@@ -8,7 +9,11 @@
 import { AJAX_S_checkSupplierLogin } from '@/modules/server-api';
 
 export default {
-  
+  methods: {
+    signOut() {
+      this.$store.dispatch("serverModule/signOutSupplierOnServer", this);
+    }
+  },
   created() {
     // 防止 router 守衛沒啟動
     const supplierAuthToken = this.$cookies.get('_s');

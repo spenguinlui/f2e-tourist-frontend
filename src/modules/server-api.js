@@ -141,6 +141,16 @@ export const AJAX_S_supplierSignIn = (supplierParams) => {
   });
 }
 
+// 廠商登出
+export const AJAX_S_supplierSignOut = (supplierParams) => {
+  return axios({
+    method: 'delete',
+    url: `${getServerPrefixUrl}/supplier/sign_out`,
+    header: { "Content-Type": "application/json" },
+    data: supplierParams,
+  });
+}
+
 // 確認管理者是否登入
 export const AJAX_S_checkAdminLogin = (adminParams) => {
   return axios({
