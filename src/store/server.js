@@ -5,6 +5,7 @@ import {
   AJAX_S_userSignIn,
   AJAX_S_userSignUp,
   AJAX_S_userSignOut,
+  AJAX_S_userCheck,
   AJAX_S_getFavorites,
   AJAX_S_changeFavorite,
   AJAX_S_postComment,
@@ -214,6 +215,24 @@ export default {
         console.log(`signOutUserOnServer: ${error}`);
         // 錯誤處理
       });
+    },
+
+    // 檢查會員是否能有效
+    checkUserStatus({ commit }, vm){
+      const userAuthToken =  vm.$cookies.get('_u');
+      AJAX_S_userCheck({ auth_token: userAuthToken })
+      .then(res => {
+        const { auth_token, favorites } = res.data;
+        vm.$cookies.remove('_u');
+        console.log("會員有效 重新核發", auth_token, favorites)
+        vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
+        commit("SET_FAVORITES", favorites, { root: true });
+        commit("UPDATE_USER_LOGIN", true);
+      })
+      .catch(error => {
+        vm.$cookies.remove('_u');
+        console.log(`checkUserStatus: ${error}`);
+      })
     },
 
     // 取得使用者的我的最愛

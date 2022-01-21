@@ -81,6 +81,16 @@ export const AJAX_S_userSignOut = (userParams) => {
   });
 }
 
+// 檢查會員
+export const AJAX_S_userCheck = (userParams) => {
+  return axios({
+    method: 'post',
+    url: `${getServerPrefixUrl}/user/check`,
+    header: { "Content-Type": "application/json" },
+    data: userParams,
+  });
+}
+
 // 取得我的最愛
 export const AJAX_S_getFavorites = (userParams) => {
   return axios({

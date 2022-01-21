@@ -48,6 +48,7 @@
         return this.data.Picture && this.data.Picture.PictureDescription1 ? this.data.Picture.PictureDescription1 : 'no-image';
       },
       favoriteImg() {
+        console.log(this.favorites)
         return this.favorites.includes(this.data.ID) ? FilledHeart : OutlineHeart;
       },
       noTags() {

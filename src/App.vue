@@ -22,8 +22,7 @@ export default {
     async checkUserIsLogin() {
       const userAuthToken = this.$cookies.get('_u');
       if (userAuthToken) {
-        this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
-        await this.$store.dispatch("serverModule/getFavoritesByUser", this);
+        await this.$store.dispatch("serverModule/checkUserStatus", this);
       } else {
         await this.$store.dispatch("otherModule/getFavorites");
       }
