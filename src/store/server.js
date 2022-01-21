@@ -203,13 +203,14 @@ export default {
         commit("UPDATE_USER_LOGIN", false);
         vm.$cookies.remove('_u');
         console.log("刪除cookie")
+        console.log(vm.$cookies.get('_u'));
+        vm.$cookies.delete('_u');
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
         commit("UPDATE_USER_LOGIN", false);
         vm.$cookies.remove('_u');
         vm.$router.push({ name: "home" });
-        console.log("刪除cookie")
         console.log(`signOutUserOnServer: ${error}`);
         // 錯誤處理
       });
@@ -221,7 +222,6 @@ export default {
       AJAX_S_getFavorites({ auth_token: userAuthToken })
       .then(res => {
         if (res.data.favorites) {
-          console.log("伺服器Favorites", res.data.favorites)
           commit("SET_FAVORITES", res.data.favorites, { root: true });
         }
       })
