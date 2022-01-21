@@ -47,9 +47,9 @@ const vm = new Vue({
   render: h => h(App),
 }).$mount('#app')
 
-// facebook
-// import { initFacebookSdk } from '@/modules/fb.js';
-// initFacebookSdk().then(vm);
+// Oauth - facebook
+import { initFacebookSdk } from '@/modules/fb.js';
+initFacebookSdk().then(vm);
 
 // 守門員
 router.beforeEach((to, _, next) => {

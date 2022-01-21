@@ -45,7 +45,8 @@ export default {
       password: "",
       confirmPassword: "",
       isLogin: true,
-      cardHight: ""
+      cardHight: "",
+      domain: process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN
     }
   },
   computed: {
@@ -83,27 +84,37 @@ export default {
     },
     async loginByGoogle() {
       const authCode = await this.$gAuth.getAuthCode();
-      const domain = process.env.NODE_ENV === "development" ? 
-        process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
+      const vm = this;
+      const domain = process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
       axios.post(`${domain}/api/v1/user/sign_in_by_google`, { code: authCode })
-      .then((res) => {
-        this.$cookies.set('_u', res.data.token, '1d', null, window.location.hostname, true);
-        this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
-        window.alert("登入成功");
-        this.$router.push({ name: "favorites" });
+      .then(res => {
+        vm.loginAndRedirect(res.data.token);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(`loginByGoogle: ${error}`);
         window.alert("登入失敗");
       })
     },
     async loginByFacebook() {
-      // window.FB.getLoginStatus(function(response) {
-      //   console.log(response);
-      // });
+      const vm = this;
+      const domain = process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
       window.FB.login(function(response) {
         console.log(response)
+        axios.post(`${domain}/api/v1/user/sign_in_by_facebook`, { code: response.authResponse.accessToken, userId: response.authResponse.userID })
+        .then(res => {
+          vm.loginAndRedirect(res.data.token);
+        })
+        .catch(error => {
+          console.log(`loginByFacebook: ${error}`);
+          window.alert("登入失敗");
+        })
       }, {scope: 'public_profile, email'});
+    },
+    loginAndRedirect(token) {
+      this.$cookies.set('_u', token, '1d', null, window.location.hostname, true);
+      this.$store.commit("serverModule/UPDATE_USER_LOGIN", true);
+      window.alert("登入成功");
+      this.$router.push({ name: "favorites" });
     }
   },
   created() {
