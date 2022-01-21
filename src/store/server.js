@@ -141,7 +141,7 @@ export default {
         const { auth_token, favorites } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
+        vm.$cookies.set('_u', auth_token, '1d', null, null, true);
 
         // 更新為已登入
         commit("UPDATE_USER_LOGIN", true);
@@ -167,7 +167,7 @@ export default {
         const { auth_token } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
+        vm.$cookies.set('_u', auth_token, '1d', null, null, true);
 
         // 更新為已登入
         commit("UPDATE_USER_LOGIN", true);
@@ -222,7 +222,7 @@ export default {
       .then(res => {
         const { auth_token, favorites } = res.data;
         vm.$cookies.remove('_u');
-        vm.$cookies.set('_u', auth_token, '1d', null, window.location.hostname, true);
+        vm.$cookies.set('_u', auth_token, '1d', null, null, true);
         commit("SET_FAVORITES", favorites, { root: true });
         commit("UPDATE_USER_LOGIN", true);
       })
@@ -313,7 +313,7 @@ export default {
         const { auth_token } = res.data;
 
         // cookie 寫入登入狀態
-        vm.$cookies.set('_a', auth_token, '1d', null, window.location.hostname, true);
+        vm.$cookies.set('_a', auth_token, '1d', null, null, true);
 
         window.alert("登入成功");
         vm.$router.push({ name: 'admin' });
