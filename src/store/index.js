@@ -289,7 +289,7 @@ export const storeObject = {
             latitude: data.Position.PositionLat,
             longitude: data.Position.PositionLon
           }
-        }
+        };
         triggerAjax(
           queryObj,
           (dataList) => {

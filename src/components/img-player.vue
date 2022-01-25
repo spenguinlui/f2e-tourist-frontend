@@ -53,6 +53,9 @@ export default {
       if (PictureUrl) this.showPicture = PictureUrl;
     }
   },
+  created() {
+    this.getShowPicture();
+  },
   updated() {
     this.getShowPicture();
   },
