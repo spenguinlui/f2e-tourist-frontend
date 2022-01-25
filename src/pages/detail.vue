@@ -15,7 +15,6 @@
               </div>
             </div>
             <ul class="detail-tags">
-              <!-- <li class="detail-tag" v-for="tag in ['文化活動', '熱鬧', '一年一度']" :key="tag">{{ tag }}</li> -->
               <li class="detail-tag" v-if="!dataDetail.Class && !dataDetail.Class1">無標記</li>
               <li class="detail-tag" v-if="dataDetail.Class1">{{ dataDetail.Class1 }}</li>
               <li class="detail-tag" v-if="dataDetail.Class2">{{ dataDetail.Class2 }}</li>
@@ -103,12 +102,7 @@
         <section class="detail-section">
           <h2 class="detail-title">這些景點大家也推</h2>
           <div class="recommend-container">
-            <template v-if="hotDataList.length > 0">
-              <div v-for="data in hotDataList" :key="data.ID" class="card-container">
-                <Card :key="data.ID" :data="data" :type="data.Type" :classType="'commonCard'"/>
-              </div>
-            </template>
-            <template v-else><NoContent /></template>
+            <CardSlider :mode="'hot'"/>
           </div>
         </section>
       </div>
@@ -118,19 +112,21 @@
 
 <script>
 import { mapGetters } from 'vuex';
+
 import Stars from "@/components/stars.vue";
 import ImgPlayer from "@/components/img-player.vue";
-import Card from "@/components/card.vue";
 import NearbyCard from "@/components/nearby-card.vue";
 import NearbyMap from "@/components/nearby-map.vue";
 import NoContent from '@/components/no-content.vue';
 import Comment from '@/components/comment.vue';
 import MaskDetail from '@/components/mask-detail.vue';
+import CardSlider from '@/components/cards-slider.vue';
 
 export default {
   name: "detail",
   data() {
     return {
+      dataLoaing: true,
       dataType: "",
       recommendList: []
     }
@@ -145,7 +141,12 @@ export default {
         default: return "其他";
       }
     },
-    ...mapGetters(['dataDetail', 'favorites', 'favoriteAdding', 'hotDataList', 'dataLoaing']),
+    ...mapGetters(['dataDetail', 'favorites', 'favoriteAdding']),
+  },
+  watch: {
+    dataDetail(d) {
+      if (d.ID) this.dataLoaing = false;
+    }
   },
   methods: {
     getDetail() {
@@ -162,27 +163,26 @@ export default {
       } else {
         this.$store.dispatch("otherModule/changeFavoriteToData", favoriteParams);
       }
-    },
-    getHotDataList() {
-      this.$store.dispatch("getHotDataList");
     }
   },
   created() {
     this.getDetail();
-    this.getHotDataList();
     // detail 點選其他卡片跳轉後位置要拉回頂端
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   },
+  beforeDestroy() {
+    this.$store.commit("CLEAR_DATA_DETAIL");
+  },
   components: {
     Stars,
     ImgPlayer,
-    Card,
     NearbyCard,
     NearbyMap,
     NoContent,
     Comment,
-    MaskDetail
+    MaskDetail,
+    CardSlider
   }
 }
 </script>
@@ -192,24 +192,23 @@ export default {
 
   .container {
     @include content-padding(.1vh);
-  }
 
-  section[class^="detail-section"] {
-    padding: 0.75rem 0;
-    article {
-      text-indent: 2em;
+    section[class^="detail-section"] {
+      padding: 0.75rem 0;
+      article {
+        text-indent: 2em;
+      }
     }
-  }
+    .detail-title {
+      @include font-h3(bold);
+      color: $primary-800;
+      padding: .5rem 0;
+    }
 
-  .detail-title {
-    @include font-h3(bold);
-    color: $primary-800;
-    padding: .5rem 0;
-  }
-
-  .detail-content {
-    @include font-content(500);
-    color: $grey-600;
+    .detail-content {
+      @include font-content(500);
+      color: $grey-600;
+    }
   }
 
   .detail-header {
@@ -259,9 +258,6 @@ export default {
           margin: 0;
         }
       }
-      .web-btn {
-        margin-right: .5vw;
-      }
       .web-btn, .favorite-btn {
         @include btn-outline;
         > img {
@@ -270,6 +266,9 @@ export default {
         &.filled {
           @include btn-filled;
         }
+      }
+      .web-btn {
+        margin-right: .5vw;
       }
     }
   }

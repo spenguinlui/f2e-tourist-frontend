@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import FullStarImg from "../assets/images/icon/star-filled.svg";
-import HalfStarImg from "../assets/images/icon/half-star-filled.svg";
-import EmptyStarImg from "../assets/images/icon/star-outline.svg";
+import FullStarImg from "@/assets/images/icon/star-filled.svg";
+import HalfStarImg from "@/assets/images/icon/half-star-filled.svg";
+import EmptyStarImg from "@/assets/images/icon/star-outline.svg";
 
 export default {
   props: ['score'],

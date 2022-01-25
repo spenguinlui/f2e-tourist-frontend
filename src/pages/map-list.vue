@@ -1,8 +1,8 @@
 <template>
   <section class="map-content">
-    <template v-if="dataList.length > 0">
+    <template v-if="ptxData.dataList.length > 0">
       <aside class="card-aside">
-        <div v-for="data in dataList" :key="data.ID" class="card-container">
+        <div v-for="data in ptxData.dataList" :key="data.ID" class="card-container">
           <Card
             :data="data" :type="dataType"
             :classType="'full-card'"
@@ -29,7 +29,7 @@ export default {
     dataType() {
       return this.$route.name
     },
-    ...mapGetters(['dataList', 'favorites']),
+    ...mapGetters(['ptxData', 'favorites']),
   },
   methods: {
     initMap() {
@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted() {
-    if (this.dataList.length > 0) this.initMap();
+    if (this.ptxData.dataList.length > 0) this.initMap();
   },
   components: {
     Card,

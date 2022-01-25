@@ -1,11 +1,8 @@
 import {
-  AJAX_getScenicSpot,
-  AJAX_getRestaurant,
-  AJAX_getHotel,
-  AJAX_getActivity,
   AJAX_getDetail,
   AJAX_getOneData,
-  getSingleType_AJAX
+  getSingleType_AJAX,
+  triggerAjax
 } from "@/modules/api";
 
 import {
@@ -13,7 +10,7 @@ import {
   AJAX_S_getScoreByDataList
 } from "@/modules/server-api";
 
-import { createCommonIDAndName, determineType, addCommentScore, concatAndAddType } from "@/modules/data-support";
+import { createCommonIDAndName, determineType, addCommentScore, concatAndAddType, deepCopy } from "@/modules/data-support";
 
 import serverModule from "./server";
 import otherModule from "./other";
@@ -23,6 +20,29 @@ export const storeObject = {
     dataList: [],           // 單一類型資料集合
     allTypeDataList: [],    // 所有類型資料集合
     dataDetail: {},         // 指定資料詳細內容
+    ptxData: {              // API 抓回來的資料
+      dataList: [],         // 資料集合
+      query: {              // 該資料集合的搜尋條件快照
+        dataType: "all",    // 該資料集合類型 all/scenicspots/activities/restaurants/hotels
+        top: 30,            // 回傳資料數量
+        select: [],         // 欄位過濾
+        position: {         // 座標過濾
+          latitude: "",
+          longitude: ""
+        },
+        skips: {            // 各資料位移量
+          scenicspots: 0,
+          restaurants: 0,
+          hotels: 0,
+          activities: 0
+        },
+        keyword: "",        // 關鍵字過濾
+        townName: "",       // 鄉鎮市區過濾
+        ids: [],            // 指定資料集合
+        tags: [],           // 指定 Tag 搜尋
+        classType: ""       //指定 class 過濾
+      }
+    },
     
     keyword: "",            // 搜尋關鍵字
     currentCity: "臺北市",   // 地區過濾第一層 - 城市
@@ -54,6 +74,7 @@ export const storeObject = {
     },
   },
   getters: {
+    ptxData: state => state.ptxData,
     dataList: state => state.dataList,
     allTypeDataList: state => state.allTypeDataList,
     dataDetail: state => state.dataDetail,
@@ -72,20 +93,22 @@ export const storeObject = {
   },
   mutations: {
     // 更改資料
-    UPDATE_DATA_LIST: (state, dataList) => state.dataList = dataList,
-    UPDATE_MORE_DATA_LIST: (state, dataList) => state.dataList = state.dataList.concat(dataList),
+    UPDATE_DATA_LIST: (state, dataList) => state.ptxData.dataList = dataList,
+    UPDATE_MORE_DATA_LIST: (state, dataList) => state.ptxData.dataList = state.ptxData.dataList.concat(dataList),
     UPDATE_ALL_TYPE_DATA_LIST: (state, dataList) => state.allTypeDataList = dataList,
     UPDATE_HOT_DATA_LIST: (state, dataList) => state.hotDataList = dataList,
     UPDATE_FAVORITE_DATA_LIST: (state, dataList) => state.favoriteDataList = dataList,
     UPDATE_THEME_DATA_LIST: (state, { index, dataList }) => state.themes[index].themeDataList = dataList,
     UPDATE_DATA_DETAIL: (state, dataDetail) => state.dataDetail = dataDetail,
     CLEAR_DATA_DETAIL: (state) => state.dataDetail = {},
-
+    
     // 改動過濾條件
+    UPDATE_DATA_QUERY: (state, query) => state.ptxData.query = { ...state.ptxData.query, ...query },
     UPDATE_KEYWORD: (state, keyword) => state.keyword = keyword,
     TOGGLE_CITY: (state, cityName) => state.currentCity = cityName,
     TOGGLE_TOWN: (state, townName) => state.currentTown = townName,
     TOGGLE_CLASS_TYPE: (state, classType) => state.currentClassType = classType,
+    INIT_DATA_QUERY: (state) => state.ptxData.query = {dataType:"all",top:30,select:[],position:{latitude:"",longitude:""},skips:{scenicspots:0,restaurants:0,hotels:0,activities: 0},keyword:"",townName:"",ids:[],tags:[],classType: ""},
 
     // 改動資料讀取判定
     UPDATE_DATA_LOADING: (state, toggle) => state.dataLoaing = toggle,
@@ -103,30 +126,151 @@ export const storeObject = {
   },
   actions: {
     // 取得單一類型資料集合
-    getSingleTypeDataList({ commit }, dataType) {
-      const targetAjax = getSingleType_AJAX(dataType);
+    getSingleTypeDataList({ commit, state }, dataType) {
       commit("UPDATE_DATA_LOADING", true);
-      targetAjax({ select: ['Picture', 'Position'] })
-      .then(res => {
-        const ids = res.data.map(data => data[`${determineType(data)}ID`]);
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(res.data, res1.data.average_scores);
+      let queryObj = deepCopy(state.ptxData.query);
+      queryObj.dataType = dataType;
+
+      triggerAjax(
+        queryObj,
+        (dataList, query) => {
+          queryObj = query;
           commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_QUERY", queryObj);
           commit("UPDATE_DATA_LOADING", false);
-        })
-      })
-      .catch(error => {
-        commit("UPDATE_DATA_LOADING", false);
-        console.log(`getSingleTypeDataList: ${error}`);
-        // 錯誤處理
-      });
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          console.log(`getSingleTypeDataList: ${error}`);
+          // 錯誤處理
+        }
+      );
+    },
+
+    // 搜尋附近地點所有類型資料
+    getAllTypeDataListWithPosition({ commit, state }, Position) {
+      commit("UPDATE_DATA_LOADING", true);
+      let queryObj = deepCopy(state.ptxData.query);
+      queryObj.position = {
+        latitude: Position.PositionLon,
+        longitude: Position.PositionLat
+      };
+      queryObj.top = 6;
+
+      triggerAjax(
+        queryObj,
+        (datalist) => {
+          commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          console.log(`getAllTypeDataListWithPosition: ${error}`);
+          // 錯誤處理
+        }
+      );
+    },
+
+    // 以關鍵字搜尋所有類型資料
+    getAllTypeDataListWithKeyword({ commit, state }, keyword) {
+      commit("UPDATE_DATA_LOADING", true);
+      let queryObj = deepCopy(state.ptxData.query);
+      queryObj.keyword = keyword;
+      queryObj.top = 6;
+
+      triggerAjax(
+        queryObj,
+        (dataList, query, ids) => {
+          queryObj = query;
+          commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_KEYWORD", "");
+          commit("UPDATE_DATA_QUERY", queryObj);
+          commit("UPDATE_DATA_LOADING", false);
+          this.dispatch("serverModule/postSearchCountToSever", ids); // 向後端丟個資料
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          console.log(`getAllTypeDataListWithKeyword: ${error}`);
+          // 錯誤處理
+        }
+      );
+    },
+
+    // 以鄉鎮市區過濾資料集合
+    filterDataListWithTown({ commit, state }, { townName }) {
+      commit("UPDATE_DATA_LOADING", true);
+      let queryObj = deepCopy(state.ptxData.query);
+      queryObj.townName = townName;
+      queryObj.skips = {
+        scenicspots: 0, restaurants: 0, hotels: 0, activities: 0
+      };
+
+      triggerAjax(
+        queryObj,
+        (dataList, query) => {
+          queryObj = query;
+          commit("TOGGLE_TOWN", townName);
+          commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_QUERY", queryObj);
+          commit("UPDATE_DATA_LOADING", false);
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          console.log(`filterDataListWithTown: ${error}`);
+          // 錯誤處理
+        }
+      )
+    },
+
+    // 以 Class 類型篩選資料集合
+    filterDataListByClass({ commit, state }, { classType }) {
+      commit("UPDATE_DATA_LOADING", true);
+      let queryObj = deepCopy(state.ptxData.query);
+      queryObj.classType = classType;
+      queryObj.skips = {
+        scenicspots: 0, restaurants: 0, hotels: 0, activities: 0
+      };
+
+      triggerAjax(
+        queryObj,
+        (dataList, query) => {
+          queryObj = query;
+          commit("TOGGLE_CLASS_TYPE", classType);
+          commit("UPDATE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_QUERY", queryObj);
+          commit("UPDATE_DATA_LOADING", false);
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          console.log(`filterDataListByClass: ${error}`);
+          // 錯誤處理
+        }
+      )
+    },
+
+    // 取得更多資料集合
+    getMoreDataList({ commit, state }) {
+      commit("UPDATE_MORE_DATA_LOADING", true);
+      const { ptxData } = state;
+      let queryObj = deepCopy(ptxData.query);
+
+      triggerAjax(
+        queryObj,
+        (dataList, query) => {
+          queryObj = query;
+          commit("UPDATE_MORE_DATA_LIST", dataList);
+          commit("UPDATE_DATA_QUERY", queryObj);
+          commit("UPDATE_MORE_DATA_LOADING", false);
+        },
+        (error) => {
+          commit("UPDATE_MORE_DATA_LOADING", false);
+          console.log(`getMoreDataList: ${error}`);
+          // 錯誤處理
+        }
+      )
     },
 
     // 取得單一類型資料細節
     getSingleTypeDetail({ commit }, id) {
-      commit("UPDATE_DATA_LOADING", true);
-
       // 同時向兩邊的 API 要資料
       Promise.all([AJAX_getDetail({ id }), AJAX_S_getDetail(id)])
       .then(res => {
@@ -138,32 +282,26 @@ export const storeObject = {
         return createCommonIDAndName(data);
       })
       .then(data => {
-        const position = {
-          latitude: data.Position.PositionLat,
-          longitude: data.Position.PositionLon
-        };
-        Promise.all([
-          AJAX_getScenicSpot({ position }),
-          AJAX_getRestaurant({ position }),
-          AJAX_getHotel({ position }),
-          AJAX_getActivity({ position })
-        ])
-        .then(ress => {
-          let allNearbyDataList = concatAndAddType(ress);
-          const ids = allNearbyDataList.map(data => data[`${determineType(data)}ID`]);
-          AJAX_S_getScoreByDataList({ ids })
-          .then(res1 => {
-            const nearbyDataList = addCommentScore(allNearbyDataList, res1.data.average_scores);
-            data.NearbyDataList = nearbyDataList;
+        // 取得單一類型資料後，在搜尋與它相關的資料
+        const queryObj = {
+          dataType: "all",
+          position: {
+            latitude: data.Position.PositionLat,
+            longitude: data.Position.PositionLon
+          }
+        }
+        triggerAjax(
+          queryObj,
+          (dataList) => {
+            data.NearbyDataList = dataList;
             commit("UPDATE_DATA_DETAIL", data);
+          },
+          (error) => {
             commit("UPDATE_DATA_LOADING", false);
-          })
-        })
-        .catch(error => {
-          commit("UPDATE_DATA_LOADING", false);
-          console.log(`getSingleTypeDetail: ${error}`);
-          // 錯誤處理
-        });
+            console.log(`getSingleTypeDetail: ${error}`);
+            // 錯誤處理
+          }
+        );
       })
       .catch(error => {
         commit("UPDATE_DATA_LOADING", false);
@@ -172,149 +310,12 @@ export const storeObject = {
       });
     },
 
-    // 搜尋附近地點所有類型資料
-    getAllTypeDataListWithPosition({ commit }, Position) {
-      const position = {
-        latitude: Position.PositionLon,
-        longitude: Position.PositionLat
-      };
-
-      Promise.all([
-        AJAX_getScenicSpot({ position, select: ['Picture', 'Position'] }),
-        AJAX_getRestaurant({ position, select: ['Picture', 'Position'] }),
-        AJAX_getHotel({ position, select: ['Picture', 'Position'] }),
-        AJAX_getActivity({ position, select: ['Picture', 'Position'] })
-      ])
-      .then(ress => {
-        const datalist = concatAndAddType(ress);
-        commit("UPDATE_ALL_TYPE_DATA_LIST", datalist);
-      })
-      .catch((error) => {
-        console.log(`getAllTypeDataListWithPosition: ${error}`);
-        // 錯誤處理
-      });
-    },
-
-    // 以關鍵字搜尋所有類型資料
-    getAllTypeDataListWithKeyword({ commit }, keyword) {
-      commit("UPDATE_DATA_LOADING", true);
-      Promise.all([
-        AJAX_getScenicSpot({ keyword, select: ['Picture'] }),
-        AJAX_getRestaurant({ keyword, select: ['Picture'] }),
-        AJAX_getHotel({ keyword, select: ['Picture'] }),
-        AJAX_getActivity({ keyword, select: ['Picture'] })
-      ])
-      .then(ress => {
-        let allDatalist = concatAndAddType(ress);
-
-        // 資料集合
-        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
-
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
-          commit("UPDATE_ALL_TYPE_DATA_LIST", dataList);
-          commit("UPDATE_KEYWORD", "");
-          commit("UPDATE_DATA_LOADING", false);
-        })
-
-        // 向後端丟個資料
-        this.dispatch("serverModule/postSearchCountToSever", ids);
-      })
-      .catch(error => {
-        commit("UPDATE_DATA_LOADING", false);
-        console.log(`getAllTypeDataListWithKeyword: ${error}`);
-        // 錯誤處理
-      });
-    },
-
-    // 以鄉鎮市區過濾資料集合
-    filterDataListWithTown({ commit }, { dataType, townName }) {
-      const targetAjax = getSingleType_AJAX(dataType);
-      commit("UPDATE_DATA_LOADING", true);
-      targetAjax({ townName, select: ['Picture'] })
-      .then(res => {
-        let allDatalist = res.data.map(data => createCommonIDAndName(data));
-        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
-          commit("TOGGLE_TOWN", townName);
-          commit("UPDATE_DATA_LIST", dataList);
-          commit("UPDATE_DATA_LOADING", false);
-        })
-      })
-      .catch(error => {
-        commit("UPDATE_DATA_LOADING", false);
-        console.log(`filterDataListWithTown: ${error}`);
-        // 錯誤處理
-      });
-    },
-
-    // 以 Class 類型篩選資料集合
-    filterDataListByClass({ commit }, { dataType, classType }) {
-      commit("UPDATE_DATA_LOADING", true);
-      const targetAjax = getSingleType_AJAX(dataType);
-      const classObject = { dataType, classType };
-      targetAjax({ classObject, select: ['Picture'] })
-      .then(res => {
-        let allDatalist = res.data.map(data => createCommonIDAndName(data));
-        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
-          commit("TOGGLE_CLASS_TYPE", classType);
-          commit("UPDATE_DATA_LIST", dataList);
-          commit("UPDATE_DATA_LOADING", false);
-        })
-      })
-      .catch(error => {
-        commit("UPDATE_DATA_LOADING", false);
-        console.log(`filterDataListByClass: ${error}`);
-        // 錯誤處理
-      });
-    },
-
-    // 取得更多資料集合
-    getMoreDataList({ commit, state }, dataType) {
-      commit("UPDATE_MORE_DATA_LOADING", true);
-      // 判斷是否有過濾條件
-      const { keyword, currentTown, currentClassType, dataList } = state;
-      const targetAjax = getSingleType_AJAX(dataType);
-      let queryObj = {
-        skip: dataList.length,
-        keyword,
-        townName: currentTown,
-        select: ['Picture']
-      };
-      if (currentClassType) {
-        queryObj.classObject = { dataType, classType: currentClassType };
-      }
-      targetAjax(queryObj)
-      .then(res => {
-        let allDatalist = res.data.map(data => createCommonIDAndName(data));
-        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
-          commit("UPDATE_MORE_DATA_LIST", dataList);
-          commit("UPDATE_MORE_DATA_LOADING", false);
-        })
-      })
-      .catch(error => {
-        commit("UPDATE_MORE_DATA_LOADING", false);
-        console.log(`getMoreDataList: ${error}`);
-        // 錯誤處理
-      });
-    },
-
     // 取得熱門景點資料集合
-    getHotDataList({ commit, state }, count) {
-      commit("UPDATE_DATA_LOADING", true);
-
+    getHotDataList({ commit, state }, { count, callbackFn }) {
       const { hots } = state;
       let hotArray = [];
 
+      // 不改變陣列順序依序要資料
       if (hots.length === 0) return;
       for (let i = 0; i <= (count || 6); i++) {
         hotArray.push(AJAX_getOneData(hots[i]));
@@ -328,11 +329,11 @@ export const storeObject = {
         .then(res1 => {
           const dataList = addCommentScore(allDatalist, res1.data.average_scores);
           commit("UPDATE_HOT_DATA_LIST", dataList);
-          commit("UPDATE_DATA_LOADING", false);
+          if (callbackFn) callbackFn();
         })
       })
       .catch((error) => {
-        commit("UPDATE_DATA_LOADING", false);
+        if (callbackFn) callbackFn();
         console.log(`getHotDataList: ${error}`);
         // 錯誤處理
       });
@@ -342,7 +343,11 @@ export const storeObject = {
     getFavoriteDataList({ commit, state }) {
       commit("UPDATE_DATA_LOADING", true);
       const favoriteIds = state.favorites;
-      const queryObj = { ids: favoriteIds, select: ['Picture'] };
+      const queryObj = {
+        dataType: "all",
+        ids: favoriteIds,
+        select: ['Picture', 'Position']
+      };
 
       // 無條件去搜尋會得到一般結果，所以要直接丟回空陣列
       if (favoriteIds.length === 0) {
@@ -350,55 +355,44 @@ export const storeObject = {
         commit("UPDATE_DATA_LOADING", false); return;
       }
 
-      Promise.all([
-        AJAX_getScenicSpot(queryObj),
-        AJAX_getRestaurant(queryObj),
-        AJAX_getHotel(queryObj),
-        AJAX_getActivity(queryObj)
-      ])
-      .then(ress => {
-        const allDatalist = concatAndAddType(ress);
-        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+      triggerAjax(
+        queryObj,
+        (dataList) => {
           commit("UPDATE_FAVORITE_DATA_LIST", dataList);
           commit("UPDATE_DATA_LOADING", false);
-        })
-      })
-      .catch(error => {
-        commit("UPDATE_DATA_LOADING", false);
-        console.log(`getFavoriteDataList: ${error}`);
-        // 錯誤處理
-      });
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          console.log(`getFavoriteDataList: ${error}`);
+          // 錯誤處理
+        }
+      )
     },
 
     // 取得單一主題景點資料集合
-    getThemeDataList({ commit }, { theme, count }) {
+    getThemeDataList({ commit }, { theme, count, callbackFn }) {
       commit("UPDATE_DATA_LOADING", true);
       const { themeTags, themeId } = theme;
-      const queryObj = { top: count, tags: themeTags, select: ['Picture'] };
-      Promise.all([
-        AJAX_getScenicSpot(queryObj),
-        AJAX_getRestaurant(queryObj),
-        AJAX_getHotel(queryObj),
-        AJAX_getActivity(queryObj)
-      ])
-      .then(ress => {
-        const allDatalist = concatAndAddType(ress);
-        const ids = allDatalist.map(data => data[`${determineType(data)}ID`]);
-        AJAX_S_getScoreByDataList({ ids })
-        .then(res1 => {
-          const dataList = addCommentScore(allDatalist, res1.data.average_scores);
+      const queryObj = { 
+        dataType: "all",
+        top: count,
+        tags: themeTags,
+        select: ['Picture', 'Position'],
+      };
+      triggerAjax(
+        queryObj,
+        (dataList) => {
           commit("UPDATE_THEME_DATA_LIST", { index: themeId, dataList });
           commit("UPDATE_DATA_LOADING", false);
-        })
-      })
-      .catch((error) => {
-        commit("UPDATE_DATA_LOADING", false);
-        console.log(`getThemeDataList: ${error}`);
-        // 錯誤處理
-      });
+          if (callbackFn) callbackFn();
+        },
+        (error) => {
+          commit("UPDATE_DATA_LOADING", false);
+          if (callbackFn) callbackFn();
+          console.log(`getThemeDataList: ${error}`);
+          // 錯誤處理
+        }
+      )
     },
 
     // 取得所有主題單一類型資料集合

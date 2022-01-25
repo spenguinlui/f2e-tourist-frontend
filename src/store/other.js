@@ -45,12 +45,13 @@ export default {
 
     // 在地圖上打入景點 marker
     setMarkerOnMap({ state, rootState }) {
-      if (rootState.dataList.length === 0) return;
+      const dataList = rootState.ptxData.dataList;
+      if (dataList.length === 0) return;
 
       const mapClass = state.mapClass;
       const markerLayer = new L.LayerGroup().addTo(mapClass);
 
-      rootState.dataList.forEach((data) => {
+      dataList.forEach((data) => {
         const { PositionLat, PositionLon } = data.Position;
         L.marker([PositionLat, PositionLon], { icon: determineIcon(data.ID) })
           .bindPopup(
@@ -64,8 +65,8 @@ export default {
           .addTo(markerLayer);
       })
       if (mapClass.tap) mapClass.tap.disable();
-      const firstPositionLat = rootState.dataList[0].Position.PositionLat;
-      const firstPositionLon = rootState.dataList[0].Position.PositionLon;
+      const firstPositionLat = dataList[0].Position.PositionLat;
+      const firstPositionLon = dataList[0].Position.PositionLon;
       mapClass.flyTo([firstPositionLat, firstPositionLon], 16, {
         animate: true,
         duration: 1.5

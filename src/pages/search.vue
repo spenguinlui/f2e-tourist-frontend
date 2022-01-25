@@ -3,51 +3,39 @@
     <header class="benner-container">
       <h1 class="benner-title">搜尋結果</h1>
     </header>
-    <section class="content">
-      <!-- 資料讀取中 -->
-      <template v-if="dataLoaing">
-        <div v-for="(data, index) in new Array(9)" :key="index" class="card-container">
-          <MaskCard />
-        </div>
-      </template>
-      <!-- 資料完成 -->
-      <template v-else>
-        <!-- 查詢有資料 -->
-        <template v-if="allTypeDataList.length > 0">
-          <div v-for="data in allTypeDataList" :key="data.ID" class="card-container">
-            <Card :data="data" :type="data.Type"/>
-          </div>
-        </template>
-        <!-- 查詢無資料 -->
-        <template v-else>
-          <NoContent />
-        </template>
-      </template>
-    </section>
+    <CardList v-if="!mapMode"/>
+    <MapList v-else/>
   </div>
 </template>
 
 <script>
-import Card from '@/components/card.vue';
-import MaskCard from '@/components/mask-card.vue';
-import NoContent from '@/components/no-content.vue';
 import { mapGetters } from 'vuex';
+import CardList from "@/pages/card-list.vue";
+import MapList from "@/pages/map-list.vue";
+
 
 export default {
   name: 'search',
   computed: {
-    ...mapGetters(['allTypeDataList', 'keyword', 'dataLoaing']),
+    ...mapGetters(['ptxData', 'keyword', 'dataLoaing']),
+    ...mapGetters('otherModule', ['mapMode'])
   },
   components: {
-    Card,
-    MaskCard,
-    NoContent
+    CardList,
+    MapList
   },
   created() {
     // 用網址進入的也要一次資料
     const keyword = this.localKeyword = this.$route.query.keyword;
     this.$store.commit("UPDATE_KEYWORD", keyword);
     this.$store.dispatch("getAllTypeDataListWithKeyword", keyword);
+  },
+  updated() {
+    if (this.mapMode) this.$store.dispatch("otherModule/setMarkerOnMap", 0);
+  },
+  beforeDestroy() {
+    this.$store.commit("INIT_DATA_QUERY");
+    console.log("初始化", this.ptxData.query)
   }
 }
 </script>

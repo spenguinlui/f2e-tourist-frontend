@@ -1,6 +1,7 @@
 import axios from 'axios';
 import jsSHA from "jssha";
-import { determineTypeByID } from "./data-support";
+import { determineTypeByID, createCommonIDAndName, determineType, addCommentScore, concatAndAddType } from "@/modules/data-support";
+import { AJAX_S_getScoreByDataList } from "@/modules/server-api";
 
 const API_DOMAIN = "https://ptx.transportdata.tw/MOTC/v2/Tourism/";
 const APP_ID = process.env.VUE_APP_APP_ID;
@@ -20,13 +21,13 @@ export const authorizationHeader = () => {
 
 // 參數字串
 const createNearByStr = ({ latitude, longitude }, limit = 1000) => (latitude && longitude) ? `&$spatialFilter=nearby(${latitude},${longitude}, ${limit})` : "";
-const createSelectByStr = (dataType, select) => {
+const createSelectByStr = (path, select) => {
   if (select.length !== 0) {
     let str = select.reduce((acc, cur, index) => acc + (index === 0 ? `${cur}` : `,${cur}`), "&$select=");
-    str += `,${dataType}ID,${dataType}Name`;
-    if (dataType === 'ScenicSpot') {
+    str += `,${path}ID,${path}Name`;
+    if (path === 'ScenicSpot') {
       str += ',Class1,Class2,Class3';
-    } else if (dataType == 'Activity') {
+    } else if (path == 'Activity') {
       str += ',Class1, Class2';
     } else {
       str += ',Class';
@@ -37,81 +38,132 @@ const createSelectByStr = (dataType, select) => {
   }
 };
 
+
 // 呼叫 API 的最終 URL
 export const urlQueryStr = (
-    dataType,
-    query = {
-      // 一般過濾條件
-      top: 0, select: [], position: null, skip: 0,
-      // 特殊過濾條件(只能取一)
-      id: "", keyword: "", townName: "", ids: [], tags: [], classObject: null
-    }
+  path,
+  {
+    // 一般格式條件
+    top = 30, select = [], position = null,
+    skips = {
+      scenicspots: 0,
+      restaurants: 0,
+      hotels: 0,
+      activities: 0
+    },
+    dataType = "all",
+    // 唯一過濾條件
+    id = "", 
+    // 特殊過濾條件
+    keyword = "", townName = "", ids = [], tags = [], classType = ""
+  } = {}
   ) => {
-  // 只要沒給限制就是 30筆
-  query.top = query.top || 30; 
   
   let queryStr = "";
   
   // 總筆數
-  if (query.top) queryStr += `&$top=${query.top}`;
+  if (top) queryStr += `&$top=${top}`;
 
   // 位移量
-  if (query.skip) queryStr += `&$skip=${query.skip}`;
-  
-  // 距離過濾
-  if (query.position) queryStr += createNearByStr(query.position);
+  if (typeof skips !== "undefined") {
+    if (skips[dataType]) queryStr += `&$skip=${skips[dataType]}`;
+  }
   
   // 欄位選擇
-  if (query.select) queryStr += createSelectByStr(dataType, query.select);
+  if (select) queryStr += createSelectByStr(path, select);
+
+  // 距離過濾
+  if (position) queryStr += createNearByStr(position);
 
   // 指定資料過濾
-  if (query.id) queryStr += `&$filter=${dataType}ID eq '${query.id}'`;
+  if (id) queryStr += `&$filter=${path}ID eq '${id}'`;
+
+  // 是否有特殊條件
+  if (keyword || townName || ids.length > 0 || tags.length > 0 || classType) {
+    queryStr += "&$filter="
+  }
 
   // 地區過濾
-  if (query.townName) queryStr += `&$filter=contains(Address, '${query.townName}')`;
+  if (townName) {
+    if (queryStr.indexOf("$filter=(contains") > 0)
+      queryStr += `and (contains(Address, '${townName}'))`;
+    else
+      queryStr += `(contains(Address, '${townName}'))`;
+  }
   
   // 針對關鍵字過濾
-  if (query.keyword) queryStr += `&$filter=contains(${dataType}Name, '${query.keyword}') or contains(Description, '${query.keyword}')`;
+  if (keyword) {
+    if (queryStr.indexOf("$filter=(contains") > 0)
+      queryStr += `and (contains(${path}Name, '${keyword}') or contains(Description, '${keyword}'))`;
+    else
+      queryStr += `(contains(${path}Name, '${keyword}') or contains(Description, '${keyword}'))`;
+  }
 
   // Tag 關鍵字過濾
-  if (query.tags) {
-    if (query.tags.length !== 0) {
-      queryStr += query.tags.reduce(
-        (tagsStr, cur, i) => {
-          if (i !== 0) tagsStr += ' or ';
-          tagsStr += `contains(${dataType}Name, '${cur}') or contains(Description, '${cur}')`;
-          return tagsStr;
-        }, "&$filter="
-      )
+  if (tags) {
+    if (tags.length !== 0) {
+      let tagStr = "";
+      if (queryStr.indexOf("$filter=(contains") > 0) {
+        tagStr += "and ("
+      } else {
+        tagStr += "("
+      }
+      tagStr +=
+        tags.reduce(
+          (tagsStr, cur, i) => {
+            if (i !== 0) tagsStr += ' or ';
+            tagsStr += `contains(${path}Name, '${cur}') or contains(Description, '${cur}')`;
+            return tagsStr;
+          }, ""
+        );
+      tagStr += ")"
+      queryStr += tagStr;
     }
   }
 
   // 多 ID 搜尋
-  if (query.ids) { 
-    if (query.ids.length !== 0) {
-      queryStr += query.ids.reduce(
-        (idsStr, cur, i) => {
-          if (i !== 0) idsStr += ' or ';
-          idsStr += `contains(${dataType}ID, '${cur}')`;
-          return idsStr;
-        }, "&$filter="
-      )
+  if (ids) { 
+    if (ids.length !== 0) {
+      let idsStr = "";
+      if (queryStr.indexOf("$filter=(contains") > 0) {
+        idsStr += "and ("
+      } else {
+        idsStr += "("
+      }
+      idsStr +=
+        ids.reduce(
+          (idsStr, cur, i) => {
+            if (i !== 0) idsStr += ' or ';
+            idsStr += `contains(${path}ID, '${cur}')`;
+            return idsStr;
+          }, ""
+        );
+      idsStr += ")"
+      queryStr += idsStr;
     }
   }
 
   // Class 類型過濾
-  if (query.classObject) {
-    if (query.classObject.dataType === "scenicspots") {
-      queryStr 
-        += `&$filter=contains(Class1, '${query.classObject.classType}')`
-        +  ` or contains(Class2, '${query.classObject.classType}')`
-        +  ` or contains(Class3, '${query.classObject.classType}')`;
+  if (classType) {
+    let classStr = "";
+    if (queryStr.indexOf("$filter=(contains") > 0) {
+      classStr += "and ("
     } else {
-      queryStr += `&$filter=contains(Class, '${query.classObject.classType}')`;
+      classStr += "("
     }
+    if (dataType === "scenicspots") {
+      classStr 
+        += `contains(Class1, '${classType}')`
+        +  ` or contains(Class2, '${classType}')`
+        +  ` or contains(Class3, '${classType}')`;
+    } else {
+      classStr += `contains(Class, '${classType}')`;
+    }
+    classStr += ")"
+    queryStr += classStr;
   }
 
-  return encodeURI(`${API_DOMAIN}${dataType}?$format=JSON${queryStr}`);
+  return encodeURI(`${API_DOMAIN}${path}?$format=JSON${queryStr}`);
 };
 
 // 景觀列表
@@ -185,7 +237,61 @@ export const getSingleType_AJAX = (dataType) => {
     case "restaurants": targetAjax = ajaxList[1]; break;
     case "hotels": targetAjax = ajaxList[2];      break;
     case "activities": targetAjax = ajaxList[3];  break;
-    default: targetAjax = ajaxList[0];            break;
+    default: targetAjax = false;                  break;
   }
   return targetAjax;
+}
+
+// 決定 ajax 類型
+const determineAjaxType = (query) => {
+  const { dataType } = query;
+
+  // 確認是要單一資料還是多類型
+  if (dataType === "all") {
+    return Promise.all([
+      AJAX_getScenicSpot(query),
+      AJAX_getRestaurant(query),
+      AJAX_getHotel(query),
+      AJAX_getActivity(query)
+    ]);
+  } else {
+    let axiosFunc = getSingleType_AJAX(dataType);
+    if (!axiosFunc) throw `dataType: ${dataType}, 不是列舉的值!`;
+    return axiosFunc(query);
+  }
+}
+
+// 啟用 ajax 要資料
+export const triggerAjax = (query, _callbackFunc, _errorFunc) => {
+  determineAjaxType(query)
+  .then(res => {
+    let resDataList = [];
+
+    // 單類型與多類型資料要分別處理過
+    if (res instanceof Array) {
+      if (typeof query.skips !== "undefined") {
+        query.skips["scenicspots"] += res[0].data.length;
+        query.skips["restaurants"] += res[1].data.length;
+        query.skips["hotels"] += res[2].data.length;
+        query.skips["activities"] += res[3].data.length;
+      }
+      resDataList = concatAndAddType(res);
+    } else {
+      if (typeof query.skips !== "undefined") {
+        query.skips[query.dataType] += res.data.length;
+      }
+      resDataList = res.data.map(data => createCommonIDAndName(data));
+    }
+    
+    // 向後端 api 取得評分數據
+    const ids = resDataList.map(data => data[`${determineType(data)}ID`]);
+    AJAX_S_getScoreByDataList({ ids })
+    .then(scoreRes => {
+      const dataList = addCommentScore(resDataList, scoreRes.data.average_scores);
+      _callbackFunc(dataList, query, ids);
+    })
+  })
+  .catch(error => {
+    _errorFunc(error);
+  })
 }

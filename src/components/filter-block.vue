@@ -1,5 +1,5 @@
 <template>
-  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: visible ? 0 : `-${blockHeight}px` }">
+  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: ispc ? 'auto' : visible ? 0 : `-${blockHeight}px` }">
     <div class="area-container">
       <section class="area-block">
         <div class="area-title" @click.prevent.stop="toggleList()">
@@ -24,7 +24,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['filterBlock', 'dataType', 'hideBlock', 'visible'],
+  props: ['filterBlock', 'dataType', 'hideBlock', 'visible', 'ispc'],
   data () {
     return {
       typeListShow: true,

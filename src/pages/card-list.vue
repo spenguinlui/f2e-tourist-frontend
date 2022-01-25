@@ -6,9 +6,9 @@
       </div>
     </template>
     <template v-else>
-      <template v-if="dataList.length > 0">
-        <div v-for="data in dataList" :key="data.ID" class="card-container">
-          <Card :data="data" :type="dataType" :classType="'commonCard'"/>
+      <template v-if="ptxData.dataList.length > 0">
+        <div v-for="data in ptxData.dataList" :key="data.ID" class="card-container">
+          <Card :data="data" :type="data.Type" :classType="'commonCard'"/>
         </div>
       </template>
       <template v-else>
@@ -27,7 +27,7 @@
   export default {
     name: 'card-list',
     computed: {
-      ...mapGetters(['dataList', 'dataLoaing', 'moreDataLoading']),
+      ...mapGetters(['ptxData', 'dataLoaing', 'moreDataLoading']),
       dataType() {
         return this.$route.name
       },

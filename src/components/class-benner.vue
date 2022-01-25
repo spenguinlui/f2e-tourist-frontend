@@ -6,13 +6,13 @@
         <div class="left-btn">
           <div class="relative">
             <button class="choose-btn" @click.prevent.stop="showBlock(areaBlock)">選擇地區</button>
-            <SelectAreaBlock  v-show="areaMBlock.visible" :visible="areaBlock.visible" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
+            <SelectAreaBlock  v-show="areaMBlock.visible" :ispc="true" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
           </div>
           <button class="choose-btn" @click="showDateBlock">選擇日期</button>
         </div>
         <div class="right-btn">
           <button type="button" class="filter-btn" @click.prevent.stop="showBlock(filterBlock)">篩選<img src="../assets/images/icon/filter-f.svg" alt="切換列表icon"></button>
-          <FilterBlock  v-show="filterBlock.visible" ref="filterBlockContainer" :dataType="classType" :filterBlock="filterBlock" :hideBlock="hideBlock"/>
+          <FilterBlock  v-show="filterBlock.visible" :ispc="true" ref="filterBlockContainer" :dataType="classType" :filterBlock="filterBlock" :hideBlock="hideBlock"/>
           <button type="button" class="filter-icon-btn" @click="toggleMapMode">
             <img :src="modeIcon" :alt="mapMode ? '切換地圖icon' : '切換列表icon'">
           </button>

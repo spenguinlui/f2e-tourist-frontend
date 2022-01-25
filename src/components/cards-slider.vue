@@ -8,7 +8,7 @@
     </template>
     <!-- 資料完成 -->
     <template v-else>
-      <div v-for="data in dataList" :key="data.ID" class="card-container">
+      <div v-for="data in DataList" :key="data.ID" class="card-container">
         <Card :data="data" :type="data.Type" :classType="'commonCard'"/>
       </div>
     </template>
@@ -33,7 +33,7 @@ export default {
     }
   },
   computed: {
-    dataList() {
+    DataList() {
       if (this.mode === "hot") {
         return this.hotDataList;
       } else if (this.mode === "theme") {
@@ -45,14 +45,19 @@ export default {
     ...mapGetters(['hots', 'hotDataList', "themes"])
   },
   methods: {
-    async getHotDataList() {
-      await this.$store.dispatch("getHotDataList");
-      this.dataLoaing = false;
+    getHotDataList() {
+      this.$store.dispatch("getHotDataList",
+        { callbackFn: this.dataLoaingFinish }
+      );
     },
-    async getThemeDataList() {
-      await this.$store.dispatch("getThemeDataList", { theme: this.theme, count: 3 });
-      this.dataLoaing = false;
+    getThemeDataList() {
+      this.$store.dispatch("getThemeDataList",
+        { theme: this.theme, count: 3, callbackFn: this.dataLoaingFinish }
+      );
     },
+    dataLoaingFinish() {
+      this.dataLoaing = false;
+    }
   },
   created() {
     const vm = this;
@@ -76,6 +81,11 @@ export default {
         }
       }, 1000);
     }
+  },
+  beforeDestroy() {
+    const vm = this;
+    window.clearInterval(vm.themeTimeout);
+    window.clearInterval(vm.timeout);
   },
   components: {
     Card,

@@ -86,10 +86,12 @@ router.beforeEach((to, _, next) => {
       next();
     }
   } else {
-    if (to.name === "scenicspots" || to.name === "restaurants" || to.name === "hotels") {
+    if (
+      to.name === "scenicspots" || to.name === "restaurants" || to.name === "hotels"
+      || to.name === "activities" || to.name === "search"
+    ) {
+      vm.$store.commit("INIT_DATA_QUERY");
       vm.$store.commit("otherModule/TOGGLE_MAP_MODE", false);
-    } else if (to.name === "detail") {
-      vm.$store.commit("CLEAR_DATA_DETAIL");
     }
     next();
   }
