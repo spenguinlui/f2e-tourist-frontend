@@ -58,28 +58,22 @@ router.beforeEach((to, _, next) => {
       const adminAuthToken = vm.$cookies.get('_a');
       const adminParams = { auth_token: adminAuthToken };
       AJAX_S_checkAdminLogin(adminParams)
-      .then(res => {
-        if (res.data.success) {
-          next();
-        } else {
-          next({ name: 'admin-login' });
-        }
+      .then(() => {
+        next();
       })
       .catch(() => {
+        vm.delete_cookie('_a', '/', 'localhost');
         next({ name: 'admin-login' });
       })
     } else if (to.name.includes("suppliers")) {
       const supplierAuthToken = vm.$cookies.get('_s');
       const supplierParams = { auth_token: supplierAuthToken }
       AJAX_S_checkSupplierLogin(supplierParams)
-      .then(res => {
-        if (res.data.success) {
-          next();
-        } else {
-          next({ name: 'supplier-login' });
-        }
+      .then(() => {
+        next();
       })
       .catch(() => {
+        vm.delete_cookie('_s', '/', 'localhost');
         next({ name: 'supplier-login' });
       })
     } else {
@@ -96,3 +90,19 @@ router.beforeEach((to, _, next) => {
     next();
   }
 })
+// 套件的刪不掉，刪除 cookie 補丁
+Vue.prototype.delete_cookie = 
+function delete_cookie( name, path, domain ) {
+  if( get_cookie( name ) ) {
+    document.cookie = name + "=" +
+      ((path) ? ";path="+path:"")+
+      ((domain)?";domain="+domain:"") +
+      ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+  }
+}
+
+function get_cookie(name){
+  return document.cookie.split(';').some(c => {
+      return c.trim().startsWith(name + '=');
+  });
+}

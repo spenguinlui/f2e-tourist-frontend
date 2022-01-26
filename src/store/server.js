@@ -203,12 +203,14 @@ export default {
       AJAX_S_userSignOut({ auth_token: userAuthToken })
       .then(() => {
         commit("UPDATE_USER_LOGIN", false);
-        vm.$cookies.remove('_u');
+        // vm.$cookies.remove('_u');
+        vm.delete_cookie('_u', '/', 'localhost');
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
         commit("UPDATE_USER_LOGIN", false);
-        vm.$cookies.remove('_u');
+        // vm.$cookies.remove('_u');
+        vm.delete_cookie('_u', '/', 'localhost');
         vm.$router.push({ name: "home" });
         console.log(`signOutUserOnServer: ${error}`);
         // 錯誤處理
@@ -294,11 +296,13 @@ export default {
       const supplierAuthToken =  vm.$cookies.get('_s');
       AJAX_S_supplierSignOut({ auth_token: supplierAuthToken })
       .then(() => {
-        vm.$cookies.remove('_s');
+        // vm.$cookies.remove('_s');
+        vm.delete_cookie('_s', '/', 'localhost');
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
-        vm.$cookies.remove('_s');
+        // vm.$cookies.remove('_s');
+        vm.delete_cookie('_s', '/', 'localhost');
         vm.$router.push({ name: "home" });
         console.log(`signOutSupplierOnServer: ${error}`);
         // 錯誤處理

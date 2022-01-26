@@ -4,6 +4,7 @@ export const routes = [
     component: () => import('./pages/admin/index'),
     name: 'admin',
     meta: { requiresAuth: true },
+    redirect: '/admin/themes',
     children: [
       {
         path: 'themes',
