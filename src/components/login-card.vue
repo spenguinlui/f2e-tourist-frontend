@@ -5,14 +5,23 @@
     </div>
     <div class="login-card" ref="loginCard">
       <header class="login-card-header">
-        <div class="login-card-header-btn" :class="{ active: isLogin }" @click="isLogin = !isLogin">{{ identityZh }}登入</div>
-        <div class="login-card-header-btn" :class="{ active: !isLogin }" @click="isLogin = !isLogin">{{ identity === 'user' ? '新戶註冊' : identity === 'supplier' ? '廠商申請' : '--' }}</div>
+        <button type="button" class="login-card-header-btn" :class="{ active: isLogin }" @click="isLogin = !isLogin">{{ identityZh }}登入</button>
+        <button type="button" class="login-card-header-btn" :class="{ active: !isLogin }" @click="isLogin = !isLogin">{{ identity === 'user' ? '新戶註冊' : identity === 'supplier' ? '廠商申請' : '--' }}</button>
       </header>
       <section class="login-card-section">
         <form action="post" class="form">
-          <input type="email" v-model="email" placeholder="信箱" class="form-input" required="required">
-          <input type="password" v-model="password" placeholder="密碼" class="form-input" required="required">
-          <input type="password" v-show="!isLogin" v-model="confirmPassword" placeholder="再次輸入密碼" class="form-input" required="required">
+          <label class="form-input">
+            <input type="email" v-model="email"  placeholder=" " class="form-input-field" required="required">
+            <span class="form-input-label">信箱</span>
+          </label>
+          <label class="form-input">
+            <input type="password" v-model="password"  placeholder=" " class="form-input-field" required="required">
+            <span class="form-input-label">密碼</span>
+          </label>
+          <label class="form-input" v-show="!isLogin">
+            <input type="password" v-model="confirmPassword"  placeholder=" " class="form-input-field" required="required">
+            <span class="form-input-label">再次輸入密碼</span>
+          </label>
           <a href="#" class="forget" @click.prevent.stop="forgetPassword">忘記密碼？</a>
           <div class="btn-group">
             <button type="submit" v-show="isLogin" @click.prevent.stop="formValidate(login)" class="form-btn">登入</button>
@@ -162,15 +171,37 @@ export default {
         .form {
           @include flex-column-flex-start-center;
           &-input {
+            position: relative;
             width: 100%;
-            background-color: $grey-100;
-            color: $grey-500;
-            border-radius: $oval-bora;
-            border: 1px solid $grey-300;
-            padding: .5em 1em;
             margin: 1rem 0;
-            &::placeholder {
-              color: $grey-300;
+            &-field {
+              width: 100%;
+              padding: calc(.5em * 1.75) calc(.5em * 3);
+              background-color: $grey-100;
+              color: $grey-500;
+              border-radius: $oval-bora;
+              border: 1px solid $grey-300;
+              &:-webkit-autofill {
+                box-shadow: 0 0 0px 1000px $grey-100 inset;
+                -webkit-box-shadow: 0 0 0px 1000px $grey-100 inset;
+              }
+              &:focus, &:not(:placeholder-shown) {
+                border: 2px solid $primary-300;
+                & + .form-input-label {
+                  left: 0;
+                  transform: translate(.25rem, -65%) scale(.8);
+                  color: $primary-700;
+                }
+              }
+            }
+            &-label {
+              position: absolute;
+              left: .5em;
+              top: 0;
+              padding: calc(.5em * 0.5) calc(.5em * 1.2);
+              margin: calc(.5em * 0.75) calc(.5em * .5);
+              background-color: $grey-100;
+              color: $grey-400;
             }
           }
           &-btn {
