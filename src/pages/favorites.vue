@@ -66,7 +66,7 @@
     @include flex-row-center-center;
     @include content-padding($section-padding-y);
     @include darken-benner;
-    background-image: url("../assets/images/spare-benner-2.jpeg");
+    background-image: url("../assets/images/favorites-benner.png");
     height: $class-benner-m-height;
     .benner-title {
       @include font-h4(bold);
