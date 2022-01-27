@@ -362,7 +362,7 @@
 
 // 卡片大小
 @mixin card-flex {
-  padding: 1rem .625rem;
+  padding: 1rem;
   @include flex-col(11);
   @media screen and (min-width: 560px) and (max-width: 920px) {
     @include flex-col(6);

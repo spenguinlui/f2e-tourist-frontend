@@ -317,7 +317,7 @@ export const storeObject = {
 
       // 不改變陣列順序依序要資料
       if (hots.length === 0) return;
-      for (let i = 0; i <= (count || 6); i++) {
+      for (let i = 0; i <= (count || 7); i++) {
         hotArray.push(AJAX_getOneData(hots[i]));
       }
 

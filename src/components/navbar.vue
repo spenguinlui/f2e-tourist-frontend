@@ -111,7 +111,7 @@ export default {
     @include posi(f);
     width: 100vw;
     min-height: $nav-height;
-    background-color: $grey-200;
+    background-color: $grey-100;
     z-index: $nav-bar-z;
     &-menu-mobile, &-brand {
       @include flex-row-center-center;
