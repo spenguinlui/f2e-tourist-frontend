@@ -34,8 +34,8 @@
             <span class="text">快速登入</span>
           </div>
           <div class="img-row">
-            <img @click="loginByFacebook" src="../assets/images/icon/facebook-login.svg" alt="facebook-icon">
-            <img @click="loginByGoogle" src="../assets/images/icon/google-login.svg" alt="facebook-icon">
+            <button type="button"><img @click="loginByFacebook" src="../assets/images/icon/facebook-login.svg" alt="facebook-icon"></button>
+            <button type="button"><img @click="loginByGoogle" src="../assets/images/icon/google-login.svg" alt="facebook-icon"></button>
           </div>
         </template>
       </section>
@@ -195,6 +195,8 @@ export default {
               }
             }
             &-label {
+              width: calc(100% - (.5em * 1.2 * 2));
+              border-radius: $oval-bora;
               position: absolute;
               left: .5em;
               top: 0;
@@ -253,8 +255,9 @@ export default {
           @include flex-row-center-center;
           gap: 1rem;
           height: 2rem;
-          > img {
+          img {
             width: 2rem;
+            cursor: pointer;
           }
         }
       }
