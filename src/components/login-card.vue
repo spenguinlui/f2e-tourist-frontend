@@ -188,6 +188,7 @@ export default {
               &:focus, &:not(:placeholder-shown) {
                 border: 2px solid $primary-300;
                 & + .form-input-label {
+                  width: auto;
                   left: 0;
                   transform: translate(.25rem, -65%) scale(.8);
                   color: $primary-700;
