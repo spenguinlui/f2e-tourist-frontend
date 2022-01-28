@@ -110,3 +110,20 @@ yarn run serve
 
 ### 主題
 ![themes](https://github.com/spenguinlui/f2e-tourist-frontend/blob/master/readme-img/sitemap.jpg)
+
+# 網站畫面
+
+### 首頁
+![index](https://github.com/spenguinlui/f2e-tourist-frontend/blob/master/readme-img/view-01.jpg)
+
+### 列表
+![index](https://github.com/spenguinlui/f2e-tourist-frontend/blob/master/readme-img/view-02.jpg)
+
+### 登入
+![index](https://github.com/spenguinlui/f2e-tourist-frontend/blob/master/readme-img/view-03.jpg)
+
+### 細節-1
+![index](https://github.com/spenguinlui/f2e-tourist-frontend/blob/master/readme-img/view-04.jpg)
+
+### 細節-2
+![index](https://github.com/spenguinlui/f2e-tourist-frontend/blob/master/readme-img/view-05.jpg)
