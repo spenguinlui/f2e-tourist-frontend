@@ -171,6 +171,15 @@ export const AJAX_S_adminSignIn = (adminParams) => {
   });
 }
 
+export const AJAX_S_adminSignOut = (adminParams) => {
+  return axios({
+    method: 'delete',
+    url: `${getServerPrefixUrl}/admin/sign_out`,
+    header: { "Content-Type": "application/json" },
+    data: adminParams,
+  });
+}
+
 // 主題修改
 export const AJAX_S_patchTheme = (themeId, themeParams) => {
   return axios({

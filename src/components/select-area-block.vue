@@ -1,5 +1,5 @@
 <template>
-  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: visible ? 0 : `-${blockHeight}px` }">
+  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: ispc ? 'auto' : visible ? 0 : `-${blockHeight}px` }">
     <div class="area-container">
       <section v-for="area in areaList" :key="area.area" class="area">
         <h3 class="v-area">{{ area.area }}</h3>
@@ -30,7 +30,7 @@ import citys from "@/json/citys.json";
 import { mapGetters } from 'vuex';
 
 export default {
-  props: ['areaBlock', 'dataType', 'hideBlock', 'visible'],
+  props: ['areaBlock', 'dataType', 'hideBlock', 'visible', 'ispc'],
   data () {
     return {
       areaList: citys,

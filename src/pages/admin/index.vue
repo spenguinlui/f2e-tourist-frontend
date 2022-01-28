@@ -6,6 +6,7 @@
       <router-link :to="{ name: 'admin-users' }" class="btn">使用者管理</router-link> 
       <router-link :to="{ name: 'admin-suppliers' }" class="btn">商家管理</router-link> 
       <router-link :to="{ name: 'admin-setting' }" class="btn">參數設定</router-link>
+      <button type="button" class="btn" @click="sighOut">管理員登出</button>
     </div>
     <router-view />
   </div>
@@ -15,6 +16,11 @@
 import { AJAX_S_checkAdminLogin } from '@/modules/server-api';
 
 export default {
+  methods: {
+    sighOut() {
+      this.$store.dispatch("serverModule/signOutAdminOnServer", this);
+    }
+  },
   created() {
     // 防止 router 守衛沒啟動
     const adminAuthToken = this.$cookies.get('_a');

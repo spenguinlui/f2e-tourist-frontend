@@ -12,6 +12,7 @@ import {
   AJAX_S_supplierSignIn,
   AJAX_S_supplierSignOut,
   AJAX_S_adminSignIn,
+  AJAX_S_adminSignOut,
   AJAX_S_patchTheme,
   AJAX_S_addTheme,
   AJAX_S_deleteTheme,
@@ -203,14 +204,12 @@ export default {
       AJAX_S_userSignOut({ auth_token: userAuthToken })
       .then(() => {
         commit("UPDATE_USER_LOGIN", false);
-        // vm.$cookies.remove('_u');
-        vm.delete_cookie('_u', '/', 'localhost');
+        vm.delete_cookie('_u', '/', vm.domain);
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
         commit("UPDATE_USER_LOGIN", false);
-        // vm.$cookies.remove('_u');
-        vm.delete_cookie('_u', '/', 'localhost');
+        vm.delete_cookie('_u', '/', vm.domain);
         vm.$router.push({ name: "home" });
         console.log(`signOutUserOnServer: ${error}`);
         // 錯誤處理
@@ -229,7 +228,7 @@ export default {
         commit("UPDATE_USER_LOGIN", true);
       })
       .catch(error => {
-        vm.$cookies.remove('_u');
+        vm.delete_cookie('_u', '/', vm.domain);
         console.log(`checkUserStatus: ${error}`);
       })
     },
@@ -296,13 +295,11 @@ export default {
       const supplierAuthToken =  vm.$cookies.get('_s');
       AJAX_S_supplierSignOut({ auth_token: supplierAuthToken })
       .then(() => {
-        // vm.$cookies.remove('_s');
-        vm.delete_cookie('_s', '/', 'localhost');
+        vm.delete_cookie('_s', '/', vm.domain);
         vm.$router.push({ name: "home" });
       })
       .catch(error => {
-        // vm.$cookies.remove('_s');
-        vm.delete_cookie('_s', '/', 'localhost');
+        vm.delete_cookie('_s', '/', vm.domain);
         vm.$router.push({ name: "home" });
         console.log(`signOutSupplierOnServer: ${error}`);
         // 錯誤處理
@@ -326,6 +323,22 @@ export default {
         console.log(`loginAdminOnServer: ${error}`);
         // 錯誤處理
         window.alert("管理員登入失敗");
+      });
+    },
+
+    // 管理者登出
+    signOutAdminOnServer(_, vm) {
+      const adminAuthToken =  vm.$cookies.get('_a');
+      AJAX_S_adminSignOut({ auth_token: adminAuthToken })
+      .then(() => {
+        vm.delete_cookie('_a', '/', vm.domain);
+        vm.$router.push({ name: "home" });
+      })
+      .catch(error => {
+        vm.delete_cookie('_a', '/', vm.domain);
+        vm.$router.push({ name: "home" });
+        console.log(`signOutUserOnServer: ${error}`);
+        // 錯誤處理
       });
     },
 

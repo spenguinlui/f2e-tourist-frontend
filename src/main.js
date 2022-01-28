@@ -90,6 +90,12 @@ router.beforeEach((to, _, next) => {
     next();
   }
 })
+
+const domain = process.env.NODE_ENV === "development" ?
+  process.env.VUE_APP_BACKEND_DEV_DOMAIN :
+  process.env.VUE_APP_BACKEND_DOMAIN;
+Vue.domain = domain;
+
 // 套件的刪不掉，刪除 cookie 補丁
 Vue.prototype.delete_cookie = 
 function delete_cookie( name, path, domain ) {

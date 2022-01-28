@@ -6,7 +6,7 @@
         <div class="left-btn">
           <div class="relative">
             <button class="choose-btn" @click.prevent.stop="showBlock(areaBlock)">選擇地區</button>
-            <SelectAreaBlock  v-show="areaMBlock.visible" :ispc="true" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
+            <SelectAreaBlock  v-show="areaBlock.visible" :ispc="true" ref="areaBlockContainer" :dataType="classType" :areaBlock="areaBlock" :hideBlock="hideBlock"/>
           </div>
           <button class="choose-btn" @click="showDateBlock">選擇日期</button>
         </div>
