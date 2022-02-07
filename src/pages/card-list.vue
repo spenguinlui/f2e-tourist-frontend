@@ -33,6 +33,7 @@
       },
     },
     methods: {
+      // 滾動式更新資料
       contentScroll(e) {
         const { scrollHeight, scrollTop } = e.target;
         if (scrollHeight - scrollTop < (scrollHeight * 0.15) && !this.moreDataLoading) {

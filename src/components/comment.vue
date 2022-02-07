@@ -108,14 +108,17 @@ export default {
     }
   },
   methods: {
+    // 展開評論填寫
     expandCommentForm() {
       this.commentFormShow = !this.commentFormShow;
       this.$refs.formTitle.focus();
     },
-    changeCommentStar (score) {
+    // 選擇評論星星數
+    changeCommentStar(score) {
       this.commentForm.score = score;
     },
-    sentForm () {
+    // 填寫完成送出
+    sentForm() {
       this.$store.dispatch("serverModule/postCommentToServer", { commentForm: this.commentForm, id: this.dataDetail.ID, vm: this });
       this.commentForm = {
         title: "",

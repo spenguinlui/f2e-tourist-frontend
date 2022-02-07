@@ -53,12 +53,8 @@
       noTags() {
         return !this.data.Class && !this.data.Class1 && !this.data.Class2 && !this.data.Class3;
       },
-      ...mapGetters(['favorites', 'favoriteAdding']),
-      ...mapGetters('serverModule', ['userIsLogin']),
-    },
-    methods: {
-      routeName(dataType) {
-        switch (dataType) {
+      routeName() {
+        switch (this.data.Type) {
           case "ScenicSpot": return "scenicspots";
           case "Restaurant": return "restaurants";
           case "Hotel":      return "hotels";
@@ -66,10 +62,15 @@
           default:           return "";
         }
       },
+      ...mapGetters(['favorites', 'favoriteAdding']),
+      ...mapGetters('serverModule', ['userIsLogin']),
+    },
+    methods: {
+      // 前往細節頁面
       toDetail() {
-        const routeName = this.routeName(this.data.Type);
-        this.$router.push(`/${routeName}/${this.data.ID}`);
+        this.$router.push(`/${this.routeName}/${this.data.ID}`);
       },
+      // 按讚 & 收回
       async changeFavorite(id, add) {
         if (this.favoriteAdding) { return; }
         const favoriteParams = { dataId: id, add, vm: this };
@@ -110,7 +111,7 @@
     &.full-card {
       margin-bottom: 1rem;
     }
-    .card-img {
+    &-img {
       width: 100%;
       height: 25vh;
       position: relative;
@@ -136,7 +137,7 @@
         }
       }
     }
-    .card-content {
+    &-content {
       padding: 5px;
       &-title {
         @include font-h4(bold);

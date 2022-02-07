@@ -24,12 +24,6 @@
 
   export default {
     props: ['item'],
-    methods: {
-      toDetail(id) {
-        this.$store.dispatch("getSingleTypeDetail", id);
-        this.$router.push(`/${this.item.Type}/${id}`);
-      }
-    },
     computed: {
       pictureUrl() {
         return this.item.Picture && this.item.Picture.PictureUrl1 ? this.item.Picture.PictureUrl1 : EmptyImg;
@@ -41,6 +35,13 @@
         return !this.item.Class && !this.item.Class1 && !this.item.Class2 && !this.item.Class3;
       },
       ...mapGetters(['dataDetail'])
+    },
+    methods: {
+      // 進入細節頁面
+      toDetail(id) {
+        this.$store.dispatch("getSingleTypeDetail", id);
+        this.$router.push(`/${this.item.Type}/${id}`);
+      }
     },
     components: {
       Stars
@@ -58,7 +59,7 @@
     &:last-child {
       border: none;
     }
-    .card-img {
+    &-img {
       width: 15vh;
       height: 15vh;
       img {
@@ -69,7 +70,7 @@
         border-radius: .5rem;
       }
     }
-    .card-content {
+    &-content {
       @include flex-column-space-between-baseline;
       width: calc(100% - 15vh);
       height: 15vh;

@@ -79,6 +79,7 @@ export default {
     }
   },
   methods:  {
+    // 手機版展開選單區塊
     expandingMenu() {
       if (this.menuShow === false) {
         this.menuShow = true;
@@ -87,6 +88,7 @@ export default {
         this.menuShow = false;
       }
     },
+    // 手機版展開搜尋區塊
     expandingSearch() {
       if (this.searchShow === false) {
         this.searchShow = true;

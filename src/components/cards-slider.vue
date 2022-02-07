@@ -53,30 +53,36 @@ export default {
     ...mapGetters(['hots', 'hotDataList', "themes"])
   },
   methods: {
+    // 取得熱門資料
     getHotDataList() {
       this.$store.dispatch("getHotDataList",
         { callbackFn: this.dataLoaingFinish }
       );
     },
+    // 取得主題資料
     getThemeDataList() {
       this.$store.dispatch("getThemeDataList",
         { theme: this.theme, count: 3, callbackFn: this.dataLoaingFinish }
       );
     },
+    // 資料更新結束
     dataLoaingFinish() {
       this.dataLoaing = false;
     },
+    // 取得元件總寬度
     getScrollWidth() {
       this.$nextTick(() => {
         this.scrollWidth = this.$refs.scroll.clientWidth;
         this.offsetWidth = 0;
       });
     },
+    // 視角往左
     goLeft() {
       if (Math.abs(this.offsetWidth) > 0) {
         this.offsetWidth += this.scrollWidth;
       }
     },
+    // 視角往右
     goRight() {
       const { scrollWidth, clientWidth } = this.$refs.scroll;
       if (Math.abs(this.offsetWidth) + 5 < (scrollWidth - clientWidth)) {
@@ -85,6 +91,7 @@ export default {
     }
   },
   created() {
+    // 設定持續取得資料(因應後端 API 架在免費空間有 30s睡眠期)
     const vm = this;
     if (vm.mode === "hot") {
       vm.timeout = window.setInterval(() => {
@@ -106,6 +113,7 @@ export default {
         }
       }, 1000);
     }
+    // 取得資料後取得寬度
     this.getScrollWidth();
   },
   beforeDestroy() {
@@ -151,17 +159,17 @@ export default {
       z-index: 1;
       cursor: pointer;
       top: calc(50% - (2.75rem / 2));
+      border-radius: $cycle-bora;
+      background-color: $grey-100;
+      width: 2.75rem;
+      height: 2.75rem;
+      padding: .8rem;
       &.left {
         left: calc((2.75rem / 2) + 2.2rem * -1);
       }
       &.right {
         right: calc((2.75rem / 2) + 2.3rem * -1);
       }
-      border-radius: $cycle-bora;
-      background-color: $grey-100;
-      width: 2.75rem;
-      height: 2.75rem;
-      padding: .8rem;
       > img {
         width: 100%;
         height: 100%;

@@ -149,11 +149,13 @@ export default {
     }
   },
   methods: {
+    // 取得細節資料
     getDetail() {
       const id =  this.$route.params.id;
       this.dataType = this.$route.params.type;
       this.$store.dispatch("getSingleTypeDetail", id);
     },
+    // 按讚/收回
     changeFavorite(id, add) {
       if (this.favoriteAdding) { return; }
 

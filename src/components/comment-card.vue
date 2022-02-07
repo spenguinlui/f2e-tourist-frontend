@@ -1,17 +1,17 @@
 <template>
   <div class="comment-card">
-    <div class="comment-left">
-      <div class="comment-avatar"></div>
+    <div class="comment-card-avatar">
+      <div class="comment-card-avatar-img"></div>
     </div>
-    <div class="comment-right">
-      <section class="comment-header">
-        <div class="comment-avatar-m"></div>
-        <h5 class="comment-title">{{ comment.title }}</h5>
-        <ul class="comment-score">
+    <div class="comment-card-content">
+      <section class="comment-card-content-header">
+        <div class="comment-card-avatar-m"></div>
+        <h5 class="comment-card-content-header-title">{{ comment.title }}</h5>
+        <ul class="comment-card-content-header-score">
           <Stars :score="comment.score"/>
         </ul>
       </section>
-      <section class="comment-context">
+      <section class="comment-card-content-context">
         {{ comment.content }}
       </section>
     </div>
@@ -39,60 +39,56 @@ export default {
     &:last-child {
       border: none;
     }
-    .comment-left {
+    &-avatar {
       display: none;
-      .comment-avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: $cycle-bora;
-        background-color: #ddd;
-      }
     }
-    .comment-right {
+    &-content {
       @include flex-col(12);
-      .comment-header {
+      &-header {
         @include flex-row-space-between-center;
         padding-bottom: .5rem;
-        .comment-avatar-m {
-          display: block;
-          width: 2rem;
-          height: 2rem;
-          border-radius: $cycle-bora;
-          background-color: #ddd;
-        }
-        .comment-title {
+        &-title {
           @include font-h5(bold);
           flex: auto;
           max-width: 50%;
           color: $grey-700;
         }
-        .comment-score {
+        &-score {
           @include flex-row-center-center;
         }
       }
-      .comment-context {
+      &-context {
         @include font-content;
         color: $grey-700;
       }
     }
   }
+  .comment-card-avatar-m {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    border-radius: $cycle-bora;
+    background-color: #ddd;
+  }
 
   @include screen-up {
     .comment-card {
-      .comment-left {
+      &-avatar {
         display: block;
-        width: 8rem;
-        height: 8rem;
-        padding: 1rem;
-      }
-      .comment-right {
-        @include flex-col(10);
-        .comment-header {
-          .comment-avatar-m {
-            display: none;
-          }
+        &-img {
+          width: 8rem;
+          height: 8rem;
+          padding: 1rem;
+          border-radius: $cycle-bora;
+          background-color: #ddd;
         }
       }
+      &-content {
+        @include flex-col(10);
+      }
+    }
+    .comment-card-avatar-m {
+      display: none;
     }
   }
 

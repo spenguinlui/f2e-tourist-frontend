@@ -1,15 +1,15 @@
 <template>
-  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: ispc ? 'auto' : visible ? 0 : `-${blockHeight}px` }">
-    <div class="area-container">
-      <section class="area-block">
-        <div class="area-title" @click.prevent.stop="toggleList()">
-          <h4 class="title-text">{{ dataObject.title }}</h4>
-          <div class="title-icon" :class="{ show: typeListShow }"></div>
+  <nav class="filter" ref="selectBlock" :style="{ bottom: ispc ? 'auto' : visible ? 0 : `-${blockHeight}px` }">
+    <div class="filter-container">
+      <section class="filter-block">
+        <div class="filter-title" @click.prevent.stop="toggleList()">
+          <h4 class="filter-title-text">{{ dataObject.title }}</h4>
+          <div class="filter-title-icon" :class="{ show: typeListShow }"></div>
         </div>
-        <ul class="area-list" v-show="typeListShow">
+        <ul class="filter-list" v-show="typeListShow">
           <li
             v-for="type in dataObject.typeList" :key="type"
-            class="area-item"
+            class="filter-list-item"
             :class="{ active: currentClassType === type }"
             @click="filterByType(type)"
             >{{ type }}
@@ -58,15 +58,18 @@ export default {
     ...mapGetters(['currentClassType'])
   },
   methods: {
+    // 切換選單範圍
     toggleList() {
       this.typeListShow = !this.typeListShow;
     },
+    // 選定篩選類型
     filterByType(classType) {
       this.$store.dispatch("filterDataListByClass", { dataType: this.dataType, classType });
       this.hideBlock(this.filterBlock);
     }
   },
   created() {
+    // 取得區塊高度
     this.$nextTick(() => {
       this.blockHeight = this.$refs.selectBlock.offsetHeight;
     })
@@ -74,11 +77,10 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
 
-  .select-area-block {
+  .filter {
     width: 100vw;
     position: fixed;
     right: 0;
@@ -91,43 +93,43 @@ export default {
     z-index: 1;
     cursor: default;
     transition: $trsi;
-    .area-container {
+    &-container {
       @include scroll;
       width: 100%;
-      .area-block {
-        padding: 0.5rem 0;
-        .area-title {
-          @include flex-row-flex-start-center;
-          padding: 0.25rem 0 0.5rem 0;
-          .title-text {
-            @include font-content(700);
-          }
-          .title-icon {
-            @include triangle;
-            margin-left: 0.5rem;
-          }
+    }
+    &-block {
+      padding: 0.5rem 0;
+    }
+    &-title {
+      @include flex-row-flex-start-center;
+      padding: 0.25rem 0 0.5rem 0;
+      &-text {
+        @include font-content(700);
+      }
+      &-icon {
+        @include triangle;
+        margin-left: 0.5rem;
+      }
+    }
+    &-list {
+      @include flex-row-flex-start-space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      &-item {
+        @include font-button(500);
+        line-height: 20px;
+        &:hover {
+          color: $grey-400;
         }
-        .area-list {
-          @include flex-row-flex-start-space-between;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-          .area-item {
-            @include font-button(500);
-            line-height: 20px;
-            &:hover {
-              color: $grey-400;
-            }
-            &.active {
-              color: $primary-600;
-            }
-          }
+        &.active {
+          color: $primary-600;
         }
       }
     }
   }
 
   @include screen-up {
-    .select-area-block {
+    .filter {
       width: 23rem;
       position: absolute;
       top: 40px;

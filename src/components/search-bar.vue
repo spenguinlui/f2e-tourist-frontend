@@ -1,6 +1,6 @@
 <template>
   <div :class="className">
-    <input v-model="localKeyword" @keyup.enter="goSearch" type="text" placeholder="想要去哪？">
+    <input class="keyword" v-model="localKeyword" @keyup.enter="goSearch" type="text" placeholder="想要去哪？">
     <div @click="goSearch"><img src="../assets/images/icon/search.svg" alt="搜尋"></div>
   </div>
 </template>
@@ -22,6 +22,7 @@ export default {
     ...mapGetters(['keyword'])
   },
   methods: {
+    // 搜尋資料
     goSearch(event) {
       if (event.isComposing || !this.keyword) { return }  // 還在輸入中文別要資料
       // keyword 加入到網址，方便分享
@@ -64,7 +65,7 @@ export default {
     background-color: $grey-100;
     color: $grey-500;
     border-radius: $oval-bora;
-    input {
+    .keyword {
       width: 100%;
       background-color: inherit;
     }
@@ -90,7 +91,7 @@ export default {
       background-color: $grey-100;
       color: $grey-500;
       border-radius: $oval-bora;
-      input {
+      .keyword {
         width: 100%;
         background-color: inherit;
       }

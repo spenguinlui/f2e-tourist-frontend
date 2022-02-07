@@ -1,19 +1,19 @@
 <template>
-  <nav class="select-area-block" ref="selectBlock" :style="{ bottom: ispc ? 'auto' : visible ? 0 : `-${blockHeight}px` }">
-    <div class="area-container">
-      <section v-for="area in areaList" :key="area.area" class="area">
-        <h3 class="v-area">{{ area.area }}</h3>
+  <nav class="filter" ref="selectBlock" :style="{ bottom: ispc ? 'auto' : visible ? 0 : `-${blockHeight}px` }">
+    <div class="filter-container">
+      <section v-for="area in areaList" :key="area.area" class="filter-block">
+        <h3 class="filter-subtitle">{{ area.area }}</h3>
 
-        <section v-for="city in area.citys" :key="city.cityName" class="area-block">
-          <div class="area-title" @click.prevent.stop="toggleList(city.cityName)">
-            <h4 class="title-text">{{ city.cityName }}</h4>
-            <div class="title-icon" :class="{ show: localCityName === city.cityName }"></div>
+        <section v-for="city in area.citys" :key="city.cityName" class="filter-area">
+          <div class="filter-area-title" @click.prevent.stop="toggleList(city.cityName)">
+            <h4 class="filter-area-title-text">{{ city.cityName }}</h4>
+            <div class="filter-area-title-icon" :class="{ show: localCityName === city.cityName }"></div>
           </div>
 
-          <ul class="area-list" v-show="localCityName === city.cityName">
+          <ul class="filter-area-list" v-show="localCityName === city.cityName">
             <li
               v-for="town in city.towns" :key="town.TownName"
-              class="area-item"
+              class="filter-area-list-item"
               :class="{ active: currentCity === city.cityName && currentTown === town.TownName }"
               @click="filterCityData(town.TownName)"
               >{{ town.TownName }}
@@ -39,9 +39,11 @@ export default {
     }
   },
   methods: {
+    // 切換選單範圍
     toggleList(cityName) {
       this.localCityName = cityName;
     },
+    // 選定篩選類型
     filterCityData(townName) {
       this.$store.commit("TOGGLE_CITY", this.localCityName);
       this.$store.dispatch("filterDataListWithTown", { dataType: this.dataType, townName });
@@ -49,6 +51,7 @@ export default {
     }
   },
   created() {
+    // 取得區塊高度
     this.$nextTick(() => {
       this.blockHeight = this.$refs.selectBlock.offsetHeight;
     })
@@ -62,7 +65,7 @@ export default {
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
 
-  .select-area-block {
+  .filter {
     width: 100vw;
     position: fixed;
     left: 0;
@@ -74,44 +77,44 @@ export default {
     z-index: 1;
     cursor: default;
     transition: $trsi;
-    .area-container {
+    &-container {
       @include scroll;
       height: 50vh;
       width: 100%;
-      .area {
-        color: $grey-700;
-        padding-top: 0.5rem;
-        .v-area {
-          @include font-caption(700);
+    }
+    &-block {
+      color: $grey-700;
+      padding-top: 0.5rem;
+    }
+    &-subtitle {
+      @include font-caption(700);
+    }
+    &-area {
+      border-bottom: 1px solid $grey-300;
+      padding: 0.5rem 0;
+      &-title {
+        @include flex-row-flex-start-center;
+        padding: 0.25rem 0 0.5rem 0;
+        &-text {
+          @include font-content(700);
         }
-        .area-block {
-          border-bottom: 1px solid $grey-300;
-          padding: 0.5rem 0;
-          .area-title {
-            @include flex-row-flex-start-center;
-            padding: 0.25rem 0 0.5rem 0;
-            .title-text {
-              @include font-content(700);
-            }
-            .title-icon {
-              @include triangle;
-              margin-left: 0.5rem;
-            }
+        &-icon {
+          @include triangle;
+          margin-left: 0.5rem;
+        }
+      }
+      &-list {
+        @include flex-row-flex-start-center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        &-item {
+          @include font-button(500);
+          line-height: 20px;
+          &:hover {
+            color: $grey-400;
           }
-          .area-list {
-            @include flex-row-flex-start-center;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            .area-item {
-              @include font-button(500);
-              line-height: 20px;
-              &:hover {
-                color: $grey-400;
-              }
-              &.active {
-                color: $primary-600;
-              }
-            }
+          &.active {
+            color: $primary-600;
           }
         }
       }
@@ -119,7 +122,7 @@ export default {
   }
 
   @include screen-up {
-    .select-area-block {
+    .filter {
       width: 23rem;
       position: absolute;
       top: 40px;

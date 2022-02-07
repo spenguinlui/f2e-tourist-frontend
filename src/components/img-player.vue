@@ -3,7 +3,9 @@
     <div class="show-image" :style="showImageUrl" :alt="showPicture ? '景點大圖' : '找不到圖片'"></div>
     <ul class="imgs-row">
       <template v-if="!data.Picture">
-        <li v-for="item in imageList" :key="item" class="img-empty"><img src="../assets/images/icon/empty-img-sm.svg" alt="找不到圖片"></li>
+        <li v-for="item in imageList" :key="item" class="img-empty">
+          <img src="../assets/images/icon/empty-img-sm.svg" alt="找不到圖片">
+        </li>
       </template>
       <template v-else>
         <li v-for="(item, index) in imageList" :key="item"
@@ -40,15 +42,18 @@ export default {
     },
   },
   methods: {
+    // 取得展示用大圖(用第一張圖)
     getShowPicture() {
       if (this.showPicture) { return; }
       if (this.data.Picture && this.data.Picture.PictureUrl1) {
         this.showPicture = this.data.Picture.PictureUrl1;
       }
     },
+    // 移除展示用大圖
     removeShowPicture() {
       this.$store.commit("otherModule/REMOVE_SHOW_PICTURE");
     },
+    // 切換展示用大圖
     checkImage(PictureUrl) {
       if (PictureUrl) this.showPicture = PictureUrl;
     }
