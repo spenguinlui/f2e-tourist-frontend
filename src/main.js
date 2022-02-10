@@ -11,6 +11,7 @@ const router = new Router({
   linkExactActiveClass: 'active',
   linkActiveClass: 'active',
   base: process.env.PUBLIC_PATH,
+  mode: 'history',
   routes
 });
 

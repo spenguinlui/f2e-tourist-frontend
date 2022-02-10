@@ -54,8 +54,7 @@ export default {
       password: "",
       confirmPassword: "",
       isLogin: true,
-      cardHight: "",
-      domain: process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN
+      cardHight: ""
     }
   },
   computed: {
@@ -78,7 +77,7 @@ export default {
   methods: {
     // 忘記密碼
     forgetPassword() {
-      window.alert("尚未開放！")
+      this.$router.push({ name: "user-password-forget" });
     },
     // 表單送出前驗證
     formValidate(callbackFunc) {

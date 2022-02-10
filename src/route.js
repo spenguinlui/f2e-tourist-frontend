@@ -89,6 +89,16 @@ export const routes = [
     name: 'user-login'
   },
   {
+    path: '/user-password-forget',
+    component: () => import('./pages/user-password-forget'),
+    name: 'user-password-forget'
+  },
+  {
+    path: '/user-password-reset',
+    component: () => import('./pages/user-password-reset'),
+    name: 'user-password-reset'
+  },
+  {
     path: '/suppliers',
     component: () => import('./pages/suppliers'),
     name: 'suppliers',
