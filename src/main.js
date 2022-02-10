@@ -15,8 +15,6 @@ const router = new Router({
   routes
 });
 
-console.log(process.env)
-
 // vuex
 import Vuex from 'vuex';
 import { storeObject } from '@/store/index';
