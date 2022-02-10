@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isLogin">
     <h1>管理頁面</h1>
     <div class="btn-group">
       <router-link :to="{ name: 'admin-themes' }" class="btn">主題管理</router-link> 
@@ -16,23 +16,31 @@
 import { AJAX_S_checkAdminLogin } from '@/modules/server-api';
 
 export default {
+  data() {
+    return {
+      isLogin: false
+    }
+  },
   methods: {
     sighOut() {
       this.$store.dispatch("serverModule/signOutAdminOnServer", this);
+    },
+    async checkIsLogin() {
+      // 防止 router 守衛沒啟動
+      const adminAuthToken = this.$cookies.get('_a');
+      const adminParams = { auth_token: adminAuthToken };
+      await AJAX_S_checkAdminLogin(adminParams)
+      .then(() => {
+        this.isLogin = true;
+      })
+      .catch(() => {
+        delete_cookie('_a', '/', 'localhost');
+        this.$router.push({ name: 'admin-login' });
+      })
     }
   },
   created() {
-    // 防止 router 守衛沒啟動
-    const adminAuthToken = this.$cookies.get('_a');
-    const adminParams = { auth_token: adminAuthToken };
-    AJAX_S_checkAdminLogin(adminParams)
-    .then(() => {
-      return;
-    })
-    .catch(() => {
-      delete_cookie('_a', '/', 'localhost');
-      this.$router.push({ name: 'admin-login' });
-    })
+    this.checkIsLogin();
   }
 }
 

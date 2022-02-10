@@ -45,6 +45,10 @@ export default {
       this.token = this.$route.query.resetPasswordToken;
     },
     resetPassword() {
+      if (this.password !== this.confirmPassword) {
+        window.alert("確認密碼不符！");
+        return;
+      }
       const domain = process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
       axios.post(`${domain}/api/v1/user/edit_password`, { reset_password_token: this.token, new_password: this.new_password })
       .then(() => {

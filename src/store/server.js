@@ -49,7 +49,7 @@ export default {
     getThemesByServer({ commit }) {
       AJAX_S_getThemes()
       .then(res => {
-        const newThemes = res.data.reduce(
+        const newThemes = res.data.themes.reduce(
           (newObj, theme) => {
             newObj[theme.id] = {
               themeId: theme.id,
@@ -64,7 +64,6 @@ export default {
       })
       .catch(error => {
         console.log(`getThemesByServer: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -72,11 +71,10 @@ export default {
     getHotsByServer({ commit }) {
       AJAX_S_getHots()
       .then(res => {
-        commit("UPDATE_HOTS", res.data, { root: true });
+        commit("UPDATE_HOTS", res.data.ids, { root: true });
       })
       .catch(error => {
         console.log(`getHotsByServer: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -86,7 +84,6 @@ export default {
       AJAX_S_postCount(idsStr, "addSearch")
       .catch(error => {
         console.log(`postSearchCountToSever: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -96,7 +93,6 @@ export default {
       AJAX_S_postCount(idsStr, 'addEnter')
       .catch(error => {
         console.log(`postEnterCountToSever: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -107,7 +103,6 @@ export default {
       AJAX_S_postCount(idsStr, `${addStr}Favorite`)
       .catch(error => {
         console.log(`postFavoriteCountToSever: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -120,17 +115,18 @@ export default {
       }
       AJAX_S_postComment(dataForm, id)
       .then(res => {
-        const { comments, average_score } = res.data;
+        const { message, comments, average_score } = res.data;
         let data = deepCopy(rootState.dataDetail);
 
         data.Comment = comments;
         data.CommentScore = average_score;
         
         commit("UPDATE_DATA_DETAIL", data, { root: true });
+        window.alert(message);
       })
       .catch(error => {
         console.log(`postCommentToServer: ${error}`);
-        // 錯誤處理
+        window.alert("新增評論失敗");
       });
     },
 
@@ -139,7 +135,7 @@ export default {
     loginUserOnServer({ commit }, { userParams, vm }) {
       AJAX_S_userSignIn(userParams)
       .then(res => {
-        const { auth_token, favorites } = res.data;
+        const { message, auth_token, favorites } = res.data;
 
         // cookie 寫入登入狀態
         vm.$cookies.set('_u', auth_token, '1d', null, null, true);
@@ -150,12 +146,11 @@ export default {
         // 更新我的旅程為 db 內的
         commit("SET_FAVORITES", favorites, { root: true });
 
-        window.alert("登入成功");
+        window.alert(message);
         vm.$router.push({ name: "favorites" });
       })
       .catch(error => {
         console.log(`loginUserOnServer: ${error}`);
-        // 錯誤處理
         window.alert("登入失敗");
       });
     },
@@ -165,37 +160,36 @@ export default {
       const favorites = JSON.stringify(rootState.favorites);
       AJAX_S_userSignUp(userParams)
       .then(res => {
-        const { auth_token } = res.data;
+        if (res.data.status === 200) {
+          const { auth_token } = res.data;
+  
+          // cookie 寫入登入狀態
+          vm.$cookies.set('_u', auth_token, '1d', null, null, true);
+  
+          // 更新為已登入
+          commit("UPDATE_USER_LOGIN", true);
 
-        // cookie 寫入登入狀態
-        vm.$cookies.set('_u', auth_token, '1d', null, null, true);
-
-        // 更新為已登入
-        commit("UPDATE_USER_LOGIN", true);
-        return auth_token;
-      })
-      .then(userAuthToken => {
-        // 將 localstorge 我的最愛加入會員資料
-        const favoritesParams = { auth_token: userAuthToken, favorites };
-
-        AJAX_S_changeFavorite(favoritesParams)
-        .then(() => {
-          window.alert("申請成功");
-          vm.$router.push({ name: "favorites" });
-        })
-        .catch(error => {
-          console.log(`signUpUserOnServer: ${error}`);
-          // 錯誤處理
-          vm.$router.push('/');
-          window.alert("加入會員失敗");
-        });
+          // 將 localstorge 我的最愛加入會員資料
+          const favoritesParams = { auth_token, favorites };
+    
+          AJAX_S_changeFavorite(favoritesParams)
+          .then(res => {
+            if (res.data.status === 200) {
+              window.alert("申請成功");
+              vm.$router.push({ name: "favorites" });
+            } else {
+              window.alert(res.data.message);
+            }
+          })
+        } else {
+          window.alert(res.data.message);
+        }
       })
       .catch(error => {
         console.log(`signUpUserOnServer: ${error}`);
-        // 錯誤處理
         vm.$router.push('/');
-        window.alert("加入會員失敗");
-      });
+        window.alert("發生不明錯誤");
+      })
     },
 
     // 會員登出
@@ -212,7 +206,6 @@ export default {
         vm.delete_cookie('_u', '/', vm.domain);
         vm.$router.push({ name: "home" });
         console.log(`signOutUserOnServer: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -244,7 +237,6 @@ export default {
       })
       .catch(error => {
         console.log(`getFavoritesByUser: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -262,7 +254,6 @@ export default {
       AJAX_S_changeFavorite(favoritesParams)
       .catch(error => {
         console.log(`changeFavoriteToData: ${error}`);
-        // 錯誤處理
       });
 
       commit("UPDATE_FAVORITE_ADDING", false, { root: true });
@@ -285,7 +276,6 @@ export default {
       })
       .catch(error => {
         console.log(`loginSupplierOnServer: ${error}`);
-        // 錯誤處理
         window.alert("廠商登入失敗");
       });
     },
@@ -302,7 +292,6 @@ export default {
         vm.delete_cookie('_s', '/', vm.domain);
         vm.$router.push({ name: "home" });
         console.log(`signOutSupplierOnServer: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -338,7 +327,6 @@ export default {
         vm.delete_cookie('_a', '/', vm.domain);
         vm.$router.push({ name: "home" });
         console.log(`signOutUserOnServer: ${error}`);
-        // 錯誤處理
       });
     },
 
@@ -348,7 +336,7 @@ export default {
       themeParams.auth_token = adminAuthToken;
       AJAX_S_patchTheme(themeId, themeParams)
       .then(res => {
-        const newThemes = res.data.reduce(
+        const newThemes = res.data.themes.reduce(
           (newObj, theme) => {
             newObj[theme.id] = {
               themeId: theme.id,
@@ -375,7 +363,7 @@ export default {
       themeParams.auth_token = adminAuthToken;
       AJAX_S_addTheme(themeParams)
       .then(res => {
-        const newThemes = res.data.reduce(
+        const newThemes = res.data.themes.reduce(
           (newObj, theme) => {
             newObj[theme.id] = {
               themeId: theme.id,
@@ -404,8 +392,8 @@ export default {
         id: themeId
       }
       AJAX_S_deleteTheme(themeParams)
-      .then((res) => {
-        const newThemes = res.data.reduce(
+      .then(res => {
+        const newThemes = res.data.themes.reduce(
           (newObj, theme) => {
             newObj[theme.id] = {
               themeId: theme.id,
@@ -421,7 +409,6 @@ export default {
       })
       .catch(error => {
         console.log(`deleteThemeToServer: ${error}`);
-        // 錯誤處理
         window.alert("主題刪除失敗");
       });
     },
@@ -431,7 +418,7 @@ export default {
       const adminAuthToken = vm.$cookies.get('_a');
       AJAX_S_getUsers({ auth_token: adminAuthToken })
       .then(res => {
-        commit("UPDATE_USERS", res.data);
+        commit("UPDATE_USERS", res.data.users);
       })
       .catch(error => {
         console.log(`getUsersByServer: ${error}`);
@@ -444,11 +431,15 @@ export default {
       const adminAuthToken = vm.$cookies.get('_a');
       AJAX_S_getSetting({ auth_token: adminAuthToken })
       .then(res => {
-        commit("UPDATE_SETTINGS", res.data);
+        if (res.data.status === 200) {
+          commit("UPDATE_SETTINGS", res.data.settings);
+        } else {
+          window.alert(res.data.message);
+        }
       })
       .catch(error => {
         console.log(`getSettingByServer: ${error}`);
-        // 錯誤處理
+        window.alert("發生不明錯誤");
       });
     },
 
@@ -458,27 +449,26 @@ export default {
       settingParams.auth_token = adminAuthToken;
       AJAX_S_patchSetting(settingParams)
       .then(res => {
-        commit("UPDATE_SETTINGS", res.data);
-        window.alert("設定修改成功");
+        if (res.data.status === 200) commit("UPDATE_SETTINGS", res.data);
+        window.alert(res.data.message);
       })
       .catch(error => {
         console.log(`updateSettingToServer: ${error}`);
-        window.alert("設定修改失敗");
+        window.alert("發生不明錯誤");
       });
     },
 
     // 取得廠商資料
     getSupplier({ commit }, { vm }) {
       const supplierAuthToken = vm.$cookies.get('_a');
-      const supplierParams = {
-        auth_token: supplierAuthToken
-      }
+      const supplierParams = { auth_token: supplierAuthToken };
       AJAX_S_getSupppliers(supplierParams)
       .then(res => {
-        commit("UPDATE_SUPPLIERS", res.data);
+        commit("UPDATE_SUPPLIERS", res.data.suppliers);
       })
       .catch(error => {
         console.log(`getSupplier: ${error}`);
+        window.alert("發生不明錯誤");
       });
     }
   }

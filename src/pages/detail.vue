@@ -319,14 +319,6 @@ export default {
     }
   }
 
-  .recommend-container {
-    @include flex-row-flex-start-center;
-    @include scroll;
-    .card-container {
-      @include card-flex;
-    }
-  }
-
   @include screen-up {
     .detail-header {
       &-title {

@@ -38,9 +38,8 @@ export default {
     sendEamil() {
       const domain = process.env.NODE_ENV === "development" ? process.env.VUE_APP_BACKEND_DEV_DOMAIN : process.env.VUE_APP_BACKEND_DOMAIN;
       axios.post(`${domain}/api/v1/user/forget_password`, { email: this.email })
-      .then(res => {
+      .then(() => {
         window.alert("已寄送密碼信件，請至您信箱收信");
-        console.log(res);
       })
       .catch(error => {
         window.alert("發信失敗！");
