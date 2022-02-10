@@ -10,10 +10,12 @@ Vue.use(Router);
 const router = new Router({
   linkExactActiveClass: 'active',
   linkActiveClass: 'active',
-  base: process.env.PUBLIC_PATH,
+  base: process.env.VUE_APP_GITPAGE_PATH,
   mode: 'history',
   routes
 });
+
+console.log(process.env)
 
 // vuex
 import Vuex from 'vuex';
