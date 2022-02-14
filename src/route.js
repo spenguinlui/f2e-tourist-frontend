@@ -1,41 +1,17 @@
 export const routes = [
   {
-    path: '/admin',
-    component: () => import('./pages/admin/index'),
-    name: 'admin',
-    meta: { requiresAuth: true },
-    children: [
-      {
-        path: 'themes',
-        component: () => import('./pages/admin/themes'),
-        name: 'admin-themes'
-      },
-      {
-        path: 'users',
-        component: () => import('./pages/admin/users'),
-        name: 'admin-users'
-      },
-      {
-        path: 'suppliers',
-        component: () => import('./pages/admin/suppliers'),
-        name: 'admin-suppliers'
-      },
-      {
-        path: 'setting',
-        component: () => import('./pages/admin/setting'),
-        name: 'admin-setting'
-      },
-    ]
-  },
-  {
-    path: '/admin-login',
-    component: () => import('./pages/admin/admin-login'),
-    name: 'admin-login'
-  },
-  {
     path: '/',
     component: () => import('./pages/home'),
-    name: 'home'
+    name: 'home',
+    beforeEnter: (to, from, next) => {
+      if (sessionStorage.getItem('redirect') !== null) {
+        const redirect = sessionStorage.redirect
+        delete sessionStorage.redirect
+        next(redirect)
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/search',
@@ -107,6 +83,39 @@ export const routes = [
     path: '/supplier-login',
     component: () => import('./pages/supplier-login'),
     name: 'supplier-login'
+  },
+  {
+    path: '/admin',
+    component: () => import('./pages/admin/index'),
+    name: 'admin',
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'themes',
+        component: () => import('./pages/admin/themes'),
+        name: 'admin-themes'
+      },
+      {
+        path: 'users',
+        component: () => import('./pages/admin/users'),
+        name: 'admin-users'
+      },
+      {
+        path: 'suppliers',
+        component: () => import('./pages/admin/suppliers'),
+        name: 'admin-suppliers'
+      },
+      {
+        path: 'setting',
+        component: () => import('./pages/admin/setting'),
+        name: 'admin-setting'
+      },
+    ]
+  },
+  {
+    path: '/admin-login',
+    component: () => import('./pages/admin/admin-login'),
+    name: 'admin-login'
   },
   {
     path: '*',
