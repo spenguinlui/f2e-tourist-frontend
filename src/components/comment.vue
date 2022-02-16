@@ -22,6 +22,7 @@
       <div class="form-tilte-block">
         <h3 class="form-title">撰寫評論</h3>
         <ul class="form-stars">
+          <span class="form-stars-text">選擇評分</span>
           <!-- 第一個是猜手的慣性消分數 -->
           <li @mouseover="changeCommentStar(0)" @click="changeCommentStar(0)" style="opacity: 0;">
             <img
@@ -187,7 +188,12 @@ export default {
       }
       .form-stars {
         @include flex-row-flex-start-center;
+        &-text {
+          @include font-button(500);
+          color: $grey-300;
+        }
         li {
+          cursor: pointer;
           img {
             width: 100%;
           }
