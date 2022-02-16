@@ -6,7 +6,7 @@
         <img src="../assets/images/icon/menu.svg" alt="手機版選單">
       </button>
       <!-- pc -->
-      <button class="nav-brand">
+      <button class="nav-brand" @click="collapseMenu">
         <router-link class="nav-brand-item" :to="{ name: 'home' }"><img src="../assets/images/logo.svg" alt="首頁Logo"></router-link>
         <SearchBar :className="'nav-search-bar'" />
       </button>
@@ -96,7 +96,18 @@ export default {
       } else {
         this.searchShow = false;
       }
+    },
+    // 收合全部選單
+    collapseMenu() {
+      this.searchShow = false;
+      this.menuShow = false;
     }
+  },
+  created() {
+    this.window.addEventListener("scroll", this.collapseMenu);
+  },
+  destroyed() {
+    this.window.removeEventListener("scroll", this.collapseMenu);
   },
   components: {
     SearchBar
