@@ -66,6 +66,7 @@ import { mapGetters } from 'vuex';
     height: $footer-height;
     background-color: $primary-600;
     padding: 0 3vw;
+    z-index: $footer-z;
   }
   .footer {
     @include flex-column-center-center;
