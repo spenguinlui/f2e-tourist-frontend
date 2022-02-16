@@ -28,13 +28,7 @@ export default {
   .container {
     @include content-padding(.1vh);
     @include flex-column-center-center;
-    height: calc(100vh - #{$nav-height} - #{$footer-m-height});
-  }
-  
-  @include screen-up {
-    .container {
-      height: calc(100vh - #{$nav-height} - #{$footer-height});
-    }
+    height: calc(100vh - #{$nav-height} - #{$footer-height});
   }
 
 </style>

@@ -58,7 +58,7 @@ export default {
       @include benner-background('../assets/images/home-benner.png');
       @include flex-column-center-center;
       width: 100%;
-      height: calc(100vh - #{$nav-height} - #{$footer-m-height});
+      height: calc(100vh - #{$nav-height} - #{$footer-height});
       &-title {
         @include font-h1(bold);
         color: $grey-100;
@@ -104,7 +104,6 @@ export default {
     .home {
       margin-bottom: $footer-height;
       &-benner {
-        height: calc(100vh - #{$nav-height} - #{$footer-height});
         &-title {
           width: 100%;
         }

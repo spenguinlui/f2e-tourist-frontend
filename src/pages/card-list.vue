@@ -60,7 +60,7 @@
       @include flex-row-center-center;
     }
     flex-wrap: wrap;
-    height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-m-height});
+    height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-height});
     .card-container {
       @include card-flex;
     }

@@ -65,7 +65,7 @@ export default {
   .map-content {
     @include flex-row-flex-start-center;
     @include content-padding(1.5rem);
-    height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-m-height});
+    height: calc(100vh - #{$nav-height} - #{$class-benner-m-height} - #{$benner-m-menu-height} - #{$footer-height});
     .card-aside {
       display: none;
       .card-container {

@@ -63,7 +63,7 @@ import { mapGetters } from 'vuex';
     left: 0;
     bottom: 0;
     width: 100%;
-    height: $footer-m-height;
+    height: $footer-height;
     background-color: $primary-600;
     padding: 0 3vw;
   }
@@ -77,18 +77,18 @@ import { mapGetters } from 'vuex';
       padding: 1vh 1%;
     }
     &-brand {
-      @include flex-column-center-center;
+      @include flex-row-center-center;
       &-icon {
         @include flex-row-center-center;
-        margin-top: .5rem;
+        margin-top: 0;
+        margin-left: .5rem;
         img {
           margin-right: .375rem;
         }
       }
     }
     &-link {
-      @include flex-row-space-between-center;
-      width: 100%;
+      display: none;
       &-item {
         @include flex-column-center-center;
         a, button {
@@ -108,12 +108,17 @@ import { mapGetters } from 'vuex';
   }
 
   @include screen-up {
-    .footer-container {
-      height: $footer-height;
-    }
     .footer {
       @include flex-row-center-center;
+      &-brand {
+        @include flex-column-center-center;
+        &-icon {
+          margin-top: .5rem;
+          margin-left: 0;
+        }
+      }
       &-link {
+        @include flex-row-space-between-center;
         width: 40%;
         padding: 0 1%;
       }

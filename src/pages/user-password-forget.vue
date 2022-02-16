@@ -61,10 +61,10 @@ export default {
 <style lang="scss" scoped>
   @import "@/assets/scss/main.scss";
 
-    .container {
+  .container {
     @include content-padding(.1vh);
     @include flex-column-center-center;
-    height: calc(100vh - #{$nav-height} - #{$footer-m-height});
+    height: calc(100vh - #{$nav-height} - #{$footer-height});
   }
 
   .login-card-container {
@@ -189,9 +189,6 @@ export default {
   }
 
   @include screen-up {
-    .container {
-      height: calc(100vh - #{$nav-height} - #{$footer-height});
-    }
     .bg-card {
       position: relative;
       display: block;
