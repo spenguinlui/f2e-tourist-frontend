@@ -45,7 +45,7 @@ export default {
       this.token = this.$route.query.resetPasswordToken;
     },
     resetPassword() {
-      if (this.password !== this.confirmPassword) {
+      if (this.new_password !== this.confirmPassword) {
         window.alert("確認密碼不符！");
         return;
       }
