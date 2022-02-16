@@ -125,7 +125,6 @@ export default {
         content: "",
         score: 0
       };
-      window.alert("評論更新！");
     }
   },
   components: {

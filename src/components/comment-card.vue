@@ -75,6 +75,7 @@ export default {
     .comment-card {
       &-avatar {
         display: block;
+        padding-right: 1rem;
         &-img {
           width: 8rem;
           height: 8rem;
